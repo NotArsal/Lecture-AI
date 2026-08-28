@@ -4,9 +4,9 @@ test.describe('Homepage', () => {
   test('should load homepage successfully', async ({ page }) => {
     await page.goto('/');
 
-    await expect(page).toHaveTitle(/Talk2Notes/i);
+    await expect(page).toHaveTitle(/LectureAI/i);
 
-    await expect(page.getByRole('heading', { name: /talk2notes/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /LectureAI/i })).toBeVisible();
   });
 
   test('should display upload component', async ({ page }) => {
@@ -31,7 +31,7 @@ test.describe('Homepage', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/');
 
-    await expect(page.getByRole('heading', { name: /talk2notes/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /LectureAI/i })).toBeVisible();
   });
 
   test('shows upload another button when last result exists in localStorage', async ({ page }) => {
@@ -55,7 +55,7 @@ test.describe('Homepage', () => {
     // Ensure we're on the app origin before touching localStorage
     await page.goto('/');
     await page.evaluate((notes) => {
-      localStorage.setItem('talk2notes_last_result', JSON.stringify(notes));
+      localStorage.setItem('LectureAI_last_result', JSON.stringify(notes));
     }, mockNotes);
 
     await page.reload();

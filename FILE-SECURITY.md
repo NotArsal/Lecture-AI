@@ -1,6 +1,6 @@
-# File Upload Security
+﻿# File Upload Security
 
-This document describes the comprehensive file upload security implementation in Talk2Notes.
+This document describes the comprehensive file upload security implementation in LectureAI.
 
 ## Overview
 
@@ -76,10 +76,10 @@ AVI:  52 49 46 46 (RIFF)
 
 #### Protection Against
 
-- ✅ File extension spoofing (e.g., `.exe` renamed to `.mp3`)
-- ✅ MIME type manipulation
-- ✅ Malicious executable files disguised as media
-- ✅ Corrupted or tampered files
+- âœ… File extension spoofing (e.g., `.exe` renamed to `.mp3`)
+- âœ… MIME type manipulation
+- âœ… Malicious executable files disguised as media
+- âœ… Corrupted or tampered files
 
 ### Layer 5: Content Scanning
 
@@ -104,7 +104,7 @@ Validates that the detected file type matches the claimed MIME type and extensio
 
 - File claims: `.mp3` / `audio/mpeg`
 - Actual content: MP4 video
-- Result: ❌ Rejected (type mismatch)
+- Result: âŒ Rejected (type mismatch)
 
 ## Implementation
 
@@ -183,20 +183,20 @@ if (result.warnings) {
 
 ```typescript
 // Only checking MIME type and extension
-// ❌ Attacker can rename virus.exe to virus.mp3
-// ❌ File upload succeeds
-// ❌ Server processes malicious file
+// âŒ Attacker can rename virus.exe to virus.mp3
+// âŒ File upload succeeds
+// âŒ Server processes malicious file
 ```
 
 ### After (Secure)
 
 ```typescript
 // Checking actual file content with magic bytes
-// ✅ File claims to be MP3
-// ✅ Read first bytes: 4D 5A (EXE header)
-// ✅ Signature mismatch detected
-// ✅ File deleted immediately
-// ✅ Upload rejected with clear error
+// âœ… File claims to be MP3
+// âœ… Read first bytes: 4D 5A (EXE header)
+// âœ… Signature mismatch detected
+// âœ… File deleted immediately
+// âœ… Upload rejected with clear error
 ```
 
 ## Testing
@@ -213,11 +213,11 @@ npx tsx lib/__tests__/file-security.test.ts
 
 ### Test Cases
 
-1. ✅ Valid MP3 file (ID3v2 header)
-2. ✅ Valid WAV file (RIFF header)
-3. ✅ Invalid file (random bytes)
-4. ✅ Type mismatch (MP3 bytes with .wav extension)
-5. ✅ Suspicious content (executable pattern)
+1. âœ… Valid MP3 file (ID3v2 header)
+2. âœ… Valid WAV file (RIFF header)
+3. âœ… Invalid file (random bytes)
+4. âœ… Type mismatch (MP3 bytes with .wav extension)
+5. âœ… Suspicious content (executable pattern)
 
 ## Error Messages
 
@@ -259,10 +259,10 @@ File failed security scan: File contains suspicious executable patterns
 
 This implementation does NOT replace antivirus software. It:
 
-- ✅ Detects file type mismatches
-- ✅ Identifies obvious malicious patterns
-- ❌ Does NOT detect all viruses/malware
-- ❌ Does NOT perform deep content analysis
+- âœ… Detects file type mismatches
+- âœ… Identifies obvious malicious patterns
+- âŒ Does NOT detect all viruses/malware
+- âŒ Does NOT perform deep content analysis
 
 ### Recommended for Production
 

@@ -1,6 +1,6 @@
-# Talk2Notes Setup Guide
+﻿# LectureAI Setup Guide
 
-This guide will help you set up Talk2Notes on your local machine or server.
+This guide will help you set up LectureAI on your local machine or server.
 
 ## Prerequisites Checklist
 
@@ -138,8 +138,8 @@ You need an API key from one of these providers:
 ### 5. Clone the Repository
 
 ```bash
-git clone https://github.com/taufiqelrahman/talk2notes.git
-cd talk2notes
+git clone https://github.com/taufiqelrahman/LectureAI.git
+cd LectureAI
 ```
 
 ### 6. Install Dependencies
@@ -231,7 +231,7 @@ The application will start at [http://localhost:3000](http://localhost:3000)
 ### 9. Verify Installation
 
 1. Open your browser to `http://localhost:3000`
-2. You should see the Talk2Notes interface
+2. You should see the LectureAI interface
 3. Try uploading a small audio file (test with a short recording)
 4. Check that processing completes successfully
 
@@ -325,10 +325,10 @@ pnpm start
 
 ```bash
 # Build image
-docker build -t talk2notes .
+docker build -t LectureAI .
 
 # Run container
-docker run -p 3000:3000 --env-file .env talk2notes
+docker run -p 3000:3000 --env-file .env LectureAI
 ```
 
 ### Using Docker Compose
@@ -387,8 +387,8 @@ Once installed:
 ## Getting Help
 
 - **Documentation:** [README.md](README.md)
-- **Issues:** [GitHub Issues](https://github.com/taufiqelrahman/talk2notes/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/taufiqelrahman/talk2notes/discussions)
+- **Issues:** [GitHub Issues](https://github.com/taufiqelrahman/LectureAI/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/taufiqelrahman/LectureAI/discussions)
 
 ## pnpm Package Manager Guide
 
@@ -396,10 +396,10 @@ This project uses **pnpm** for faster, more efficient dependency management.
 
 ### Why pnpm?
 
-- ⚡ Up to 2x faster than npm
-- 💾 Space efficient (content-addressable storage)
-- 🔒 Strict dependency resolution
-- 🎯 Monorepo friendly
+- âš¡ Up to 2x faster than npm
+- ðŸ’¾ Space efficient (content-addressable storage)
+- ðŸ”’ Strict dependency resolution
+- ðŸŽ¯ Monorepo friendly
 
 ### Common pnpm Commands
 
@@ -444,4 +444,4 @@ docker-compose up     # Run with Docker
 
 ---
 
-**Success!** 🎉 You now have Talk2Notes running locally.
+**Success!** ðŸŽ‰ You now have LectureAI running locally.

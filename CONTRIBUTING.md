@@ -1,18 +1,18 @@
-# Contributing to Talk2Notes
+﻿# Contributing to LectureAI
 
-Thank you for your interest in contributing to Talk2Notes! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to LectureAI! This document provides guidelines and instructions for contributing.
 
-## 📋 Code of Conduct
+## ðŸ“‹ Code of Conduct
 
 By participating in this project, you agree to maintain a respectful and inclusive environment for everyone.
 
-## 🚀 Getting Started
+## ðŸš€ Getting Started
 
 1. **Fork the repository**
 2. **Clone your fork**
    ```bash
-   git clone https://github.com/your-username/talk2notes.git
-   cd talk2notes
+   git clone https://github.com/your-username/LectureAI.git
+   cd LectureAI
    ```
 3. **Install dependencies**
    ```bash
@@ -28,7 +28,7 @@ By participating in this project, you agree to maintain a respectful and inclusi
    git checkout -b feat/your-feature-name
    ```
 
-## 💻 Development Guidelines
+## ðŸ’» Development Guidelines
 
 ### Code Style
 
@@ -42,14 +42,14 @@ By participating in this project, you agree to maintain a respectful and inclusi
 
 ```
 Server-side (TypeScript):
-- actions/      → Server Actions
-- lib/          → Core libraries
-- utils/        → Utility functions
-- types/        → Type definitions
+- actions/      â†’ Server Actions
+- lib/          â†’ Core libraries
+- utils/        â†’ Utility functions
+- types/        â†’ Type definitions
 
 Client-side (JavaScript):
-- components/   → React components
-- app/          → Pages and layouts
+- components/   â†’ React components
+- app/          â†’ Pages and layouts
 ```
 
 ### Naming Conventions
@@ -85,7 +85,7 @@ All code must follow the security guidelines in `.instructions.md`:
 - Implement proper error handling
 - No sensitive data in logs or error messages
 
-## 🧪 Testing
+## ðŸ§ª Testing
 
 Before submitting:
 
@@ -119,7 +119,7 @@ Before submitting:
    - Verify uploads work correctly
    - Check notes generation
 
-## 📝 Commit Messages
+## ðŸ“ Commit Messages
 
 We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
@@ -163,7 +163,7 @@ or corrupted audio files.
 Fixes #456
 ```
 
-## 🔀 Pull Request Process
+## ðŸ”€ Pull Request Process
 
 1. **Update documentation** if needed
 2. **Add tests** for new features
@@ -205,7 +205,7 @@ How to test these changes
 - [ ] All tests pass
 ```
 
-## 🐛 Bug Reports
+## ðŸ› Bug Reports
 
 ### Before Submitting
 
@@ -242,7 +242,7 @@ If applicable
 Any other relevant information
 ```
 
-## 💡 Feature Requests
+## ðŸ’¡ Feature Requests
 
 ### Feature Request Template
 
@@ -260,7 +260,7 @@ Other approaches you've thought about
 Mockups, examples, etc.
 ```
 
-## 🏗️ Architecture Decisions
+## ðŸ—ï¸ Architecture Decisions
 
 When making significant architectural changes:
 
@@ -269,7 +269,7 @@ When making significant architectural changes:
 3. Consider backwards compatibility
 4. Update `ARCHITECTURE.md`
 
-## 📚 Documentation
+## ðŸ“š Documentation
 
 Good documentation includes:
 
@@ -286,7 +286,7 @@ Update these files as needed:
 - `CONTRIBUTING.md` - This file
 - Code comments
 
-## 🤝 Community
+## ðŸ¤ Community
 
 - Be respectful and inclusive
 - Help others learn
@@ -294,13 +294,13 @@ Update these files as needed:
 - Provide constructive feedback
 - Credit others' work
 
-## 📧 Questions?
+## ðŸ“§ Questions?
 
-- Open a [Discussion](https://github.com/taufiqelrahman/talk2notes/discussions)
-- Check existing [Issues](https://github.com/taufiqelrahman/talk2notes/issues)
+- Open a [Discussion](https://github.com/taufiqelrahman/LectureAI/discussions)
+- Check existing [Issues](https://github.com/taufiqelrahman/LectureAI/issues)
 - Review the [Architecture docs](ARCHITECTURE.md)
 
-## 🎉 Recognition
+## ðŸŽ‰ Recognition
 
 Contributors will be:
 
@@ -308,4 +308,4 @@ Contributors will be:
 - Credited in release notes
 - Thanked in the community
 
-Thank you for contributing to Talk2Notes! 🚀
+Thank you for contributing to LectureAI! ðŸš€

@@ -1,10 +1,10 @@
-# Media Player Feature
+﻿# Media Player Feature
 
 ## Overview
 
 The media player feature allows users to replay video/audio **only for YouTube and Direct URL sources** with a modern compact floating display.
 
-### ✨ Key Features
+### âœ¨ Key Features
 
 - **Compact Floating Design**: 320px player that floats on screen
 - **Draggable Player**: Drag & drop player anywhere when floating
@@ -15,16 +15,16 @@ The media player feature allows users to replay video/audio **only for YouTube a
 - **Smooth Animations**: Smooth transitions for all interactions (except during drag)
 - **Safe Boundaries**: 16px padding from top/bottom edges, 16px left and 32px right padding
 
-### ⚠️ Important Note
+### âš ï¸ Important Note
 
 **Media player ONLY available for:**
 
-- ✅ **YouTube URLs**: Direct videos from YouTube (red theme)
-- ✅ **Direct Media URLs**: Direct links to audio/video files (blue theme)
+- âœ… **YouTube URLs**: Direct videos from YouTube (red theme)
+- âœ… **Direct Media URLs**: Direct links to audio/video files (blue theme)
 
 **NOT available for:**
 
-- ❌ Local file uploads (MP3, MP4, etc. uploaded from computer)
+- âŒ Local file uploads (MP3, MP4, etc. uploaded from computer)
 
 ### Why Only URLs?
 
@@ -437,23 +437,23 @@ Files are automatically optimized:
 ## Advantages of URL-Only Approach
 
 ### For Serverless Deployment
-✅ **No storage needed**: Perfect for Vercel, Netlify, Fly.io
-✅ **No cloud costs**: No S3, R2, or CDN required
-✅ **Scalable**: Each user streams from original source
-✅ **Simple**: No file management needed
+âœ… **No storage needed**: Perfect for Vercel, Netlify, Fly.io
+âœ… **No cloud costs**: No S3, R2, or CDN required
+âœ… **Scalable**: Each user streams from original source
+âœ… **Simple**: No file management needed
 
 ### For Users
-✅ **No size limits**: Can play videos of any length
-✅ **Always fresh**: Always plays from original source
-✅ **No storage quota**: Doesn't use localStorage/browser storage
-✅ **HD Quality**: Full quality from original source
+âœ… **No size limits**: Can play videos of any length
+âœ… **Always fresh**: Always plays from original source
+âœ… **No storage quota**: Doesn't use localStorage/browser storage
+âœ… **HD Quality**: Full quality from original source
 
 ### Limitations
-⚠️ **Source availability**: Only works if URL is still active
-⚠️ **File uploads excluded**: Local files are not stored
-⚠️ **Internet required**: Cannot play offline
-⚠️ **CORS issues**: Some URLs may block embedding
-⚠️ **Mobile drag**: Touch drag not yet implemented (desktop only)
+âš ï¸ **Source availability**: Only works if URL is still active
+âš ï¸ **File uploads excluded**: Local files are not stored
+âš ï¸ **Internet required**: Cannot play offline
+âš ï¸ **CORS issues**: Some URLs may block embedding
+âš ï¸ **Mobile drag**: Touch drag not yet implemented (desktop only)
 
 ## Troubleshooting
 
@@ -495,5 +495,5 @@ Files are automatically optimized:
 
 **Version**: 3.1 (Draggable Player with Safe Boundaries)
 **Last Updated**: February 5, 2026
-**Author**: Talk2Notes Development Team
+**Author**: LectureAI Development Team
 ```

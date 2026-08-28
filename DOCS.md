@@ -1,10 +1,10 @@
-# Talk2Notes Documentation
+﻿# LectureAI Documentation
 
-Welcome to Talk2Notes documentation. Find the guide you need below.
+Welcome to LectureAI documentation. Find the guide you need below.
 
-🌐 **[Try Live Demo](https://talk2notes.fly.dev)** - Test the app without installation!
+ðŸŒ **[Try Live Demo](https://LectureAI.fly.dev)** - Test the app without installation!
 
-## 📖 Getting Started
+## ðŸ“– Getting Started
 
 | Document                              | Purpose                               | Time   |
 | ------------------------------------- | ------------------------------------- | ------ |
@@ -15,7 +15,7 @@ Welcome to Talk2Notes documentation. Find the guide you need below.
 | [Rate Limits](RATE-LIMITS.md)         | Free tier limits & protection         | 5 min  |
 | [Troubleshooting](TROUBLESHOOTING.md) | Fix common errors                     | -      |
 
-## 💻 Development
+## ðŸ’» Development
 
 | Document                                  | Purpose                  |
 | ----------------------------------------- | ------------------------ |
@@ -25,7 +25,7 @@ Welcome to Talk2Notes documentation. Find the guide you need below.
 | [Contributing](CONTRIBUTING.md)           | How to contribute        |
 | [Changelog](CHANGELOG.md)                 | Version history          |
 
-## 🏗️ Documentation Structure
+## ðŸ—ï¸ Documentation Structure
 
 ### For Users
 
@@ -40,29 +40,29 @@ Welcome to Talk2Notes documentation. Find the guide you need below.
 3. **CLI-REFERENCE.md** - Command reference
 4. **CONTRIBUTING.md** - Contribution workflow
 
-## 🎯 Quick Navigation
+## ðŸŽ¯ Quick Navigation
 
 **I want to...**
 
-- ⚡ Start using the app → [Quick Start](QUICKSTART.md)
-- 🆓 Use free AI (no credit card) → [Groq Setup](GROQ-SETUP.md)
-- 🔧 Set up development environment → [Setup Guide](SETUP.md)
-- 🐛 Fix errors → [Troubleshooting](TROUBLESHOOTING.md)
-- 🏗️ Understand the architecture → [Architecture](ARCHITECTURE.md)
-- 🤝 Contribute code → [Contributing](CONTRIBUTING.md)
-- 📁 Find a specific file → [Project Structure](PROJECT-STRUCTURE.md)
+- âš¡ Start using the app â†’ [Quick Start](QUICKSTART.md)
+- ðŸ†“ Use free AI (no credit card) â†’ [Groq Setup](GROQ-SETUP.md)
+- ðŸ”§ Set up development environment â†’ [Setup Guide](SETUP.md)
+- ðŸ› Fix errors â†’ [Troubleshooting](TROUBLESHOOTING.md)
+- ðŸ—ï¸ Understand the architecture â†’ [Architecture](ARCHITECTURE.md)
+- ðŸ¤ Contribute code â†’ [Contributing](CONTRIBUTING.md)
+- ðŸ“ Find a specific file â†’ [Project Structure](PROJECT-STRUCTURE.md)
 
-## 📚 Additional Resources
+## ðŸ“š Additional Resources
 
-- **GitHub Repository:** https://github.com/yourusername/talk2notes
-- **Issues:** https://github.com/yourusername/talk2notes/issues
-- **Discussions:** https://github.com/yourusername/talk2notes/discussions
+- **GitHub Repository:** https://github.com/yourusername/LectureAI
+- **Issues:** https://github.com/yourusername/LectureAI/issues
+- **Discussions:** https://github.com/yourusername/LectureAI/discussions
 
-## 🆘 Getting Help
+## ðŸ†˜ Getting Help
 
 1. Check [CLI Reference](CLI-REFERENCE.md) for troubleshooting
-2. Search [GitHub Issues](https://github.com/yourusername/talk2notes/issues)
-3. Ask in [GitHub Discussions](https://github.com/yourusername/talk2notes/discussions)
+2. Search [GitHub Issues](https://github.com/yourusername/LectureAI/issues)
+3. Ask in [GitHub Discussions](https://github.com/yourusername/LectureAI/discussions)
 4. Open a new issue if needed
 
 ---

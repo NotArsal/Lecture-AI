@@ -1,6 +1,6 @@
-# Testing Guide
+﻿# Testing Guide
 
-This document describes the testing infrastructure and how to run tests in Talk2Notes.
+This document describes the testing infrastructure and how to run tests in LectureAI.
 
 ## Testing Frameworks
 
@@ -15,11 +15,11 @@ We use:
 
 ### Key Features
 
-- ⚡️ **Fast**: Vitest runs tests in parallel with hot-reload
-- 🎯 **TypeScript**: Full TypeScript support out of the box
-- 🧪 **Jest Compatible**: Similar API to Jest for easy migration
-- 📊 **Coverage**: Built-in code coverage with v8
-- 🎨 **UI Mode**: Interactive test UI for debugging
+- âš¡ï¸ **Fast**: Vitest runs tests in parallel with hot-reload
+- ðŸŽ¯ **TypeScript**: Full TypeScript support out of the box
+- ðŸ§ª **Jest Compatible**: Similar API to Jest for easy migration
+- ðŸ“Š **Coverage**: Built-in code coverage with v8
+- ðŸŽ¨ **UI Mode**: Interactive test UI for debugging
 
 ### Running Integration Tests
 
@@ -43,11 +43,11 @@ pnpm test:coverage
 
 ### Key Features
 
-- 🌐 **Cross-browser**: Test on Chromium, Firefox, and WebKit
-- 📱 **Mobile Testing**: Test responsive designs on mobile viewports
-- 🎥 **Trace & Screenshots**: Automatic screenshots and traces on failure
-- 🔄 **Auto-wait**: Smart waiting for elements to be ready
-- 🎯 **Test Generation**: Record tests using Playwright Codegen
+- ðŸŒ **Cross-browser**: Test on Chromium, Firefox, and WebKit
+- ðŸ“± **Mobile Testing**: Test responsive designs on mobile viewports
+- ðŸŽ¥ **Trace & Screenshots**: Automatic screenshots and traces on failure
+- ðŸ”„ **Auto-wait**: Smart waiting for elements to be ready
+- ðŸŽ¯ **Test Generation**: Record tests using Playwright Codegen
 
 ### Running E2E Tests
 
@@ -74,13 +74,13 @@ E2E tests are located in `tests/e2e/`:
 
 ```
 tests/
-├── e2e/
-│   ├── homepage.spec.ts          # Homepage tests
-│   ├── file-upload.spec.ts       # File upload flow
-│   ├── history.spec.ts           # History management
-│   └── rate-limiting.spec.ts     # Rate limit display
-└── fixtures/
-    └── test.txt                   # Test files for upload
+â”œâ”€â”€ e2e/
+â”‚   â”œâ”€â”€ homepage.spec.ts          # Homepage tests
+â”‚   â”œâ”€â”€ file-upload.spec.ts       # File upload flow
+â”‚   â”œâ”€â”€ history.spec.ts           # History management
+â”‚   â””â”€â”€ rate-limiting.spec.ts     # Rate limit display
+â””â”€â”€ fixtures/
+    â””â”€â”€ test.txt                   # Test files for upload
 ```
 
 ---
@@ -119,14 +119,14 @@ Press `h` in watch mode to see all available commands.
 
 ```
 tests/
-├── setup.ts                          # Global test setup
-└── integration/                      # Integration tests
-    ├── file-validation.test.ts       # File validation logic
-    ├── file-security.test.ts         # Magic bytes validation
-    ├── rate-limiter.test.ts          # Rate limiting
-    ├── ai-config.test.ts             # AI configuration
-    ├── history.test.ts               # History management
-    └── quiz.test.tsx                 # Quiz feature tests
+â”œâ”€â”€ setup.ts                          # Global test setup
+â””â”€â”€ integration/                      # Integration tests
+    â”œâ”€â”€ file-validation.test.ts       # File validation logic
+    â”œâ”€â”€ file-security.test.ts         # Magic bytes validation
+    â”œâ”€â”€ rate-limiter.test.ts          # Rate limiting
+    â”œâ”€â”€ ai-config.test.ts             # AI configuration
+    â”œâ”€â”€ history.test.ts               # History management
+    â””â”€â”€ quiz.test.tsx                 # Quiz feature tests
 ```
 
 ### Test Categories
@@ -285,8 +285,8 @@ import { test, expect } from '@playwright/test';
 test('should load homepage', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page).toHaveTitle(/Talk2Notes/i);
-  await expect(page.getByRole('heading', { name: /talk2notes/i })).toBeVisible();
+  await expect(page).toHaveTitle(/LectureAI/i);
+  await expect(page.getByRole('heading', { name: /LectureAI/i })).toBeVisible();
 });
 ```
 
@@ -421,10 +421,10 @@ Current coverage (to be improved):
 ### 1. Test Naming
 
 ```typescript
-// ✅ Good: Descriptive test names
+// âœ… Good: Descriptive test names
 it('should reject files exceeding max size', () => {});
 
-// ❌ Bad: Vague test names
+// âŒ Bad: Vague test names
 it('test file size', () => {});
 ```
 
@@ -446,7 +446,7 @@ it('should validate MP3 files', () => {
 ### 3. One Assertion Per Concept
 
 ```typescript
-// ✅ Good: Tests single behavior
+// âœ… Good: Tests single behavior
 it('should validate file type', () => {
   expect(result.valid).toBe(true);
 });
@@ -455,7 +455,7 @@ it('should detect correct file type', () => {
   expect(result.fileType).toBe('audio');
 });
 
-// ❌ Bad: Tests multiple unrelated things
+// âŒ Bad: Tests multiple unrelated things
 it('should do everything', () => {
   expect(result.valid).toBe(true);
   expect(result.fileType).toBe('audio');
@@ -507,16 +507,16 @@ vi.mock('openai', () => ({
 2. **Wait for elements properly**
 
    ```typescript
-   // ✅ Good: Automatic waiting
+   // âœ… Good: Automatic waiting
    await expect(page.locator('text=Success')).toBeVisible();
 
-   // ❌ Bad: Manual delays
+   // âŒ Bad: Manual delays
    await page.waitForTimeout(5000);
    ```
 
 3. **Test user flows, not pages**
    - Test complete user journeys
-   - Upload → Process → View Results → Download
+   - Upload â†’ Process â†’ View Results â†’ Download
 
 4. **Keep tests independent**
    - Each test should run in isolation
@@ -603,7 +603,7 @@ resolve: {
 
 ## Future Improvements
 
-- [x] Add E2E tests with Playwright ✅
+- [x] Add E2E tests with Playwright âœ…
 - [ ] Add API route testing
 - [ ] Add component testing with React Testing Library
 - [ ] Increase code coverage to 80%+

@@ -1,8 +1,8 @@
-# 🆓 Setup Groq (Gratis!)
+﻿# ðŸ†“ Setup Groq (Gratis!)
 
 Groq lebih cepat dari OpenAI dan punya free tier yang generous!
 
-## 🚀 Quick Setup (3 menit)
+## ðŸš€ Quick Setup (3 menit)
 
 ### 1. Daftar Groq (Gratis)
 
@@ -56,17 +56,17 @@ GROQ_SUMMARIZATION_MODEL=openai/gpt-oss-20b
 pnpm dev
 ```
 
-## ✅ Test
+## âœ… Test
 
 Upload audio/video file dan cek console logs:
 
 ```
 [AI] Using Groq for transcription
 [AI] Model: whisper-large-v3
-[Transcription] ✓ Success!
+[Transcription] âœ“ Success!
 ```
 
-## 📊 Groq Free Tier Limits
+## ðŸ“Š Groq Free Tier Limits
 
 - **Whisper transcription**:
   - 14,400 requests/day
@@ -76,16 +76,16 @@ Upload audio/video file dan cek console logs:
 - **Speed**: 2-3x lebih cepat dari OpenAI
 - **Quality**: Sama bagusnya (pakai Whisper Large V3)
 
-## 🆚 OpenAI vs Groq
+## ðŸ†š OpenAI vs Groq
 
 | Feature         | OpenAI              | Groq              |
 | --------------- | ------------------- | ----------------- |
-| **Free Tier**   | ❌ No (need credit) | ✅ Yes (generous) |
-| **Speed**       | Normal              | ⚡ Very Fast      |
+| **Free Tier**   | âŒ No (need credit) | âœ… Yes (generous) |
+| **Speed**       | Normal              | âš¡ Very Fast      |
 | **Quality**     | Excellent           | Excellent         |
 | **Cost** (paid) | $0.006/min          | Free/Cheap        |
 
-## 🔧 Troubleshooting
+## ðŸ”§ Troubleshooting
 
 ### Error: "model does not support chat completions"
 
@@ -122,9 +122,9 @@ AI_PROVIDER=groq
 
 Restart server after changing!
 
-## 🌍 Language Support
+## ðŸŒ Language Support
 
-Groq mendukung fitur bilingual Talk2Notes:
+Groq mendukung fitur bilingual LectureAI:
 
 **English (Default):**
 
@@ -134,14 +134,14 @@ Groq mendukung fitur bilingual Talk2Notes:
 
 - Automatic translation transcript ke Bahasa Indonesia
 - Notes di-generate dalam Bahasa Indonesia
-- **Perfect untuk konten Islami:**
-  - Preserves teks Arab (ayat Quran, Hadits) dengan harakat
+- **Perfect untuk konten Akademis:**
+  - Preserves teks Arab (ayat Textbook, Hadits) dengan harakat
   - Format: "teks Arab (transliterasi) - terjemahan Indonesia"
-  - Istilah teknis Islam tetap dalam bahasa Arab
+  - Istilah teknis Akademis tetap dalam bahasa Arab
 
 Pilih language di UI sebelum upload file!
 
-## 💡 Pro Tips
+## ðŸ’¡ Pro Tips
 
 1. **Groq untuk transcription** (gratis & cepat)
 2. **OpenAI untuk summarization** (lebih bagus)
@@ -156,9 +156,9 @@ Pilih language di UI sebelum upload file!
    ```
 
 3. **File size limit**: Sama seperti OpenAI (25MB audio)
-4. **Pakai mode Indonesian**: Bagus untuk kajian/ceramah Islam dengan konten Arab
+4. **Pakai mode Indonesian**: Bagus untuk kajian/ceramah Akademis dengan konten Arab
 
-## 📚 References
+## ðŸ“š References
 
 - Groq Console: https://console.groq.com
 - Groq Docs: https://console.groq.com/docs
@@ -181,4 +181,4 @@ nano .env.local
 pnpm dev
 ```
 
-Selesai! 🎉
+Selesai! ðŸŽ‰

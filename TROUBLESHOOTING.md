@@ -1,8 +1,8 @@
-# Troubleshooting Guide
+﻿# Troubleshooting Guide
 
-Common issues and their solutions for Talk2Notes.
+Common issues and their solutions for LectureAI.
 
-## 🔴 Connection Errors
+## ðŸ”´ Connection Errors
 
 ### Error: `Connection to OpenAI API failed` or `ECONNRESET`
 
@@ -12,7 +12,7 @@ Common issues and their solutions for Talk2Notes.
 - Network connection is unstable during upload
 - Upload timeout during large file transfer
 
-**✅ Automatic Fix (v2.0+)**:
+**âœ… Automatic Fix (v2.0+)**:
 The app now **automatically compresses** audio files over 10MB to ~8MB before transcription for maximum reliability.
 
 **Manual Solutions**:
@@ -55,7 +55,7 @@ The app now **automatically compresses** audio files over 10MB to ~8MB before tr
 
 ---
 
-## 📦 Body Size Limit Errors
+## ðŸ“¦ Body Size Limit Errors
 
 ### Error: `Body exceeded 1 MB limit`
 
@@ -88,13 +88,13 @@ experimental: {
 
 ---
 
-## 🎵 FFmpeg Errors
+## ðŸŽµ FFmpeg Errors
 
 ### Error: `spawn /usr/local/bin/ffprobe ENOENT` or `FFmpeg not found`
 
 **Cause**: FFmpeg is not installed, or the app can't find it.
 
-**✅ Quick Fix (3 steps)**:
+**âœ… Quick Fix (3 steps)**:
 
 ```bash
 # Step 1: Find your FFmpeg paths
@@ -229,7 +229,7 @@ cp .env.example .env.local
 
 ---
 
-## 🔑 API Key Issues
+## ðŸ”‘ API Key Issues
 
 ### Error: `API key not configured`
 
@@ -262,7 +262,7 @@ cp .env.example .env.local
 
 ---
 
-## 💾 File Upload Issues
+## ðŸ’¾ File Upload Issues
 
 ### Error: `File validation failed`
 
@@ -283,7 +283,7 @@ cp .env.example .env.local
 
 ---
 
-## 🐌 Performance Issues
+## ðŸŒ Performance Issues
 
 ### Transcription taking too long
 
@@ -309,7 +309,7 @@ cp .env.example .env.local
 
 ---
 
-## 🔧 Development Environment
+## ðŸ”§ Development Environment
 
 ### Port already in use
 
@@ -357,19 +357,19 @@ pnpm dev
 
 ---
 
-## 📊 File Size Guidelines (Updated v2.1)
+## ðŸ“Š File Size Guidelines (Updated v2.1)
 
-### ✅ Recommended Limits (Best Reliability)
+### âœ… Recommended Limits (Best Reliability)
 
 | File Type   | Recommended      | Max Allowed  | Notes                      |
 | ----------- | ---------------- | ------------ | -------------------------- |
-| Audio (mp3) | **< 10MB**       | **25MB** ✨  | Auto-compressed if 10-25MB |
-| Video (mp4) | **< 300MB**      | **500MB** ✨ | Audio extracted at 48kbps  |
+| Audio (mp3) | **< 10MB**       | **25MB** âœ¨  | Auto-compressed if 10-25MB |
+| Video (mp4) | **< 300MB**      | **500MB** âœ¨ | Audio extracted at 48kbps  |
 | Duration    | **< 25 minutes** | ~60 minutes  | Longer = larger files      |
 
-**✨ New in v2.1:** Increased limits! Files up to 25MB (audio) and 500MB (video) now accepted with automatic compression.
+**âœ¨ New in v2.1:** Increased limits! Files up to 25MB (audio) and 500MB (video) now accepted with automatic compression.
 
-### 🎯 Target Quality Settings
+### ðŸŽ¯ Target Quality Settings
 
 For best results, use these FFmpeg settings:
 
@@ -381,21 +381,21 @@ ffmpeg -i input.mp3 -ar 16000 -ac 1 -b:a 48k output.mp3
 ffmpeg -i input.mp3 -ar 16000 -ac 1 -b:a 64k output.mp3
 ```
 
-### 📐 Calculate Audio File Size
+### ðŸ“ Calculate Audio File Size
 
 ```
-File Size (MB) = (Bitrate in kbps × Duration in seconds) / 8192
+File Size (MB) = (Bitrate in kbps Ã— Duration in seconds) / 8192
 ```
 
 Example for 30 minutes at 64kbps:
 
 ```
-(64 × 1800) / 8192 = 14MB ✅
+(64 Ã— 1800) / 8192 = 14MB âœ…
 ```
 
 ---
 
-## 🆘 Still Having Issues?
+## ðŸ†˜ Still Having Issues?
 
 1. **Check logs**:
    - Server logs in terminal
@@ -418,7 +418,7 @@ Example for 30 minutes at 64kbps:
 
 ---
 
-## 📝 Optimization Tips
+## ðŸ“ Optimization Tips
 
 ### For best results:
 

@@ -1,4 +1,4 @@
-# Rate Limiting & Free Tier Protection
+﻿# Rate Limiting & Free Tier Protection
 
 ## Overview
 
@@ -56,7 +56,7 @@ A blue info box shows current usage:
 ```
 Free Tier Limits
 7 / 10 files this hour    42 / 50 files today
-Max file size: 50MB • Limits reset automatically
+Max file size: 50MB â€¢ Limits reset automatically
 ```
 
 ### API Endpoint
@@ -135,13 +135,13 @@ These limits ensure we stay within:
 - 256MB RAM per instance
 - 3 shared-cpu-1x VMs
 - 160GB bandwidth/month
-- **With limits**: ~50 files/day × 30 days = 1,500 files/month ✅
+- **With limits**: ~50 files/day Ã— 30 days = 1,500 files/month âœ…
 
 ### Groq Free Tier
 
 - Rate limits: Varies by model
 - Daily limits: Generous for individual use
-- **With limits**: 10 files/hour prevents API exhaustion ✅
+- **With limits**: 10 files/hour prevents API exhaustion âœ…
 
 ### Storage Considerations
 
@@ -179,7 +179,7 @@ Check application health:
 
 ```bash
 flyctl status
-flyctl logs --app talk2notes
+flyctl logs --app LectureAI
 flyctl scale show
 ```
 

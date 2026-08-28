@@ -1,12 +1,12 @@
-# Changelog
+﻿# Changelog
 
-All notable changes to Talk2Notes will be documented in this file.
+All notable changes to LectureAI will be documented in this file.
 
 ## [3.1.0] - 2026-02-05
 
 ### Added
 
-- 🎯 **Draggable Media Player**: Enhanced floating player with full drag & drop functionality
+- ðŸŽ¯ **Draggable Media Player**: Enhanced floating player with full drag & drop functionality
   - **Click & Drag**: Reposition player anywhere on screen when in sticky mode
   - **Smart Edge Snapping**: Automatically snaps to nearest edge (left/right) when released
   - **Safe Viewport Boundaries**: Player constrained within screen with proper padding
@@ -22,8 +22,8 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ### Fixed
 
-- 🐛 **Initial Floating Position**: Fixed right padding when player first becomes sticky (now properly uses 32px instead of being too close to edge)
-- 🐛 **Viewport Boundaries**: Added top/bottom padding constraints to prevent player from touching screen edges
+- ðŸ› **Initial Floating Position**: Fixed right padding when player first becomes sticky (now properly uses 32px instead of being too close to edge)
+- ðŸ› **Viewport Boundaries**: Added top/bottom padding constraints to prevent player from touching screen edges
 
 ### Technical
 
@@ -41,7 +41,7 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ### Added
 
-- 🎵 **Media Player Feature**: Playback for YouTube and Direct URL sources
+- ðŸŽµ **Media Player Feature**: Playback for YouTube and Direct URL sources
   - **YouTube Integration**: Embedded YouTube player with full controls
   - **Direct URL Support**: HTML5 video/audio player for direct media URLs
   - **Compact Floating Design**: Picture-in-picture style player (320px width)
@@ -62,7 +62,7 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ### Fixed
 
-- 🐛 **Dynamic Import Issues**: Removed all dynamic imports from server actions
+- ðŸ› **Dynamic Import Issues**: Removed all dynamic imports from server actions
   - Fixed "Cannot find module" error when uploading files
   - Converted all `await import()` to static imports for better Next.js compatibility
   - Improved build stability and production reliability
@@ -85,30 +85,30 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ### Benefits
 
-- ✅ Perfect for serverless (Vercel/Netlify/Fly.io)
-- ✅ No cloud storage costs
-- ✅ Unlimited video length and quality
-- ✅ Always plays from original source
-- ✅ Simple implementation with no file management
+- âœ… Perfect for serverless (Vercel/Netlify/Fly.io)
+- âœ… No cloud storage costs
+- âœ… Unlimited video length and quality
+- âœ… Always plays from original source
+- âœ… Simple implementation with no file management
 
 ### Limitations
 
-- ⚠️ Only works for YouTube and direct URL sources
-- ⚠️ File uploads are NOT stored (by design)
-- ⚠️ Requires internet connection for playback
-- ⚠️ Dependent on source URL availability
+- âš ï¸ Only works for YouTube and direct URL sources
+- âš ï¸ File uploads are NOT stored (by design)
+- âš ï¸ Requires internet connection for playback
+- âš ï¸ Dependent on source URL availability
 
 ## [2.8.0] - 2026-02-01
 
 ### Added
 
-- 🎯 **Interactive Quiz Feature**: AI-generated multiple choice questions to test comprehension
+- ðŸŽ¯ **Interactive Quiz Feature**: AI-generated multiple choice questions to test comprehension
   - New `QuizQuestion` interface with question, options, correctAnswer, and explanation
   - Interactive Quiz tab in notes display between Examples and Action Items
   - 5-10 automatically generated multiple choice questions (A, B, C, D format)
   - Answer selection with visual feedback (primary blue when selected)
   - Submit answers to see results with score calculation
-  - Correct answers highlighted in green (✓), incorrect in red (✗)
+  - Correct answers highlighted in green (âœ“), incorrect in red (âœ—)
   - Optional explanations displayed after submission for learning
   - Retake quiz functionality to reset and try again
   - Quiz questions included in markdown export with correct answers marked
@@ -128,34 +128,34 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ### Added
 
-- 🔗 **Direct URL Support**: Download and transcribe media from any public URL
-  - New input mode: "🔗 URL" alongside File Upload and YouTube
+- ðŸ”— **Direct URL Support**: Download and transcribe media from any public URL
+  - New input mode: "ðŸ”— URL" alongside File Upload and YouTube
   - Support for direct links to audio/video files (MP3, MP4, WAV, etc.)
   - Google Drive and Dropbox public links support
   - New utility: `lib/media-downloader.ts` for generic URL downloads
   - HTTP/HTTPS download with redirect handling
   - Auto-detection of file extension from URL
   - Same compression and processing pipeline as other sources
-  - History tracking with URL source indicator (🔗 icon)
+  - History tracking with URL source indicator (ðŸ”— icon)
   - Documentation: `URL-SOURCE.md` with usage guide and troubleshooting
 
-- 🌍 **Arabic Language Support**: Full Arabic transcription and note generation
-  - Added Arabic (العربية) as third language option
-  - Support for Arabic audio transcription
-  - Proper Arabic text formatting and diacritics preservation
-  - Language selector now shows: 🇬🇧 English, 🇮🇩 Indonesian, 🇸🇦 Arabic
-  - Arabic language indicator in history (🇸🇦)
+- ðŸŒ **Original Language Language Support**: Full Original Language transcription and note generation
+  - Added Original Language (Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©) as third language option
+  - Support for Original Language audio transcription
+  - Proper Original Language text formatting and diacritics preservation
+  - Language selector now shows: ðŸ‡¬ðŸ‡§ English, ðŸ‡®ðŸ‡© Indonesian, ðŸ‡¸ðŸ‡¦ Original Language
+  - Original Language language indicator in history (ðŸ‡¸ðŸ‡¦)
 
-- 🎨 **UI Improvements**:
+- ðŸŽ¨ **UI Improvements**:
   - Tab selector shows `cursor-default` when active (not clickable)
   - Tab selector shows `cursor-pointer` when inactive (clickable)
   - Better visual feedback for current selection
-  - Cleaner 3-tab layout for input modes (📁 File, ▶️ YouTube, 🔗 URL)
+  - Cleaner 3-tab layout for input modes (ðŸ“ File, â–¶ï¸ YouTube, ðŸ”— URL)
 
 ### Updated
 
-- 📚 **Documentation**:
-  - Updated README.md with URL support and Arabic language
+- ðŸ“š **Documentation**:
+  - Updated README.md with URL support and Original Language language
   - Added URL-SOURCE.md with complete feature documentation
   - Updated usage instructions for 3 input modes
   - Enhanced feature list with new capabilities
@@ -181,15 +181,15 @@ All notable changes to Talk2Notes will be documented in this file.
   - Added 'url' to HistoryItem source union type
   - Added optional `mediaUrl` field to HistoryItem
 - Updated `components/history.tsx`:
-  - Added URL source icon (🔗) and label
-  - Added Arabic language display support
+  - Added URL source icon (ðŸ”—) and label
+  - Added Original Language language display support
   - Better source type differentiation
 
 ## [2.6.0] - 2026-01-20
 
 ### Added
 
-- 🧪 **Testing Infrastructure**: Comprehensive testing setup
+- ðŸ§ª **Testing Infrastructure**: Comprehensive testing setup
   - Vitest testing framework with React Testing Library
   - 58 integration tests covering core functionality
   - File validation and security tests (magic bytes, integrity checks)
@@ -201,7 +201,7 @@ All notable changes to Talk2Notes will be documented in this file.
   - Complete testing guide (`TESTING.md`)
   - Test commands: `pnpm test`, `pnpm test:ui`, `pnpm test:coverage`
 
-- 🛡️ **Error Boundaries**: Comprehensive error handling system
+- ðŸ›¡ï¸ **Error Boundaries**: Comprehensive error handling system
   - Page-level error boundary (`app/error.tsx`)
   - Root-level error boundary (`app/global-error.tsx`)
   - Reusable error boundary component (`components/error-boundary.tsx`)
@@ -211,7 +211,7 @@ All notable changes to Talk2Notes will be documented in this file.
   - Error boundary test page (`/test-error-boundary`)
   - Complete documentation (`ERROR-BOUNDARY.md`)
 
-- 🔒 **File Upload Security**: Magic bytes validation and content scanning
+- ðŸ”’ **File Upload Security**: Magic bytes validation and content scanning
   - File signature validation (magic bytes) to detect file type spoofing
   - Content pattern scanning for malicious executables
   - Multi-layer security: MIME type, extension, size, signature, content
@@ -248,7 +248,7 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ## [2.5.0] - 2025-11-22
 
-### 🛡️ Rate Limiting & Free Tier Protection
+### ðŸ›¡ï¸ Rate Limiting & Free Tier Protection
 
 #### Added
 
@@ -305,15 +305,15 @@ All notable changes to Talk2Notes will be documented in this file.
 - Prevents memory overflow on small instances
 - Fair usage enforcement across all users
 
-### 🚀 Deployment
+### ðŸš€ Deployment
 
-- **Live Demo**: Deployed to Fly.io at https://talk2notes.fly.dev
+- **Live Demo**: Deployed to Fly.io at https://LectureAI.fly.dev
 - Production-ready with rate limiting enabled
 - Running on free tier (256MB RAM, Singapore region)
 
 ## [2.4.0] - 2025-11-22
 
-### 🗂️ History Management
+### ðŸ—‚ï¸ History Management
 
 #### Added
 
@@ -351,7 +351,7 @@ All notable changes to Talk2Notes will be documented in this file.
 - `app/page.tsx`: Added history toggle button and section
 - `components/upload.tsx`: Auto-save to history after transcription completes
 
-### 📚 Documentation Updates
+### ðŸ“š Documentation Updates
 
 #### Added
 
@@ -367,13 +367,13 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ## [2.3.0] - 2025-11-20
 
-### 🌍 Bilingual Support & Enhanced Display
+### ðŸŒ Bilingual Support & Enhanced Display
 
 #### Added
 
-- **Language Selection**: Choose between English (🇬🇧) or Indonesian (🇮🇩) for notes generation
+- **Language Selection**: Choose between English (ðŸ‡¬ðŸ‡§) or Indonesian (ðŸ‡®ðŸ‡©) for notes generation
 - **Transcript Translation**: Automatic translation to Bahasa Indonesia when selected
-- **Islamic Content Handling**: Special preservation of Arabic text with harakat, transliteration, and translations
+- **Academic Content Handling**: Special preservation of Original Language text with harakat, transliteration, and translations
 - **Full Transcript Tab**: New dedicated tab to view complete transcription
 - **Transcript Download**: Separate TXT download button for transcript
 - **Markdown Rendering**: Beautiful formatted display using `react-markdown` and `remark-gfm`
@@ -397,7 +397,7 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ## [2.2.0] - 2025-11-20
 
-### 🆓 Free AI Provider Support
+### ðŸ†“ Free AI Provider Support
 
 #### Added
 
@@ -413,10 +413,10 @@ All notable changes to Talk2Notes will be documented in this file.
 
 #### Changed
 
-- Environment variables: `GROQ_MODEL` → `GROQ_TRANSCRIPTION_MODEL` + `GROQ_SUMMARIZATION_MODEL`
+- Environment variables: `GROQ_MODEL` â†’ `GROQ_TRANSCRIPTION_MODEL` + `GROQ_SUMMARIZATION_MODEL`
 - Updated `.env.example` with correct Groq configuration
 
-### 📚 Documentation Cleanup
+### ðŸ“š Documentation Cleanup
 
 #### Removed
 
@@ -432,7 +432,7 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ## [2.1.0] - 2025-11-20
 
-### 🎨 Enhanced User Experience - Progress Tracking
+### ðŸŽ¨ Enhanced User Experience - Progress Tracking
 
 #### Added
 
@@ -460,13 +460,13 @@ All notable changes to Talk2Notes will be documented in this file.
 - **Progress visibility**: Users see exactly what's happening at each stage
 - **Wait time perception**: Estimated times and tips reduce anxiety
 - **User education**: Tips teach optimization and best practices
-- **Visual feedback**: Color-coded steps (gray → blue → green)
+- **Visual feedback**: Color-coded steps (gray â†’ blue â†’ green)
 - **Animation polish**: Smooth transitions and GPU-accelerated effects
 - **Flexibility**: Users can now upload larger files that will be auto-compressed
 
 #### UX Enhancements
 
-- Progress now shows: Validate → Upload → Extract → Compress → Transcribe → Generate
+- Progress now shows: Validate â†’ Upload â†’ Extract â†’ Compress â†’ Transcribe â†’ Generate
 - Each step has descriptive details (e.g., "Converting video to audio format...")
 - Compression step only shows for files > 10MB
 - Extraction step only shows for video files
@@ -475,7 +475,7 @@ All notable changes to Talk2Notes will be documented in this file.
 
 ## [2.0.0] - 2025-11-20
 
-### 🎯 Major Improvements - File Upload Reliability
+### ðŸŽ¯ Major Improvements - File Upload Reliability
 
 #### Added
 
@@ -505,17 +505,17 @@ All notable changes to Talk2Notes will be documented in this file.
 
 - Manual retry logic replaces OpenAI SDK auto-retry for better control
 - Blob-based File objects for more reliable uploads
-- File size checks at multiple stages: validation → extraction → transcription
+- File size checks at multiple stages: validation â†’ extraction â†’ transcription
 - Auto-cleanup of compressed temporary files
 
-### 📚 Documentation
+### ðŸ“š Documentation
 
 - Added comprehensive `TROUBLESHOOTING.md` with common error solutions
 - Updated `README.md` with link to troubleshooting guide
 - Added this `CHANGELOG.md` for tracking changes
 - Updated file size guidelines and recommendations
 
-### 🔧 Configuration
+### ðŸ”§ Configuration
 
 - `next.config.js`: Moved serverActions to experimental block
 - Environment variables: No changes required

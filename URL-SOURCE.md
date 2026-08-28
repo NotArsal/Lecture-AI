@@ -1,8 +1,8 @@
-# URL Source Feature
+﻿# URL Source Feature
 
 ## Overview
 
-Talk2Notes now supports three input methods for audio/video content:
+LectureAI now supports three input methods for audio/video content:
 
 1. **File Upload** - Upload audio/video files directly from your device
 2. **YouTube URL** - Download and transcribe YouTube videos
@@ -24,9 +24,9 @@ The Media URL feature allows you to transcribe audio/video content directly from
 
 ### How to Use
 
-1. Click the "🔗 URL" tab on the upload form
+1. Click the "ðŸ”— URL" tab on the upload form
 2. Paste the direct URL to your media file
-3. Select your preferred output language (English, Bahasa Indonesia, or Arabic)
+3. Select your preferred output language (English, Bahasa Indonesia, or Original Language)
 4. Click "Generate Lecture Notes"
 
 ### Requirements

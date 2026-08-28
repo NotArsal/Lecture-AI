@@ -1,6 +1,6 @@
-# Deploy Talk2Notes to Fly.io
+﻿# Deploy LectureAI to Fly.io
 
-Complete guide to deploy Talk2Notes to Fly.io's free tier.
+Complete guide to deploy LectureAI to Fly.io's free tier.
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ flyctl launch --no-deploy
 
 When prompted:
 
-- **App name**: Choose a unique name (e.g., `talk2notes-yourname`)
+- **App name**: Choose a unique name (e.g., `LectureAI-yourname`)
 - **Region**: Choose closest to you (e.g., `sin` for Singapore, `nrt` for Tokyo)
 - **Database**: Skip (select No)
 - **Redis**: Skip (select No)
@@ -179,13 +179,13 @@ flyctl scale show
 
 ## Important Notes
 
-### ⚠️ Free Tier Limitations
+### âš ï¸ Free Tier Limitations
 
 - **RAM**: 256MB (may be tight for large files)
 - **Storage**: 3GB persistent storage (sufficient for temp files)
 - **CPU**: Shared CPU (may be slower)
 
-### 🎯 Optimization Tips
+### ðŸŽ¯ Optimization Tips
 
 1. **File Size Limits**: Consider reducing `MAX_FILE_SIZE_MB` in production:
 
@@ -201,7 +201,7 @@ flyctl scale show
    ```
    Note: This moves you to paid tier (~$2-3/month)
 
-### 🔧 Troubleshooting
+### ðŸ”§ Troubleshooting
 
 **Problem**: Out of memory errors
 
@@ -278,7 +278,7 @@ flyctl apps destroy your-app-name
 
 ## Next Steps
 
-1. ✅ Deploy successfully
+1. âœ… Deploy successfully
 2. Test with a small audio file
 3. Monitor memory usage with `flyctl logs`
 4. If memory issues, upgrade to 512MB
@@ -292,4 +292,4 @@ flyctl apps destroy your-app-name
 
 ---
 
-**Note**: This deployment includes FFmpeg and yt-dlp, so all features (video, YouTube) will work on Fly.io! 🚀
+**Note**: This deployment includes FFmpeg and yt-dlp, so all features (video, YouTube) will work on Fly.io! ðŸš€

@@ -1,8 +1,8 @@
-# Talk2Notes Architecture
+﻿# LectureAI Architecture
 
-This document provides a comprehensive overview of the Talk2Notes architecture, design decisions, and implementation patterns.
+This document provides a comprehensive overview of the LectureAI architecture, design decisions, and implementation patterns.
 
-## 🎯 Design Philosophy
+## ðŸŽ¯ Design Philosophy
 
 ### Core Principles
 
@@ -12,117 +12,117 @@ This document provides a comprehensive overview of the Talk2Notes architecture, 
 4. **Modularity**: Reusable components and abstracted integrations
 5. **Developer Experience**: Clear patterns, consistent naming, good documentation
 
-## 🏗️ System Architecture
+## ðŸ—ï¸ System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         Client Layer                         │
-│                        (JavaScript)                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │ Upload Form  │  │   Progress   │  │    Notes     │     │
-│  │ Component    │  │  Indicator   │  │   Display    │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     Next.js App Router                       │
-│                                                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   page.js    │  │  layout.js   │  │  API Routes  │     │
-│  │  (Home)      │  │  (Root)      │  │ /transcribe  │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Server Actions Layer                      │
-│                       (TypeScript)                           │
-│                                                               │
-│  ┌────────────────────────────────────────────────┐         │
-│  │      createTranscriptionMutation()             │         │
-│  │  - Validate file                                │         │
-│  │  - Process upload                               │         │
-│  │  - Extract audio (if video)                     │         │
-│  │  - Transcribe                                   │         │
-│  │  - Summarize                                    │         │
-│  │  - Cleanup                                      │         │
-│  └────────────────────────────────────────────────┘         │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      Service Layer                           │
-│                      (TypeScript)                            │
-│                                                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   AI Service │  │    FFmpeg    │  │    Upload    │     │
-│  │              │  │   Service    │  │   Service    │     │
-│  │ - Transcribe │  │ - Extract    │  │ - Validate   │     │
-│  │ - Summarize  │  │ - Convert    │  │ - Save       │     │
-│  │ - Abstract   │  │ - Metadata   │  │ - Cleanup    │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    External Services                         │
-│                                                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   OpenAI     │  │     Groq     │  │  Deepgram    │     │
-│  │  Whisper     │  │   Whisper    │  │    Nova      │     │
-│  │   GPT-4      │  │   Mixtral    │  │              │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-└─────────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                         Client Layer                         â”‚
+â”‚                        (JavaScript)                          â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
+â”‚  â”‚ Upload Form  â”‚  â”‚   Progress   â”‚  â”‚    Notes     â”‚     â”‚
+â”‚  â”‚ Component    â”‚  â”‚  Indicator   â”‚  â”‚   Display    â”‚     â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                           â”‚
+                           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                     Next.js App Router                       â”‚
+â”‚                                                               â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
+â”‚  â”‚   page.js    â”‚  â”‚  layout.js   â”‚  â”‚  API Routes  â”‚     â”‚
+â”‚  â”‚  (Home)      â”‚  â”‚  (Root)      â”‚  â”‚ /transcribe  â”‚     â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                           â”‚
+                           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    Server Actions Layer                      â”‚
+â”‚                       (TypeScript)                           â”‚
+â”‚                                                               â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”‚
+â”‚  â”‚      createTranscriptionMutation()             â”‚         â”‚
+â”‚  â”‚  - Validate file                                â”‚         â”‚
+â”‚  â”‚  - Process upload                               â”‚         â”‚
+â”‚  â”‚  - Extract audio (if video)                     â”‚         â”‚
+â”‚  â”‚  - Transcribe                                   â”‚         â”‚
+â”‚  â”‚  - Summarize                                    â”‚         â”‚
+â”‚  â”‚  - Cleanup                                      â”‚         â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                           â”‚
+                           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                      Service Layer                           â”‚
+â”‚                      (TypeScript)                            â”‚
+â”‚                                                               â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
+â”‚  â”‚   AI Service â”‚  â”‚    FFmpeg    â”‚  â”‚    Upload    â”‚     â”‚
+â”‚  â”‚              â”‚  â”‚   Service    â”‚  â”‚   Service    â”‚     â”‚
+â”‚  â”‚ - Transcribe â”‚  â”‚ - Extract    â”‚  â”‚ - Validate   â”‚     â”‚
+â”‚  â”‚ - Summarize  â”‚  â”‚ - Convert    â”‚  â”‚ - Save       â”‚     â”‚
+â”‚  â”‚ - Abstract   â”‚  â”‚ - Metadata   â”‚  â”‚ - Cleanup    â”‚     â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                           â”‚
+                           â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    External Services                         â”‚
+â”‚                                                               â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
+â”‚  â”‚   OpenAI     â”‚  â”‚     Groq     â”‚  â”‚  Deepgram    â”‚     â”‚
+â”‚  â”‚  Whisper     â”‚  â”‚   Whisper    â”‚  â”‚    Nova      â”‚     â”‚
+â”‚  â”‚   GPT-4      â”‚  â”‚   Mixtral    â”‚  â”‚              â”‚     â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-## 📁 Directory Structure
+## ðŸ“ Directory Structure
 
 ```
-talk2notes/
-├── actions/              # Server Actions (use server)
-│   └── transcription.ts  # Main processing mutation
-│
-├── app/                  # Next.js App Router
-│   ├── api/             # API routes
-│   │   └── transcribe/
-│   │       └── route.ts  # REST API endpoint
-│   ├── layout.js        # Root layout (metadata, header, footer)
-│   ├── page.js          # Home page (upload + display)
-│   └── globals.css      # Global styles
-│
-├── components/          # Client components (JavaScript/TypeScript)
-│   ├── upload.tsx       # File upload with drag-drop
-│   ├── progress.js      # Progress indicator
-│   ├── notes-display.js # Tabbed notes viewer
-│   └── history.tsx      # History list with delete
-│
-├── lib/                 # Core libraries (TypeScript)
-│   ├── ai.ts           # AI provider abstraction
-│   ├── ffmpeg.ts       # Audio extraction utilities
-│   └── upload.ts       # File upload handling
-│
-├── types/              # TypeScript type definitions
-│   └── index.ts        # All interfaces and types
-│
-├── utils/              # Utility functions (TypeScript)
-│   ├── validateFile.ts # File validation logic
-│   └── history.ts      # History management (localStorage)
-│
-└── public/             # Static assets
+LectureAI/
+â”œâ”€â”€ actions/              # Server Actions (use server)
+â”‚   â””â”€â”€ transcription.ts  # Main processing mutation
+â”‚
+â”œâ”€â”€ app/                  # Next.js App Router
+â”‚   â”œâ”€â”€ api/             # API routes
+â”‚   â”‚   â””â”€â”€ transcribe/
+â”‚   â”‚       â””â”€â”€ route.ts  # REST API endpoint
+â”‚   â”œâ”€â”€ layout.js        # Root layout (metadata, header, footer)
+â”‚   â”œâ”€â”€ page.js          # Home page (upload + display)
+â”‚   â””â”€â”€ globals.css      # Global styles
+â”‚
+â”œâ”€â”€ components/          # Client components (JavaScript/TypeScript)
+â”‚   â”œâ”€â”€ upload.tsx       # File upload with drag-drop
+â”‚   â”œâ”€â”€ progress.js      # Progress indicator
+â”‚   â”œâ”€â”€ notes-display.js # Tabbed notes viewer
+â”‚   â””â”€â”€ history.tsx      # History list with delete
+â”‚
+â”œâ”€â”€ lib/                 # Core libraries (TypeScript)
+â”‚   â”œâ”€â”€ ai.ts           # AI provider abstraction
+â”‚   â”œâ”€â”€ ffmpeg.ts       # Audio extraction utilities
+â”‚   â””â”€â”€ upload.ts       # File upload handling
+â”‚
+â”œâ”€â”€ types/              # TypeScript type definitions
+â”‚   â””â”€â”€ index.ts        # All interfaces and types
+â”‚
+â”œâ”€â”€ utils/              # Utility functions (TypeScript)
+â”‚   â”œâ”€â”€ validateFile.ts # File validation logic
+â”‚   â””â”€â”€ history.ts      # History management (localStorage)
+â”‚
+â””â”€â”€ public/             # Static assets
 ```
 
-## 🔄 Data Flow
+## ðŸ”„ Data Flow
 
 ### Upload to Notes Pipeline
 
 ```
 1. User uploads file (upload.tsx)
-   ↓
+   â†“
 2. FormData sent to /api/transcribe
-   ↓
+   â†“
 3. API route calls createTranscriptionMutation()
-   ↓
+   â†“
 4. Server Action pipeline:
    a. validateFile() - Check format, size
    b. saveUploadedFile() - Store temporarily
@@ -130,11 +130,11 @@ talk2notes/
    d. transcribeAudio() - AI transcription
    e. summarizeTranscript() - AI summarization
    f. Cleanup temp files
-   ↓
+   â†“
 5. Return LectureNotes JSON
-   ↓
+   â†“
 6. Save to history (saveToHistory()) - localStorage
-   ↓
+   â†“
 7. Client displays structured notes (notes-display.js)
 ```
 
@@ -142,20 +142,20 @@ talk2notes/
 
 ```
 1. Transcription completes successfully
-   ↓
+   â†“
 2. saveToHistory() called with:
    - title (filename or YouTube title)
    - notes (complete LectureNotes)
    - language (en/id)
    - source (file/youtube)
    - timestamp (auto-generated)
-   ↓
+   â†“
 3. Stored in localStorage (max 50 items)
-   ↓
+   â†“
 4. Dispatch 'historyUpdated' event
-   ↓
+   â†“
 5. History component auto-refreshes
-   ↓
+   â†“
 6. User can:
    - View all past transcriptions
    - Click to restore notes
@@ -163,7 +163,7 @@ talk2notes/
    - Clear all history
 ```
 
-## 🔌 AI Provider Abstraction
+## ðŸ”Œ AI Provider Abstraction
 
 ### Design Pattern
 
@@ -205,7 +205,7 @@ To add a new AI provider:
 4. Add to switch statements in `transcribeAudio()` and `summarizeTranscript()`
 5. Document in README
 
-## 🎭 Server Actions Pattern
+## ðŸŽ­ Server Actions Pattern
 
 ### Mutation Pattern
 
@@ -249,7 +249,7 @@ export async function createTranscriptionMutation(
 - **Easy client consumption**: Check `success` field
 - **Logging friendly**: Centralized error capture
 
-## 🎨 Component Architecture
+## ðŸŽ¨ Component Architecture
 
 ### Client Components (JavaScript)
 
@@ -288,13 +288,13 @@ Features:
 - **No server components for UI**: Simplifies data flow
 - **Progressive enhancement**: Works without JS for static content
 
-## 🔐 Security Architecture
+## ðŸ” Security Architecture
 
 ### Multi-Layer Validation
 
 ```
-Client → Server Action → Service Layer
-  ↓           ↓              ↓
+Client â†’ Server Action â†’ Service Layer
+  â†“           â†“              â†“
 [Basic]   [Full Validation] [Final Check]
 ```
 
@@ -313,7 +313,7 @@ Client → Server Action → Service Layer
 - Input sanitization at every layer
 - Structured error messages (no sensitive data leaks)
 
-## 📊 Data Models
+## ðŸ“Š Data Models
 
 ### Core Types
 
@@ -348,7 +348,7 @@ interface LectureNotes {
 }
 ```
 
-## 🎯 Prompt Engineering
+## ðŸŽ¯ Prompt Engineering
 
 ### Transcription Prompt
 
@@ -362,7 +362,7 @@ interface LectureNotes {
 
 ### Summarization Prompt
 
-Located in `lib/ai.ts` → `buildSummarizationPrompt()`:
+Located in `lib/ai.ts` â†’ `buildSummarizationPrompt()`:
 
 **Key elements:**
 
@@ -374,7 +374,7 @@ Located in `lib/ai.ts` → `buildSummarizationPrompt()`:
 - Relationship identification
 - Example extraction rules
 
-## ⚡ Performance Considerations
+## âš¡ Performance Considerations
 
 ### Optimizations
 
@@ -391,7 +391,7 @@ Located in `lib/ai.ts` → `buildSummarizationPrompt()`:
 - [ ] Chunk large files
 - [ ] Background job processing
 
-## 🚀 Deployment Architecture
+## ðŸš€ Deployment Architecture
 
 ### Environment Requirements
 
@@ -418,7 +418,7 @@ Located in `lib/ai.ts` → `buildSummarizationPrompt()`:
 - All dependencies
 - Environment variable support
 
-## 🔧 Configuration System
+## ðŸ”§ Configuration System
 
 ### Environment Variables
 
@@ -444,11 +444,11 @@ FFPROBE_PATH=/usr/local/bin/ffprobe
 
 Configuration is loaded at module initialization:
 
-- `lib/ai.ts` → AI provider config
-- `utils/validateFile.ts` → Upload limits
-- `lib/upload.ts` → Upload directory
+- `lib/ai.ts` â†’ AI provider config
+- `utils/validateFile.ts` â†’ Upload limits
+- `lib/upload.ts` â†’ Upload directory
 
-## 🧪 Testing Strategy
+## ðŸ§ª Testing Strategy
 
 ### Current State
 
@@ -458,10 +458,10 @@ Manual testing for MVP release.
 
 - **Unit tests**: Core utilities and validation
 - **Integration tests**: Server Actions end-to-end
-- **E2E tests**: Full upload → notes flow
+- **E2E tests**: Full upload â†’ notes flow
 - **Mock AI providers**: Test without API calls
 
-## 📈 Monitoring & Logging
+## ðŸ“ˆ Monitoring & Logging
 
 ### Current Logging
 
@@ -476,9 +476,9 @@ console.error('Operation failed:', error);
 - Analytics (Plausible, Umami)
 - Performance monitoring (Vercel Analytics)
 
-## 🔄 Migration Path
+## ðŸ”„ Migration Path
 
-### Version 1.x → 2.x
+### Version 1.x â†’ 2.x
 
 Potential breaking changes:
 
@@ -488,7 +488,7 @@ Potential breaking changes:
 
 Migration guide will be provided with major releases.
 
-## 🤝 Extension Points
+## ðŸ¤ Extension Points
 
 ### Adding Features
 
@@ -505,7 +505,7 @@ Migration guide will be provided with major releases.
 - Batch uploads (requires queue system)
 - Collaboration (requires database)
 
-## 📚 Additional Resources
+## ðŸ“š Additional Resources
 
 - [Next.js App Router Docs](https://nextjs.org/docs/app)
 - [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
@@ -522,4 +522,4 @@ This architecture is designed to be:
 - **Type-safe**: TypeScript throughout server layer
 - **Developer-friendly**: Consistent patterns and good documentation
 
-For questions or discussions about architecture decisions, please open a [GitHub Discussion](https://github.com/taufiqelrahman/talk2notes/discussions).
+For questions or discussions about architecture decisions, please open a [GitHub Discussion](https://github.com/taufiqelrahman/LectureAI/discussions).

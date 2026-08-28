@@ -1,6 +1,6 @@
-# Error Boundary Implementation
+﻿# Error Boundary Implementation
 
-This document describes the error boundary implementation in Talk2Notes for handling client-side errors gracefully.
+This document describes the error boundary implementation in LectureAI for handling client-side errors gracefully.
 
 ## Overview
 
@@ -121,10 +121,10 @@ const SafeComponent = withErrorBoundary(YourComponent);
 
 ```
 Root Layout
-├── global-error.tsx (catches layout errors)
-└── error.tsx (catches page errors)
-    └── ErrorBoundary component (catches section errors)
-        └── Your components
+â”œâ”€â”€ global-error.tsx (catches layout errors)
+â””â”€â”€ error.tsx (catches page errors)
+    â””â”€â”€ ErrorBoundary component (catches section errors)
+        â””â”€â”€ Your components
 ```
 
 ## Best Practices

@@ -1,119 +1,119 @@
-# Talk2Notes Project Structure
+﻿# LectureAI Project Structure
 
 ```
-talk2notes/
-│
-├── .github/                      # GitHub configuration
-│   └── workflows/                # GitHub Actions workflows
-│       ├── ci.yml                # Continuous Integration
-│       └── code-quality.yml      # Code quality checks
-│
-├── .vscode/                      # VS Code configuration
-│   ├── extensions.json           # Recommended extensions
-│   └── settings.json             # Editor settings
-│
-├── actions/                      # Next.js Server Actions (TypeScript)
-│   └── transcription.ts          # Main transcription mutation logic
-│       ├── createTranscriptionMutation()
-│       ├── validateFileMutation()
-│       └── cleanupFilesAction()
-│
-├── app/                          # Next.js App Router (JavaScript)
-│   ├── api/                      # API Routes
-│   │   └── transcribe/
-│   │       └── route.ts          # Transcription API endpoint
-│   ├── layout.js                 # Root layout with header/footer
-│   ├── page.js                   # Home page (upload + display)
-│   └── globals.css               # Global styles with Tailwind
-│
-├── components/                   # React Components (JavaScript/TypeScript)
-│   ├── upload.tsx                # File upload form with drag-drop
-│   ├── progress.js               # Progress indicator
-│   ├── notes-display.js          # Tabbed notes viewer
-│   └── history.tsx               # History list with delete functionality
-│
-├── lib/                          # Core Libraries (TypeScript)
-│   ├── ai.ts                     # AI provider abstraction
-│   │   ├── getAIConfig()
-│   │   ├── transcribeAudio()
-│   │   ├── summarizeTranscript()
-│   │   ├── transcribeWithOpenAI()
-│   │   ├── transcribeWithGroq()
-│   │   ├── transcribeWithDeepgram()
-│   │   └── buildSummarizationPrompt()
-│   │
-│   ├── ffmpeg.ts                 # FFmpeg utilities
-│   │   ├── extractAudioFromVideo()
-│   │   ├── getAudioDuration()
-│   │   ├── convertAudioFormat()
-│   │   ├── cleanupTempFile()
-│   │   └── getAudioMetadata()
-│   │
-│   └── upload.ts                 # File upload handling
-│       ├── ensureUploadDir()
-│       ├── parseFormData()
-│       ├── saveUploadedFile()
-│       └── cleanupUploadedFile()
-│
-├── types/                        # TypeScript Type Definitions
-│   └── index.ts                  # All interfaces and types
-│       ├── UploadedFile
-│       ├── TranscriptionResult
-│       ├── LectureNotes
-│       ├── KeyConcept
-│       ├── Definition
-│       ├── ExampleProblem
-│       ├── HistoryItem
-│       ├── MutationResult<T>
-│       └── AIConfig
-│
-├── utils/                        # Utility Functions (TypeScript)
-│   ├── validateFile.ts           # File validation
-│   │   ├── validateFile()
-│   │   ├── formatFileSize()
-│   │   ├── formatDuration()
-│   │   └── sanitizeFilename()
-│   └── history.ts                # History management
-│       ├── getHistory()
-│       ├── saveToHistory()
-│       ├── deleteFromHistory()
-│       ├── clearHistory()
-│       ├── getHistoryItem()
-│       └── formatTimestamp()
-│
-├── public/                       # Static Assets
-│   └── (images, icons, etc.)
-│
-├── uploads/                      # Upload directory (gitignored)
-│   └── (temporary uploaded files)
-│
-├── .env.example                  # Environment variables template
-├── .env                          # Environment variables (gitignored)
-├── .gitignore                    # Git ignore rules
-├── .prettierrc.json              # Prettier configuration
-├── .prettierignore               # Prettier ignore rules
-├── .eslintrc.json                # ESLint configuration
-├── .editorconfig                 # Editor configuration
-│
-├── commitlint.config.js          # Commit message linting
-├── next.config.js                # Next.js configuration
-├── tsconfig.json                 # TypeScript configuration
-├── tailwind.config.js            # Tailwind CSS configuration
-├── postcss.config.js             # PostCSS configuration
-│
-├── package.json                  # Project dependencies and scripts
-├── package-lock.json             # Dependency lock file
-│
-├── Dockerfile                    # Docker container definition
-├── docker-compose.yml            # Docker Compose configuration
-│
-├── README.md                     # Main documentation
-├── ARCHITECTURE.md               # Architecture documentation
-├── CONTRIBUTING.md               # Contribution guidelines
-├── SETUP.md                      # Setup instructions
-├── LICENSE                       # MIT License
-│
-└── setup.sh                      # Automated setup script
+LectureAI/
+â”‚
+â”œâ”€â”€ .github/                      # GitHub configuration
+â”‚   â””â”€â”€ workflows/                # GitHub Actions workflows
+â”‚       â”œâ”€â”€ ci.yml                # Continuous Integration
+â”‚       â””â”€â”€ code-quality.yml      # Code quality checks
+â”‚
+â”œâ”€â”€ .vscode/                      # VS Code configuration
+â”‚   â”œâ”€â”€ extensions.json           # Recommended extensions
+â”‚   â””â”€â”€ settings.json             # Editor settings
+â”‚
+â”œâ”€â”€ actions/                      # Next.js Server Actions (TypeScript)
+â”‚   â””â”€â”€ transcription.ts          # Main transcription mutation logic
+â”‚       â”œâ”€â”€ createTranscriptionMutation()
+â”‚       â”œâ”€â”€ validateFileMutation()
+â”‚       â””â”€â”€ cleanupFilesAction()
+â”‚
+â”œâ”€â”€ app/                          # Next.js App Router (JavaScript)
+â”‚   â”œâ”€â”€ api/                      # API Routes
+â”‚   â”‚   â””â”€â”€ transcribe/
+â”‚   â”‚       â””â”€â”€ route.ts          # Transcription API endpoint
+â”‚   â”œâ”€â”€ layout.js                 # Root layout with header/footer
+â”‚   â”œâ”€â”€ page.js                   # Home page (upload + display)
+â”‚   â””â”€â”€ globals.css               # Global styles with Tailwind
+â”‚
+â”œâ”€â”€ components/                   # React Components (JavaScript/TypeScript)
+â”‚   â”œâ”€â”€ upload.tsx                # File upload form with drag-drop
+â”‚   â”œâ”€â”€ progress.js               # Progress indicator
+â”‚   â”œâ”€â”€ notes-display.js          # Tabbed notes viewer
+â”‚   â””â”€â”€ history.tsx               # History list with delete functionality
+â”‚
+â”œâ”€â”€ lib/                          # Core Libraries (TypeScript)
+â”‚   â”œâ”€â”€ ai.ts                     # AI provider abstraction
+â”‚   â”‚   â”œâ”€â”€ getAIConfig()
+â”‚   â”‚   â”œâ”€â”€ transcribeAudio()
+â”‚   â”‚   â”œâ”€â”€ summarizeTranscript()
+â”‚   â”‚   â”œâ”€â”€ transcribeWithOpenAI()
+â”‚   â”‚   â”œâ”€â”€ transcribeWithGroq()
+â”‚   â”‚   â”œâ”€â”€ transcribeWithDeepgram()
+â”‚   â”‚   â””â”€â”€ buildSummarizationPrompt()
+â”‚   â”‚
+â”‚   â”œâ”€â”€ ffmpeg.ts                 # FFmpeg utilities
+â”‚   â”‚   â”œâ”€â”€ extractAudioFromVideo()
+â”‚   â”‚   â”œâ”€â”€ getAudioDuration()
+â”‚   â”‚   â”œâ”€â”€ convertAudioFormat()
+â”‚   â”‚   â”œâ”€â”€ cleanupTempFile()
+â”‚   â”‚   â””â”€â”€ getAudioMetadata()
+â”‚   â”‚
+â”‚   â””â”€â”€ upload.ts                 # File upload handling
+â”‚       â”œâ”€â”€ ensureUploadDir()
+â”‚       â”œâ”€â”€ parseFormData()
+â”‚       â”œâ”€â”€ saveUploadedFile()
+â”‚       â””â”€â”€ cleanupUploadedFile()
+â”‚
+â”œâ”€â”€ types/                        # TypeScript Type Definitions
+â”‚   â””â”€â”€ index.ts                  # All interfaces and types
+â”‚       â”œâ”€â”€ UploadedFile
+â”‚       â”œâ”€â”€ TranscriptionResult
+â”‚       â”œâ”€â”€ LectureNotes
+â”‚       â”œâ”€â”€ KeyConcept
+â”‚       â”œâ”€â”€ Definition
+â”‚       â”œâ”€â”€ ExampleProblem
+â”‚       â”œâ”€â”€ HistoryItem
+â”‚       â”œâ”€â”€ MutationResult<T>
+â”‚       â””â”€â”€ AIConfig
+â”‚
+â”œâ”€â”€ utils/                        # Utility Functions (TypeScript)
+â”‚   â”œâ”€â”€ validateFile.ts           # File validation
+â”‚   â”‚   â”œâ”€â”€ validateFile()
+â”‚   â”‚   â”œâ”€â”€ formatFileSize()
+â”‚   â”‚   â”œâ”€â”€ formatDuration()
+â”‚   â”‚   â””â”€â”€ sanitizeFilename()
+â”‚   â””â”€â”€ history.ts                # History management
+â”‚       â”œâ”€â”€ getHistory()
+â”‚       â”œâ”€â”€ saveToHistory()
+â”‚       â”œâ”€â”€ deleteFromHistory()
+â”‚       â”œâ”€â”€ clearHistory()
+â”‚       â”œâ”€â”€ getHistoryItem()
+â”‚       â””â”€â”€ formatTimestamp()
+â”‚
+â”œâ”€â”€ public/                       # Static Assets
+â”‚   â””â”€â”€ (images, icons, etc.)
+â”‚
+â”œâ”€â”€ uploads/                      # Upload directory (gitignored)
+â”‚   â””â”€â”€ (temporary uploaded files)
+â”‚
+â”œâ”€â”€ .env.example                  # Environment variables template
+â”œâ”€â”€ .env                          # Environment variables (gitignored)
+â”œâ”€â”€ .gitignore                    # Git ignore rules
+â”œâ”€â”€ .prettierrc.json              # Prettier configuration
+â”œâ”€â”€ .prettierignore               # Prettier ignore rules
+â”œâ”€â”€ .eslintrc.json                # ESLint configuration
+â”œâ”€â”€ .editorconfig                 # Editor configuration
+â”‚
+â”œâ”€â”€ commitlint.config.js          # Commit message linting
+â”œâ”€â”€ next.config.js                # Next.js configuration
+â”œâ”€â”€ tsconfig.json                 # TypeScript configuration
+â”œâ”€â”€ tailwind.config.js            # Tailwind CSS configuration
+â”œâ”€â”€ postcss.config.js             # PostCSS configuration
+â”‚
+â”œâ”€â”€ package.json                  # Project dependencies and scripts
+â”œâ”€â”€ package-lock.json             # Dependency lock file
+â”‚
+â”œâ”€â”€ Dockerfile                    # Docker container definition
+â”œâ”€â”€ docker-compose.yml            # Docker Compose configuration
+â”‚
+â”œâ”€â”€ README.md                     # Main documentation
+â”œâ”€â”€ ARCHITECTURE.md               # Architecture documentation
+â”œâ”€â”€ CONTRIBUTING.md               # Contribution guidelines
+â”œâ”€â”€ SETUP.md                      # Setup instructions
+â”œâ”€â”€ LICENSE                       # MIT License
+â”‚
+â””â”€â”€ setup.sh                      # Automated setup script
 ```
 
 ## Key Directories Explained
@@ -189,12 +189,12 @@ The project uses path aliases for cleaner imports:
 import { LectureNotes } from '@/types'
 
 // Available aliases:
-@/actions      → /actions
-@/app          → /app
-@/components   → /components
-@/lib          → /lib
-@/types        → /types
-@/utils        → /utils
+@/actions      â†’ /actions
+@/app          â†’ /app
+@/components   â†’ /components
+@/lib          â†’ /lib
+@/types        â†’ /types
+@/utils        â†’ /utils
 ```
 
 ## Configuration Files
@@ -215,10 +215,10 @@ When you run `npm run build`, Next.js creates:
 
 ```
 .next/
-├── cache/              # Build cache
-├── server/             # Server-side code
-├── static/             # Static assets
-└── types/              # Generated types
+â”œâ”€â”€ cache/              # Build cache
+â”œâ”€â”€ server/             # Server-side code
+â”œâ”€â”€ static/             # Static assets
+â””â”€â”€ types/              # Generated types
 ```
 
 ## Environment Files
@@ -305,6 +305,6 @@ Or follow [SETUP.md](SETUP.md) for detailed instructions.
 
 ---
 
-**Maintained by:** Talk2Notes Contributors
+**Maintained by:** LectureAI Contributors
 **License:** MIT
 **Last Updated:** November 2025

@@ -1,4 +1,4 @@
-# ADR 001: Hybrid Cloud-to-Local AI Architecture
+﻿# ADR 001: Hybrid Cloud-to-Local AI Architecture
 
 ## Context
 LectureAI requires processing large audio/video files for college lectures. Cloud APIs (Groq, Gemini) offer incredible speed and efficiency. However, API rate limits or network failures can interrupt the workflow. The user is equipped with a powerful local machine (RTX 4060 GPU, 32GB RAM) capable of running these models natively.

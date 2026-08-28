@@ -1,20 +1,20 @@
-# CLI Reference & Quick Commands
+﻿# CLI Reference & Quick Commands
 
-Complete command-line reference for Talk2Notes with quick cheatsheet.
+Complete command-line reference for LectureAI with quick cheatsheet.
 
-## 🚀 Quick Start Commands
+## ðŸš€ Quick Start Commands
 
 ```bash
 # Clone and start
-git clone https://github.com/taufiqelrahman/talk2notes.git
-cd talk2notes
+git clone https://github.com/taufiqelrahman/LectureAI.git
+cd LectureAI
 pnpm install
 cp .env.example .env
 # Edit .env with your API keys
 pnpm dev
 ```
 
-## 📦 Package Manager Commands
+## ðŸ“¦ Package Manager Commands
 
 ```bash
 pnpm install              # Install dependencies
@@ -27,7 +27,7 @@ pnpm format               # Format with Prettier
 pnpm format:check         # Check formatting
 ```
 
-## 🔧 Setup & Configuration
+## ðŸ”§ Setup & Configuration
 
 ### FFmpeg Installation
 
@@ -82,14 +82,14 @@ GROQ_MODEL=mixtral-8x7b-32768
 ANTHROPIC_MODEL=claude-3-opus-20240229
 ```
 
-## 🐳 Docker Commands
+## ðŸ³ Docker Commands
 
 ```bash
 # Build image
-docker build -t talk2notes .
+docker build -t LectureAI .
 
 # Run container
-docker run -p 3000:3000 --env-file .env talk2notes
+docker run -p 3000:3000 --env-file .env LectureAI
 
 # Using docker-compose
 docker-compose up                  # Start services
@@ -99,7 +99,7 @@ docker-compose logs -f             # Follow logs
 docker-compose restart             # Restart services
 ```
 
-## 🛠️ Development Workflow
+## ðŸ› ï¸ Development Workflow
 
 ### Branch Management
 
@@ -134,7 +134,7 @@ git commit -m "test: add tests"
 git commit -m "chore: update dependencies"
 ```
 
-## 🚢 Deployment
+## ðŸš¢ Deployment
 
 ### Vercel (Recommended)
 
@@ -160,7 +160,7 @@ pnpm start
 
 # Or use PM2 for process management
 pnpm add -g pm2
-pm2 start npm --name "talk2notes" -- start
+pm2 start npm --name "LectureAI" -- start
 pm2 save
 pm2 startup
 ```
@@ -171,7 +171,7 @@ pm2 startup
 docker-compose -f docker-compose.yml up -d
 ```
 
-## 🔍 Debugging & Troubleshooting
+## ðŸ” Debugging & Troubleshooting
 
 ### Check Prerequisites
 
@@ -227,7 +227,7 @@ pnpm type-check
 pnpm list
 ```
 
-## 🧪 Testing & Validation
+## ðŸ§ª Testing & Validation
 
 ### File Upload Testing
 
@@ -243,7 +243,7 @@ curl -X POST http://localhost:3000/api/upload \
 curl http://localhost:3000/api/health
 ```
 
-## 📊 Monitoring & Logs
+## ðŸ“Š Monitoring & Logs
 
 ### View Application Logs
 
@@ -252,7 +252,7 @@ curl http://localhost:3000/api/health
 pnpm dev
 
 # Production logs with PM2
-pm2 logs talk2notes
+pm2 logs LectureAI
 pm2 monit
 ```
 
@@ -264,7 +264,7 @@ docker-compose logs -f app        # Specific service
 docker logs <container-id>        # Specific container
 ```
 
-## 🔐 Security Commands
+## ðŸ” Security Commands
 
 ### Update Dependencies
 
@@ -289,7 +289,7 @@ pnpm audit
 pnpm audit --fix
 ```
 
-## 📁 File Management
+## ðŸ“ File Management
 
 ### Clean Temporary Files
 
@@ -311,7 +311,7 @@ cp .env .env.backup
 tar -czf uploads-backup.tar.gz uploads/
 ```
 
-## 🎯 Performance Optimization
+## ðŸŽ¯ Performance Optimization
 
 ### Build Analysis
 
@@ -328,7 +328,7 @@ NODE_ENV=production pnpm build
 NODE_ENV=production pnpm start
 ```
 
-## 🆘 Quick Troubleshooting Guide
+## ðŸ†˜ Quick Troubleshooting Guide
 
 | Issue            | Solution                                                                  |
 | ---------------- | ------------------------------------------------------------------------- |
@@ -341,7 +341,7 @@ NODE_ENV=production pnpm start
 | API key invalid  | Verify key in .env file                                                   |
 | Out of memory    | Increase Node memory: `NODE_OPTIONS=--max-old-space-size=4096 pnpm build` |
 
-## 📚 Related Documentation
+## ðŸ“š Related Documentation
 
 - [README.md](README.md) - Project overview
 - [SETUP.md](SETUP.md) - Detailed setup guide with pnpm
@@ -352,4 +352,4 @@ NODE_ENV=production pnpm start
 
 ---
 
-**Need help?** Open an issue: https://github.com/taufiqelrahman/talk2notes/issues
+**Need help?** Open an issue: https://github.com/taufiqelrahman/LectureAI/issues

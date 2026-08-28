@@ -1,36 +1,36 @@
-# Quick Start - 5 Minutes to First Transcription
+﻿# Quick Start - 5 Minutes to First Transcription
 
-Get Talk2Notes running in 5 minutes with **free Groq API** (no credit card needed!)
+Get LectureAI running in 5 minutes with **free Groq API** (no credit card needed!)
 
-🌐 **Want to try it first?** Check out the [live demo](https://talk2notes.fly.dev) before installing!
+ðŸŒ **Want to try it first?** Check out the [live demo](https://LectureAI.fly.dev) before installing!
 
 ## Prerequisites
 
-- ✅ Node.js 18.18+ installed
-- ✅ pnpm 8+ installed
-- ✅ FFmpeg installed
-- ✅ Groq API key (free, get in 30 seconds!)
+- âœ… Node.js 18.18+ installed
+- âœ… pnpm 8+ installed
+- âœ… FFmpeg installed
+- âœ… Groq API key (free, get in 30 seconds!)
 
-## 🚀 Installation (3 Steps)
+## ðŸš€ Installation (3 Steps)
 
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/taufiqelrahman/talk2notes.git
-cd talk2notes
+git clone https://github.com/taufiqelrahman/LectureAI.git
+cd LectureAI
 pnpm install
 ```
 
 ### 2. Get Free API Key
 
-**Option A: Groq (Recommended - Free!)** 🆓
+**Option A: Groq (Recommended - Free!)** ðŸ†“
 
 1. Go to: https://console.groq.com/keys
 2. Sign up with Google/GitHub (30 seconds)
 3. Click "Create API Key"
 4. Copy key starting with `gsk_...`
 
-**Option B: OpenAI (Requires Payment)** 💳
+**Option B: OpenAI (Requires Payment)** ðŸ’³
 
 - Get key: https://platform.openai.com/api-keys
 
@@ -53,19 +53,19 @@ GROQ_TRANSCRIPTION_MODEL=whisper-large-v3
 GROQ_SUMMARIZATION_MODEL=openai/gpt-oss-20b
 ```
 
-## ▶️ Run
+## â–¶ï¸ Run
 
 ```bash
 pnpm dev
 ```
 
-Open http://localhost:3000 🎉
+Open http://localhost:3000 ðŸŽ‰
 
-## 🎯 Your First Transcription
+## ðŸŽ¯ Your First Transcription
 
 **From File:**
 
-1. **Select Language:** Choose 🇬🇧 English or 🇮🇩 Indonesian
+1. **Select Language:** Choose ðŸ‡¬ðŸ‡§ English or ðŸ‡®ðŸ‡© Indonesian
 2. **Upload:** Drag & drop an audio/video file
 3. **Wait:** Processing takes 30s - 3 min (depending on file size)
 4. **View:** See your formatted transcript with paragraphs, sections, and structured notes
@@ -74,7 +74,7 @@ Open http://localhost:3000 🎉
 **From YouTube URL:** (requires yt-dlp - see [Setup Guide](SETUP.md))
 
 1. **Toggle to YouTube mode**
-2. **Select Language:** Choose 🇬🇧 English or 🇮🇩 Indonesian
+2. **Select Language:** Choose ðŸ‡¬ðŸ‡§ English or ðŸ‡®ðŸ‡© Indonesian
 3. **Paste URL:** Enter YouTube video link
 4. **Wait:** Download + process takes 1-5 min
 5. **View:** Formatted transcript and notes with auto-compression for large videos
@@ -87,7 +87,7 @@ Open http://localhost:3000 🎉
 4. **Delete** individual items by hovering and clicking the trash icon
 5. **Clear All** to remove all history (with confirmation)
 
-## 🌍 Language Features
+## ðŸŒ Language Features
 
 **English:** Original transcription and notes in English
 
@@ -95,15 +95,15 @@ Open http://localhost:3000 🎉
 
 - Automatic transcript translation to Bahasa Indonesia
 - Notes generated in Indonesian
-- Special handling for Islamic content (preserves Arabic text with harakat)
+- Special handling for Academic content (preserves Original Language text with harakat)
 
-## 📁 Supported Formats
+## ðŸ“ Supported Formats
 
 **Audio:** MP3, WAV, M4A, AAC, OGG, FLAC
 
 **Video:** MP4, MKV, MOV, AVI, WEBM
 
-## 🔧 FFmpeg Setup
+## ðŸ”§ FFmpeg Setup
 
 If you don't have FFmpeg:
 
@@ -118,17 +118,17 @@ sudo apt install ffmpeg
 ffmpeg -version
 ```
 
-## 🆚 Provider Comparison
+## ðŸ†š Provider Comparison
 
 | Feature         | Groq (Default) | OpenAI           |
 | --------------- | -------------- | ---------------- |
-| **Cost**        | 🆓 Free        | 💰 Paid          |
+| **Cost**        | ðŸ†“ Free        | ðŸ’° Paid          |
 | **Setup**       | 30 seconds     | Need credit card |
-| **Speed**       | ⚡ Very Fast   | Normal           |
-| **Quality**     | ✅ Excellent   | ✅ Excellent     |
+| **Speed**       | âš¡ Very Fast   | Normal           |
+| **Quality**     | âœ… Excellent   | âœ… Excellent     |
 | **Daily Limit** | ~240 hours     | Depends on plan  |
 
-## ❓ Common Issues
+## â“ Common Issues
 
 | Problem          | Solution                                                   |
 | ---------------- | ---------------------------------------------------------- |
@@ -140,7 +140,7 @@ ffmpeg -version
 
 ``````
 
-## 📚 Next Steps
+## ðŸ“š Next Steps
 
 `````
 
@@ -152,7 +152,7 @@ ffmpeg -version
 
 **Get API Keys:**
 
-## 💡 Pro Tips
+## ðŸ’¡ Pro Tips
 
 ## 5. Use
 
@@ -170,11 +170,11 @@ ffmpeg -version
 
 
 
-**Total time:** 5 minutes ⏱️  3. View your structured notes
+**Total time:** 5 minutes â±ï¸  3. View your structured notes
 
-**Cost:** $0 (with Groq) 💸
+**Cost:** $0 (with Groq) ðŸ’¸
 
-**Next:** Upload your first lecture! 🎓4. Download as JSON or Markdown1. **Open the app:** http://localhost:3000
+**Next:** Upload your first lecture! ðŸŽ“4. Download as JSON or Markdown1. **Open the app:** http://localhost:3000
 
 
 
@@ -249,7 +249,7 @@ pnpm dev### Groq (Faster, Free Tier)
 
 ```
 
-**That's it!** 🎉 For detailed documentation, see [README.md](README.md)
+**That's it!** ðŸŽ‰ For detailed documentation, see [README.md](README.md)
 
 ````env
 
@@ -341,7 +341,7 @@ docker-compose up -d```env
 
 ### Port 3000 in use
 
-**That's it!** 🎉 For detailed documentation, see [README.md](README.md)
+**That's it!** ðŸŽ‰ For detailed documentation, see [README.md](README.md)
 
 ```bash
 # Use different port
@@ -359,15 +359,15 @@ lsof -ti:3000 | xargs kill
 
 ## What's Next?
 
-- 📖 Read [README.md](README.md) for full documentation
-- 🏗️ Check [ARCHITECTURE.md](ARCHITECTURE.md) to understand the code
-- 🤝 See [CONTRIBUTING.md](CONTRIBUTING.md) to contribute
-- 📁 Review [PROJECT-STRUCTURE.md](PROJECT-STRUCTURE.md) for file organization
+- ðŸ“– Read [README.md](README.md) for full documentation
+- ðŸ—ï¸ Check [ARCHITECTURE.md](ARCHITECTURE.md) to understand the code
+- ðŸ¤ See [CONTRIBUTING.md](CONTRIBUTING.md) to contribute
+- ðŸ“ Review [PROJECT-STRUCTURE.md](PROJECT-STRUCTURE.md) for file organization
 
 ## Getting Help
 
-- **Issues:** https://github.com/taufiqelrahman/talk2notes/issues
-- **Discussions:** https://github.com/taufiqelrahman/talk2notes/discussions
+- **Issues:** https://github.com/taufiqelrahman/LectureAI/issues
+- **Discussions:** https://github.com/taufiqelrahman/LectureAI/discussions
 
 ## Advanced Usage
 
@@ -415,5 +415,5 @@ pnpm start
 
 ---
 
-**That's it!** You're ready to transcribe lectures. 🎉
+**That's it!** You're ready to transcribe lectures. ðŸŽ‰
 ``````
