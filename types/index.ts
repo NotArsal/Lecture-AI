@@ -130,5 +130,3 @@ export interface SummarizationOptions {
   focusAreas?: string[];
   language?: 'english' | 'hinglish';
 }
-
-

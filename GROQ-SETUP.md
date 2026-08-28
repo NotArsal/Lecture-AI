@@ -78,12 +78,12 @@ Upload audio/video file dan cek console logs:
 
 ## ðŸ†š OpenAI vs Groq
 
-| Feature         | OpenAI              | Groq              |
-| --------------- | ------------------- | ----------------- |
+| Feature         | OpenAI              | Groq               |
+| --------------- | ------------------- | ------------------ |
 | **Free Tier**   | âŒ No (need credit) | âœ… Yes (generous) |
 | **Speed**       | Normal              | âš¡ Very Fast      |
-| **Quality**     | Excellent           | Excellent         |
-| **Cost** (paid) | $0.006/min          | Free/Cheap        |
+| **Quality**     | Excellent           | Excellent          |
+| **Cost** (paid) | $0.006/min          | Free/Cheap         |
 
 ## ðŸ”§ Troubleshooting
 

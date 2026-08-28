@@ -20,7 +20,6 @@ import { downloadYoutubeAudio, isValidYoutubeUrl } from '@/lib/youtube';
 import { formatTranscript } from '@/lib/ai';
 import { formatApiError } from '@/utils/format-api-error';
 
-
 async function processAudioPipeline(
   originalAudioPath: string,
   originalFilename: string,
@@ -31,7 +30,7 @@ async function processAudioPipeline(
 ): Promise<MutationResult<LectureNotes>> {
   let currentAudioPath = originalAudioPath;
   let compressedAudio: string | null = null;
-  
+
   try {
     const stats = await fs.stat(currentAudioPath);
     const fileSizeMB = stats.size / (1024 * 1024);
@@ -45,7 +44,7 @@ async function processAudioPipeline(
 
     const transcriptionResult = await transcribeAudio(currentAudioPath, {
       language: language === 'hinglish' ? 'id' : 'en',
-      customGroqKey
+      customGroqKey,
     });
 
     let transcriptText = transcriptionResult.text;
@@ -57,7 +56,7 @@ async function processAudioPipeline(
     const lectureNotes = await summarizeTranscript(transcriptText, originalFilename, {
       language,
       detailLevel: 'detailed',
-      customGroqKey
+      customGroqKey,
     });
 
     return {
@@ -159,7 +158,8 @@ export async function createTranscriptionMutation(
         await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
         return result;
       } catch (error) {
-        if (downloadedAudio?.audioPath) await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
+        if (downloadedAudio?.audioPath)
+          await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
         throw error;
       }
     }
@@ -189,7 +189,8 @@ export async function createTranscriptionMutation(
         await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
         return result;
       } catch (error) {
-        if (downloadedAudio?.audioPath) await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
+        if (downloadedAudio?.audioPath)
+          await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
         throw error;
       }
     }
@@ -320,5 +321,3 @@ export async function cleanupFilesAction(filePaths: string[]): Promise<MutationR
     };
   }
 }
-
-

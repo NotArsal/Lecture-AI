@@ -82,18 +82,18 @@ describe('Rate Limiter', () => {
 
   describe('RATE_LIMITS configuration', () => {
     it('should have correct transcription limits', () => {
-      expect(RATE_LIMITS.TRANSCRIPTION.MAX_REQUESTS).toBe(5);
+      expect(RATE_LIMITS.TRANSCRIPTION.MAX_REQUESTS).toBe(50);
       expect(RATE_LIMITS.TRANSCRIPTION.WINDOW_MS).toBe(60 * 60 * 1000);
     });
 
     it('should have correct daily limits', () => {
-      expect(RATE_LIMITS.DAILY.MAX_TRANSCRIPTIONS).toBe(20);
+      expect(RATE_LIMITS.DAILY.MAX_TRANSCRIPTIONS).toBe(200);
       expect(RATE_LIMITS.DAILY.WINDOW_MS).toBe(24 * 60 * 60 * 1000);
     });
 
     it('should have correct file size limits', () => {
-      expect(RATE_LIMITS.FILE_SIZE.MAX_SIZE_MB).toBe(50);
-      expect(RATE_LIMITS.FILE_SIZE.MAX_YOUTUBE_MB).toBe(100);
+      expect(RATE_LIMITS.FILE_SIZE.MAX_SIZE_MB).toBe(500);
+      expect(RATE_LIMITS.FILE_SIZE.MAX_YOUTUBE_MB).toBe(500);
     });
   });
 
@@ -125,3 +125,4 @@ describe('Rate Limiter', () => {
     });
   });
 });
+

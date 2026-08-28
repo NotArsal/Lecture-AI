@@ -110,7 +110,6 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
   const [progressDetails, setProgressDetails] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
 
-  
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -128,13 +127,13 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         const file = new File([audioBlob], 'recording.webm', { type: 'audio/webm' });
         setSelectedFile(file);
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       };
 
       mediaRecorder.start();
       setIsRecording(true);
       setRecordingTime(0);
-      
+
       timerIntervalRef.current = setInterval(() => {
         setRecordingTime((prev) => prev + 1);
       }, 1000);
@@ -154,7 +153,9 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
   };
 
   const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
@@ -516,17 +517,17 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
           >
             🔗 URL
           </button>
-            <button
-              type="button"
-              onClick={() => setInputMode('record')}
-              className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                inputMode === 'record'
-                  ? 'bg-primary-600 text-white cursor-default'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer'
-              }`}
-            >
-              🎤 Record
-            </button>
+          <button
+            type="button"
+            onClick={() => setInputMode('record')}
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+              inputMode === 'record'
+                ? 'bg-primary-600 text-white cursor-default'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer'
+            }`}
+          >
+            🎤 Record
+          </button>
         </div>
 
         {inputMode === 'youtube' ? (
@@ -587,17 +588,30 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
                       <div className="flex flex-col items-center">
                         <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-4 animate-pulse">
                           <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-                            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                            <svg
+                              className="w-8 h-8 text-white"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" />
                             </svg>
                           </div>
                         </div>
-                        <span className="text-3xl font-mono font-semibold text-red-600">{formatTime(recordingTime)}</span>
+                        <span className="text-3xl font-mono font-semibold text-red-600">
+                          {formatTime(recordingTime)}
+                        </span>
                       </div>
                     ) : (
-                      <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-4 hover:bg-gray-300 transition-colors cursor-pointer" onClick={startRecording}>
-                        <svg className="w-10 h-10 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                      <div
+                        className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-4 hover:bg-gray-300 transition-colors cursor-pointer"
+                        onClick={startRecording}
+                      >
+                        <svg
+                          className="w-10 h-10 text-gray-600"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" />
                         </svg>
                       </div>
                     )}
@@ -619,17 +633,31 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
                       Start Recording
                     </button>
                   )}
-                  <p className="mt-4 text-sm text-gray-500">Record audio directly from your microphone</p>
+                  <p className="mt-4 text-sm text-gray-500">
+                    Record audio directly from your microphone
+                  </p>
                 </>
               ) : (
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="w-8 h-8 text-green-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-1">Recording Captured!</h3>
-                  <p className="text-sm text-gray-500 mb-6">Duration: {formatTime(recordingTime)}</p>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Duration: {formatTime(recordingTime)}
+                  </p>
                   <button
                     type="button"
                     onClick={() => setSelectedFile(null)}
@@ -755,12 +783,10 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
         {((inputMode === 'file' && selectedFile) ||
           (inputMode === 'youtube' && youtubeUrl) ||
           (inputMode === 'url' && mediaUrl) ||
-            (inputMode === 'record' && selectedFile)) &&
+          (inputMode === 'record' && selectedFile)) &&
           !isUploading && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Output Language
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Output Language</label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -803,53 +829,53 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
           </div>
         )}
 
-        
-          {/* Advanced Settings */}
-          <div className="mt-6 border-t border-gray-200 pt-4">
-            <button
-              type="button"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <svg 
-                className={`w-4 h-4 mr-2 transition-transform ${showAdvanced ? 'rotate-90' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-              Advanced Settings (BYOK)
-            </button>
-            
-            {showAdvanced && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
-                <label htmlFor="custom-groq-key" className="block text-sm font-medium text-gray-700">
-                  Custom Groq API Key (Optional)
-                </label>
-                <input
-                  type="password"
-                  id="custom-groq-key"
-                  value={customGroqKey}
-                  onChange={(e) => handleKeyChange(e.target.value)}
-                  placeholder="gsk_..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  disabled={isUploading}
-                />
-                <p className="text-xs text-gray-500">
-                  Bypass the public rate limits by providing your own free Groq API key. Your key is stored locally in your browser and never saved to our database.
-                </p>
-              </div>
-            )}
-          </div>
-
+        {/* Advanced Settings */}
+        <div className="mt-6 border-t border-gray-200 pt-4">
           <button
+            type="button"
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <svg
+              className={`w-4 h-4 mr-2 transition-transform ${showAdvanced ? 'rotate-90' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            Advanced Settings (BYOK)
+          </button>
+
+          {showAdvanced && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
+              <label htmlFor="custom-groq-key" className="block text-sm font-medium text-gray-700">
+                Custom Groq API Key (Optional)
+              </label>
+              <input
+                type="password"
+                id="custom-groq-key"
+                value={customGroqKey}
+                onChange={(e) => handleKeyChange(e.target.value)}
+                placeholder="gsk_..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                disabled={isUploading}
+              />
+              <p className="text-xs text-gray-500">
+                Bypass the public rate limits by providing your own free Groq API key. Your key is
+                stored locally in your browser and never saved to our database.
+              </p>
+            </div>
+          )}
+        </div>
+
+        <button
           type="submit"
           disabled={
             (inputMode === 'file' && !selectedFile) ||
             (inputMode === 'youtube' && !youtubeUrl) ||
             (inputMode === 'url' && !mediaUrl) ||
-              (inputMode === 'record' && !selectedFile) ||
+            (inputMode === 'record' && !selectedFile) ||
             isUploading
           }
           className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -860,5 +886,3 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
     </div>
   );
 }
-
-

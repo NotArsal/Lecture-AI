@@ -21,7 +21,8 @@ const AUDIO_FORMATS = process.env.ALLOWED_AUDIO_FORMATS?.split(',') || [
   'm4a',
   'aac',
   'ogg',
-  'flac', 'webm',
+  'flac',
+  'webm',
 ];
 
 const VIDEO_FORMATS = process.env.ALLOWED_VIDEO_FORMATS?.split(',') || [
@@ -48,7 +49,8 @@ const AUDIO_MIME_TYPES = [
   'audio/m4a',
   'audio/aac',
   'audio/ogg',
-  'audio/flac', 'audio/webm',
+  'audio/flac',
+  'audio/webm',
 ];
 
 const VIDEO_MIME_TYPES = [
@@ -159,4 +161,3 @@ export function sanitizeFilename(filename: string): string {
     .replace(/_{2,}/g, '_')
     .toLowerCase();
 }
-

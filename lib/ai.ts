@@ -45,7 +45,10 @@ export function getAIConfig(options?: { customGroqKey?: string }): AIConfig {
     case 'groq': {
       let apiKey = options?.customGroqKey || process.env.GROQ_API_KEY || '';
       if (apiKey.includes(',')) {
-        const keys = apiKey.split(',').map(k => k.trim()).filter(Boolean);
+        const keys = apiKey
+          .split(',')
+          .map((k) => k.trim())
+          .filter(Boolean);
         apiKey = keys[Math.floor(Math.random() * keys.length)];
       }
       return {
@@ -120,7 +123,7 @@ export async function transcribeAudio(
     }
   } catch (error: any) {
     console.error(`[Transcription] Primary provider (${config.provider}) failed:`, error.message);
-    
+
     // Quick fallback to local proxy if Groq fails or API key is exhausted
     if (config.provider !== 'openai' && process.env.OPENAI_BASE_URL) {
       console.log(`[Transcription] Falling back to local AI proxy...`);
@@ -130,15 +133,21 @@ export async function transcribeAudio(
         summarizationModel: process.env.OPENAI_SUMMARIZATION_MODEL || 'gemma4:e4b',
         apiKey: process.env.OPENAI_API_KEY || 'dummy',
       };
-      
+
       return await transcribeWithOpenAI(audioPath, fallbackConfig, options);
     }
-    
+
     throw error;
   }
 }
 
-export async function translateTranscript(transcript: string, targetLanguage: 'english' | 'hinglish', options?: SummarizationOptions): Promise<string> { if (targetLanguage === 'english') return transcript; const config = getSummarizationConfig(options);
+export async function translateTranscript(
+  transcript: string,
+  targetLanguage: 'english' | 'hinglish',
+  options?: SummarizationOptions
+): Promise<string> {
+  if (targetLanguage === 'english') return transcript;
+  const config = getSummarizationConfig(options);
 
   if (!config.apiKey) {
     throw new Error(`API key not configured for provider: ${config.provider}`);
@@ -147,10 +156,7 @@ export async function translateTranscript(transcript: string, targetLanguage: 'e
   console.log(`[Translation] Translating transcript to Indonesian...`);
 
   try {
-    if (
-      config.provider === 'openai' ||
-      config.provider === 'groq'
-    ) {
+    if (config.provider === 'openai' || config.provider === 'groq') {
       const openai = createOpenAIClient(config);
       const processedTranscript =
         config.provider === 'groq'
@@ -162,7 +168,8 @@ export async function translateTranscript(transcript: string, targetLanguage: 'e
         messages: [
           {
             role: 'system',
-            content: "Translate the following transcript into Hinglish (a natural blend of Hindi and English written in the Latin alphabet). Preserve technical terms in English.",
+            content:
+              'Translate the following transcript into Hinglish (a natural blend of Hindi and English written in the Latin alphabet). Preserve technical terms in English.',
           },
           {
             role: 'user',
@@ -182,9 +189,10 @@ export async function translateTranscript(transcript: string, targetLanguage: 'e
         model: config.summarizationModel,
         contents: transcript,
         config: {
-          systemInstruction: "Translate the following transcript into Hinglish (a natural blend of Hindi and English written in the Latin alphabet). Preserve technical terms in English.",
+          systemInstruction:
+            'Translate the following transcript into Hinglish (a natural blend of Hindi and English written in the Latin alphabet). Preserve technical terms in English.',
           temperature: 0.3,
-        }
+        },
       });
       console.log(`[Translation] ✓ Translation complete`);
       return response.text || transcript;
@@ -203,17 +211,18 @@ export async function translateTranscript(transcript: string, targetLanguage: 'e
 /**
  * Format transcript with paragraphs and sections for better readability
  */
-export async function formatTranscript(transcript: string, language: 'english' | 'hinglish' = 'english', options?: SummarizationOptions): Promise<string> { const config = getSummarizationConfig(options);
+export async function formatTranscript(
+  transcript: string,
+  language: 'english' | 'hinglish' = 'english',
+  options?: SummarizationOptions
+): Promise<string> {
+  const config = getSummarizationConfig(options);
 
   if (!config.apiKey) return addBasicParagraphs(transcript);
 
   try {
-    const langKey =
-      language === 'hinglish' ? 'hinglish' : 'english';
-    if (
-      config.provider === 'openai' ||
-      config.provider === 'groq'
-    ) {
+    const langKey = language === 'hinglish' ? 'hinglish' : 'english';
+    if (config.provider === 'openai' || config.provider === 'groq') {
       const openai = createOpenAIClient(config);
       const maxTokens = config.provider === 'groq' ? GROQ_MAX_INPUT_TOKENS : 100000;
       const estimatedTokens = Math.ceil(transcript.length / 4);
@@ -225,7 +234,13 @@ export async function formatTranscript(transcript: string, language: 'english' |
       const response = await openai.chat.completions.create({
         model: config.summarizationModel,
         messages: [
-          { role: 'system', content: buildSummarizationPrompt({ language: langKey as 'english' | 'hinglish', detailLevel: 'detailed' }) },
+          {
+            role: 'system',
+            content: buildSummarizationPrompt({
+              language: langKey as 'english' | 'hinglish',
+              detailLevel: 'detailed',
+            }),
+          },
           { role: 'user', content: processedTranscript },
         ],
         temperature: 0.2,
@@ -245,9 +260,12 @@ export async function formatTranscript(transcript: string, language: 'english' |
         model: config.summarizationModel,
         contents: processedTranscript,
         config: {
-          systemInstruction: buildSummarizationPrompt({ language: langKey as 'english' | 'hinglish', detailLevel: 'detailed' }),
+          systemInstruction: buildSummarizationPrompt({
+            language: langKey as 'english' | 'hinglish',
+            detailLevel: 'detailed',
+          }),
           temperature: 0.2,
-        }
+        },
       });
       return response.text || transcript;
     }
@@ -291,10 +309,7 @@ export async function summarizeTranscript(
   let summaryText: string;
 
   try {
-    if (
-      config.provider === 'openai' ||
-      config.provider === 'groq'
-    ) {
+    if (config.provider === 'openai' || config.provider === 'groq') {
       const openai = createOpenAIClient(config, { maxRetries: 0 });
       summaryText = await pRetry(async (attemptNumber) => {
         console.log(`[Summarization] Attempt ${attemptNumber}...`);
@@ -321,7 +336,7 @@ export async function summarizeTranscript(
             systemInstruction: systemPrompt,
             responseMimeType: 'application/json',
             temperature: 0.3,
-          }
+          },
         });
         return response.text || '{}';
       }, retryOptions('Summarization'));
@@ -358,7 +373,7 @@ export async function summarizeTranscript(
     }
   } catch (error: any) {
     console.error(`[Summarization] Primary provider (${config.provider}) failed:`, error.message);
-    
+
     // Quick fallback to local proxy
     if (config.provider !== 'openai' && process.env.OPENAI_BASE_URL) {
       console.log(`[Summarization] Falling back to local AI proxy...`);
@@ -368,7 +383,7 @@ export async function summarizeTranscript(
         summarizationModel: process.env.OPENAI_SUMMARIZATION_MODEL || 'gemma4:e4b',
         apiKey: process.env.OPENAI_API_KEY || 'dummy',
       };
-      
+
       const fallbackOpenai = createOpenAIClient(fallbackConfig, { maxRetries: 0 });
       summaryText = await pRetry(async (attemptNumber) => {
         console.log(`[Summarization] Fallback Attempt ${attemptNumber}...`);
@@ -416,9 +431,3 @@ export async function summarizeTranscript(
     },
   };
 }
-
-
-
-
-
-

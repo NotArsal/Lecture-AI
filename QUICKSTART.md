@@ -417,4 +417,3 @@ pnpm start
 
 **That's it!** You're ready to transcribe lectures. 🎉
 ``````
-

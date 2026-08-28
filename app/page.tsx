@@ -167,7 +167,8 @@ export default function HomePage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Easy Upload</h3>
             <p className="text-gray-600">
-              Drag and drop or click to upload audio and video files. Supports MP3, WAV, MP4, and YouTube links.
+              Drag and drop or click to upload audio and video files. Supports MP3, WAV, MP4, and
+              YouTube links.
             </p>
           </div>
 
@@ -189,7 +190,8 @@ export default function HomePage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Processing</h3>
             <p className="text-gray-600">
-              Advanced AI transcribes audio and generates structured notes with key concepts and quizzes.
+              Advanced AI transcribes audio and generates structured notes with key concepts and
+              quizzes.
             </p>
           </div>
 
@@ -211,7 +213,8 @@ export default function HomePage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Export & Study</h3>
             <p className="text-gray-600">
-              Export your generated notes directly to Markdown or JSON to easily study or integrate into your personal knowledge base.
+              Export your generated notes directly to Markdown or JSON to easily study or integrate
+              into your personal knowledge base.
             </p>
           </div>
         </div>

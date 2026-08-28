@@ -361,11 +361,11 @@ pnpm dev
 
 ### âœ… Recommended Limits (Best Reliability)
 
-| File Type   | Recommended      | Max Allowed  | Notes                      |
-| ----------- | ---------------- | ------------ | -------------------------- |
+| File Type   | Recommended      | Max Allowed   | Notes                      |
+| ----------- | ---------------- | ------------- | -------------------------- |
 | Audio (mp3) | **< 10MB**       | **25MB** âœ¨  | Auto-compressed if 10-25MB |
 | Video (mp4) | **< 300MB**      | **500MB** âœ¨ | Audio extracted at 48kbps  |
-| Duration    | **< 25 minutes** | ~60 minutes  | Longer = larger files      |
+| Duration    | **< 25 minutes** | ~60 minutes   | Longer = larger files      |
 
 **âœ¨ New in v2.1:** Increased limits! Files up to 25MB (audio) and 500MB (video) now accepted with automatic compression.
 

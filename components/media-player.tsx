@@ -304,4 +304,3 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
     </div>
   );
 }
-

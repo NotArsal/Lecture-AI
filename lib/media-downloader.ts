@@ -118,4 +118,3 @@ export function isValidMediaUrl(url: string): boolean {
     return false;
   }
 }
-
