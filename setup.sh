@@ -2,7 +2,7 @@
 
 set -e
 
-echo "🎙️ Talk2Notes Setup Script"
+echo "🎙️ LectureAI Setup Script"
 echo "=========================="
 echo ""
 
@@ -129,3 +129,4 @@ echo "  - Architecture: ARCHITECTURE.md"
 echo "  - Contributing: CONTRIBUTING.md"
 echo ""
 echo "Happy coding! 🚀"
+

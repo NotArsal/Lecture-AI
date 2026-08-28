@@ -5,7 +5,7 @@
 
 set -e
 
-echo "🚀 Talk2Notes - Fly.io Deployment"
+echo "🚀 LectureAI - Fly.io Deployment"
 echo "=================================="
 echo ""
 
@@ -117,3 +117,4 @@ echo "  flyctl status        # Check status"
 echo "  flyctl open          # Open in browser"
 echo "  flyctl ssh console   # SSH into machine"
 echo ""
+
