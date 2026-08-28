@@ -68,7 +68,7 @@ async function downloadFile(url: string, outputPath: string): Promise<void> {
       url,
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; Talk2Notes/1.0)',
+          'User-Agent': 'Mozilla/5.0 (compatible; LectureAI/1.0)',
         },
       },
       (response) => {
@@ -118,3 +118,4 @@ export function isValidMediaUrl(url: string): boolean {
     return false;
   }
 }
+

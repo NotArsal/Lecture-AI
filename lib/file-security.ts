@@ -182,7 +182,8 @@ export async function validateFileIntegrity(
   const { detectedType, detectedMime } = signatureCheck;
 
   // Check if detected type matches claimed extension
-  const extensionMatch = detectedType === claimedExtension.toLowerCase();
+  const extensionMatch = detectedType === claimedExtension.toLowerCase() || 
+    (detectedType === 'mkv' && claimedExtension.toLowerCase() === 'webm');
 
   // Check if detected MIME matches claimed MIME (with some flexibility)
   const mimeMatch =
@@ -191,8 +192,11 @@ export async function validateFileIntegrity(
     (detectedType === 'mp3' && claimedMimeType === 'audio/mp3') ||
     (detectedType === 'wav' && claimedMimeType.includes('wav')) ||
     (detectedType === 'm4a' && claimedMimeType.includes('m4a'));
+    // Allow WebM audio/video
+    const isWebmMatch = detectedType === 'mkv' && (claimedMimeType === 'audio/webm' || claimedMimeType === 'video/webm');
+    const finalMimeMatch = mimeMatch || isWebmMatch;
 
-  if (!extensionMatch || !mimeMatch) {
+  if ((!extensionMatch || !finalMimeMatch)) {
     return {
       valid: false,
       error: `File content mismatch: File appears to be ${detectedType} (${detectedMime}) but claimed as ${claimedExtension} (${claimedMimeType}). Possible file tampering or corruption.`,

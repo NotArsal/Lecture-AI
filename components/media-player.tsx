@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 interface MediaPlayerProps {
   sourceUrl: string;
-  sourceType: 'youtube' | 'url';
+  sourceType: 'upload' | 'youtube' | 'url';
   fileName: string;
 }
 
@@ -304,3 +304,4 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
     </div>
   );
 }
+

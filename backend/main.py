@@ -1,4 +1,6 @@
 import os
+import tempfile
+import uuid
 import httpx
 from fastapi import FastAPI, UploadFile, File, Form, Request
 from fastapi.responses import JSONResponse, StreamingResponse
@@ -24,8 +26,14 @@ async def audio_transcriptions(
     print(f"Received transcription request for model: {model}")
     
     # Save temp file
-    file_path = f"temp_{file.filename}"
+    
+    # Save temp file securely
+    _, ext = os.path.splitext(file.filename or "")
+    unique_filename = f"temp_{uuid.uuid4().hex}{ext}"
+    file_path = os.path.join(tempfile.gettempdir(), unique_filename)
+    
     with open(file_path, "wb") as f:
+
         f.write(await file.read())
         
     try:

@@ -6,11 +6,7 @@ import type {
   TranscriptionOptions,
   SummarizationOptions,
 } from '@/types';
-import {
-  TRANSLATE_TO_INDONESIAN_PROMPT,
-  FORMAT_PROMPTS,
-  buildSummarizationPrompt,
-} from '@/lib/ai-prompts';
+import { buildSummarizationPrompt } from '@/lib/ai-prompts';
 import {
   retryOptions,
   createOpenAIClient,
@@ -34,7 +30,7 @@ const GROQ_MAX_SUMMARY_OUTPUT_TOKENS = 2000;
 // Controls transcription (audio -> text). Independent from getSummarizationConfig(),
 // since transcription (Whisper) and text generation (translate/format/summarize) can run
 // on different providers/rate limits.
-export function getAIConfig(): AIConfig {
+export function getAIConfig(options?: { customGroqKey?: string }): AIConfig {
   const AI_PROVIDER =
     (process.env.AI_PROVIDER as 'openai' | 'groq' | 'deepgram' | 'anthropic') || 'openai';
 
@@ -46,13 +42,19 @@ export function getAIConfig(): AIConfig {
         summarizationModel: process.env.OPENAI_SUMMARIZATION_MODEL || 'gpt-4-turbo-preview',
         apiKey: process.env.OPENAI_API_KEY || '',
       };
-    case 'groq':
+    case 'groq': {
+      let apiKey = options?.customGroqKey || process.env.GROQ_API_KEY || '';
+      if (apiKey.includes(',')) {
+        const keys = apiKey.split(',').map(k => k.trim()).filter(Boolean);
+        apiKey = keys[Math.floor(Math.random() * keys.length)];
+      }
       return {
         provider: 'groq',
         transcriptionModel: process.env.GROQ_TRANSCRIPTION_MODEL || 'whisper-large-v3',
         summarizationModel: process.env.GROQ_SUMMARIZATION_MODEL || 'openai/gpt-oss-20b',
-        apiKey: process.env.GROQ_API_KEY || '',
+        apiKey,
       };
+    }
     case 'deepgram':
       return {
         provider: 'deepgram',
@@ -77,7 +79,7 @@ export function getAIConfig(): AIConfig {
  * (transcription) so text generation can run on a different provider, e.g.
  * Gemini for summarization while transcription stays on Groq Whisper.
  */
-export function getSummarizationConfig(): AIConfig {
+export function getSummarizationConfig(options?: { customGroqKey?: string }): AIConfig {
   const SUMMARIZATION_PROVIDER =
     (process.env.AI_SUMMARIZATION_PROVIDER as 'openai' | 'groq' | 'anthropic' | 'gemini') ||
     (process.env.AI_PROVIDER as 'openai' | 'groq' | 'deepgram' | 'anthropic') ||
@@ -87,18 +89,18 @@ export function getSummarizationConfig(): AIConfig {
     return {
       provider: 'gemini',
       transcriptionModel: '',
-      summarizationModel: process.env.GEMINI_SUMMARIZATION_MODEL || 'gemini-3.6-flash',
+      summarizationModel: process.env.GEMINI_SUMMARIZATION_MODEL || 'gemini-2.5-flash',
       apiKey: process.env.GEMINI_API_KEY || '',
     };
   }
-  return getAIConfig();
+  return getAIConfig(options);
 }
 
 export async function transcribeAudio(
   audioPath: string,
   options: TranscriptionOptions = {}
 ): Promise<TranscriptionResult> {
-  const config = getAIConfig();
+  const config = getAIConfig(options);
 
   try {
     if (!config.apiKey) {
@@ -136,15 +138,7 @@ export async function transcribeAudio(
   }
 }
 
-export async function translateTranscript(
-  transcript: string,
-  targetLanguage: 'english' | 'indonesian'
-): Promise<string> {
-  if (targetLanguage === 'english') {
-    return transcript; // No translation needed for English
-  }
-
-  const config = getSummarizationConfig();
+export async function translateTranscript(transcript: string, targetLanguage: 'english' | 'hinglish', options?: SummarizationOptions): Promise<string> { if (targetLanguage === 'english') return transcript; const config = getSummarizationConfig(options);
 
   if (!config.apiKey) {
     throw new Error(`API key not configured for provider: ${config.provider}`);
@@ -168,7 +162,7 @@ export async function translateTranscript(
         messages: [
           {
             role: 'system',
-            content: TRANSLATE_TO_INDONESIAN_PROMPT,
+            content: "Translate the following transcript into Hinglish (a natural blend of Hindi and English written in the Latin alphabet). Preserve technical terms in English.",
           },
           {
             role: 'user',
@@ -188,7 +182,7 @@ export async function translateTranscript(
         model: config.summarizationModel,
         contents: transcript,
         config: {
-          systemInstruction: TRANSLATE_TO_INDONESIAN_PROMPT,
+          systemInstruction: "Translate the following transcript into Hinglish (a natural blend of Hindi and English written in the Latin alphabet). Preserve technical terms in English.",
           temperature: 0.3,
         }
       });
@@ -209,17 +203,13 @@ export async function translateTranscript(
 /**
  * Format transcript with paragraphs and sections for better readability
  */
-export async function formatTranscript(
-  transcript: string,
-  language: 'english' | 'indonesian' | 'arabic' = 'english'
-): Promise<string> {
-  const config = getSummarizationConfig();
+export async function formatTranscript(transcript: string, language: 'english' | 'hinglish' = 'english', options?: SummarizationOptions): Promise<string> { const config = getSummarizationConfig(options);
 
   if (!config.apiKey) return addBasicParagraphs(transcript);
 
   try {
     const langKey =
-      language === 'arabic' ? 'arabic' : language === 'indonesian' ? 'indonesian' : 'english';
+      language === 'hinglish' ? 'hinglish' : 'english';
     if (
       config.provider === 'openai' ||
       config.provider === 'groq'
@@ -235,7 +225,7 @@ export async function formatTranscript(
       const response = await openai.chat.completions.create({
         model: config.summarizationModel,
         messages: [
-          { role: 'system', content: FORMAT_PROMPTS[langKey] },
+          { role: 'system', content: buildSummarizationPrompt({ language: langKey as 'english' | 'hinglish', detailLevel: 'detailed' }) },
           { role: 'user', content: processedTranscript },
         ],
         temperature: 0.2,
@@ -255,7 +245,7 @@ export async function formatTranscript(
         model: config.summarizationModel,
         contents: processedTranscript,
         config: {
-          systemInstruction: FORMAT_PROMPTS[langKey],
+          systemInstruction: buildSummarizationPrompt({ language: langKey as 'english' | 'hinglish', detailLevel: 'detailed' }),
           temperature: 0.2,
         }
       });
@@ -273,7 +263,7 @@ export async function summarizeTranscript(
   originalFilename: string,
   options: SummarizationOptions = {}
 ): Promise<LectureNotes> {
-  const config = getSummarizationConfig();
+  const config = getSummarizationConfig(options);
 
   if (!config.apiKey) {
     throw new Error(`API key not configured for provider: ${config.provider}`);
@@ -426,3 +416,9 @@ export async function summarizeTranscript(
     },
   };
 }
+
+
+
+
+
+

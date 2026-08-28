@@ -1,4 +1,4 @@
-﻿# LectureAI ðŸŽ™ï¸ðŸ“
+# LectureAI 🎙️📝
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/taufiqelrahman/LectureAI/ci.yml?branch=main)](https://github.com/taufiqelrahman/LectureAI/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -11,36 +11,36 @@
 
 LectureAI is an open-source web application that automatically transcribes audio and video files and generates well-organized lecture notes complete with summaries, key concepts, definitions, example problems, interactive quizzes, and action items.
 
-ðŸŒ **[Live Demo](https://LectureAI.fly.dev)** | ðŸ“– **[Documentation](DOCS.md)** | âš¡ **[Quick Start](QUICKSTART.md)** | ðŸ†“ **[Groq Setup](GROQ-SETUP.md)** | ðŸ›¡ï¸ **[Rate Limits](RATE-LIMITS.md)** | ðŸ” **[Troubleshooting](TROUBLESHOOTING.md)**
+🌐 **[Live Demo](https://LectureAI.fly.dev)** | 📖 **[Documentation](DOCS.md)** | ⚡ **[Quick Start](QUICKSTART.md)** | 🆓 **[Groq Setup](GROQ-SETUP.md)** | 🛡️ **[Rate Limits](RATE-LIMITS.md)** | 🔍 **[Troubleshooting](TROUBLESHOOTING.md)**
 
-## âœ¨ Features
+## ✨ Features
 
-- ðŸ’° **Free to Use**: Default Groq integration with generous free tier (no credit card required!)
-- ðŸŽµ **Multi-format Support**: Upload MP3, WAV, M4A, MP4, MKV, MOV, and more
-- ðŸŽ¬ **YouTube Support**: Transcribe directly from YouTube URLs (requires yt-dlp)
-- ðŸ”— **Direct URL Support**: Download and transcribe media from any public URL
-- ðŸ¤– **AI-Powered**: Transcription and summarization using Groq (default), OpenAI, Deepgram, or Anthropic
-- ðŸŒ **Multilingual Support**: Generate notes in English, Indonesian, or Original Language
-- ðŸ“ **Formatted Transcript**: AI-formatted transcript with paragraphs, sections, and subheadings for easy reading
-- ðŸ“Š **Structured Output**: Organized notes with paragraphs, bullet points, concepts, and definitions
-- ðŸŽ¯ **Interactive Quiz**: AI-generated multiple choice questions with instant feedback and explanations
-- ðŸŽµ **Media Player**: Playback YouTube videos and direct media URLs while reading transcripts and notes
-- âœ¨ **Markdown Rendering**: Beautiful formatted display with support for bold, italic, lists, and code blocks
-- ðŸ’¾ **Export Options**: Download notes as JSON or Markdown, transcript as TXT
-- ðŸ“‹ **Copy to Clipboard**: Quick copy functionality for each tab
-- ðŸ’¾ **Auto-save**: Results persist across page refreshes
-- ðŸ“œ **History Management**: Browse, search, and restore past transcriptions with individual delete
-- ðŸ›¡ï¸ **Rate Limiting**: Smart limits (10/hour, 50/day) to stay within free tier while preventing abuse
-- âœ‚ï¸ **Smart Cropping**: Automatically crops long transcripts to fit API limits (preserves sentence boundaries)
-- ðŸ—œï¸ **Auto Compression**: Compresses large audio files (>24MB YouTube, >10MB uploads) for reliable transcription
-- âš¡ **Fast Processing**: Automatic audio extraction from video files using FFmpeg
-- ðŸŽ¨ **Modern UI**: Clean, responsive interface built with Next.js and Tailwind CSS
-- ðŸ•Œ **Academic Content**: Preserves Citation with Original Language text, harakat, transliteration, translations, and references
-- ðŸ”’ **Secure**: File validation and size limits for safe uploads
-- ðŸ›¡ï¸ **Error Handling**: Robust error boundaries for graceful error recovery
-- ðŸ” **File Security**: Magic bytes validation to prevent malicious file uploads
+- 💰 **Free to Use**: Default Groq integration with generous free tier (no credit card required!)
+- 🎵 **Multi-format Support**: Upload MP3, WAV, M4A, MP4, MKV, MOV, and more
+- 🎬 **YouTube Support**: Transcribe directly from YouTube URLs (requires yt-dlp)
+- 🔗 **Direct URL Support**: Download and transcribe media from any public URL
+- 🤖 **AI-Powered**: Transcription and summarization using Groq (default), OpenAI, Deepgram, or Anthropic
+- 🌍 **Multilingual Support**: Generate notes in English, Hinglish, or Original Language
+- 📝 **Formatted Transcript**: AI-formatted transcript with paragraphs, sections, and subheadings for easy reading
+- 📊 **Structured Output**: Organized notes with paragraphs, bullet points, concepts, and definitions
+- 🎯 **Interactive Quiz**: AI-generated multiple choice questions with instant feedback and explanations
+- 🎵 **Media Player**: Playback YouTube videos and direct media URLs while reading transcripts and notes
+- ✨ **Markdown Rendering**: Beautiful formatted display with support for bold, italic, lists, and code blocks
+- 💾 **Export Options**: Download notes as JSON or Markdown, transcript as TXT
+- 📋 **Copy to Clipboard**: Quick copy functionality for each tab
+- 💾 **Auto-save**: Results persist across page refreshes
+- 📜 **History Management**: Browse, search, and restore past transcriptions with individual delete
+- 🛡️ **Rate Limiting**: Smart limits (10/hour, 50/day) to stay within free tier while preventing abuse
+- ✂️ **Smart Cropping**: Automatically crops long transcripts to fit API limits (preserves sentence boundaries)
+- 🗜️ **Auto Compression**: Compresses large audio files (>24MB YouTube, >10MB uploads) for reliable transcription
+- ⚡ **Fast Processing**: Automatic audio extraction from video files using FFmpeg
+- 🎨 **Modern UI**: Clean, responsive interface built with Next.js and Tailwind CSS
+- 🕌 **Academic Content**: Preserves Citation with Original Language text, harakat, transliteration, translations, and references
+- 🔒 **Secure**: File validation and size limits for safe uploads
+- 🛡️ **Error Handling**: Robust error boundaries for graceful error recovery
+- 🔐 **File Security**: Magic bytes validation to prevent malicious file uploads
 
-## ðŸš€ Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -108,15 +108,15 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## ðŸ“– Usage
+## 📖 Usage
 
 ### Basic Usage
 
 **File Upload:**
 
 1. Visit the application homepage
-2. Click the **ðŸ“ Upload File** tab
-3. Select your preferred language (ðŸ‡¬ðŸ‡§ English, ðŸ‡®ðŸ‡© Indonesian, or ðŸ‡¸ðŸ‡¦ Original Language)
+2. Click the **📁 Upload File** tab
+3. Select your preferred language (🇬🇧 English, 🇮🇩 Hinglish, or 🇸🇦 Original Language)
 4. Drag and drop or click to upload an audio/video file (MP3, WAV, M4A, MP4, MKV, MOV, etc.)
 5. Wait for processing (transcription + summarization)
 6. View your structured notes with beautiful markdown formatting
@@ -124,19 +124,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 **YouTube URL:**
 
-1. Click the **â–¶ï¸ YouTube** tab
+1. Click the **▶️ YouTube** tab
 2. Select your preferred language
 3. Paste a YouTube video URL (supports youtube.com, youtu.be, etc.)
-4. Wait for processing (download â†’ transcribe â†’ summarize)
+4. Wait for processing (download → transcribe → summarize)
 5. View formatted notes and transcript
 6. **Note**: Videos >500MB or >24MB audio will be auto-compressed for reliable transcription
 
 **Direct URL:**
 
-1. Click the **ðŸ”— URL** tab
+1. Click the **🔗 URL** tab
 2. Select your preferred language
 3. Paste a direct URL to an audio/video file
-4. Wait for processing (download â†’ transcribe â†’ summarize)
+4. Wait for processing (download → transcribe → summarize)
 5. View formatted notes and transcript
 6. **Supported URLs**:
    - Direct links to media files (MP3, MP4, WAV, etc.)
@@ -153,14 +153,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 **Bahasa Indonesia**
 
-- Automatic translation of transcript to Indonesian
-- Notes generated in Indonesian
+- Automatic translation of transcript to Hinglish
+- Notes generated in Hinglish
 - **Special handling for Academic content:**
   - Preserves Original Language text (Textbookic verses, References) with harakat
-  - Maintains format: "Original Language text (transliteration) - Indonesian translation"
+  - Maintains format: "Original Language text (transliteration) - Hinglish translation"
   - Keeps technical Academic terms in original Original Language when commonly used
 
-**Original Language (Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©)**
+**Original Language (العربية)**
 
 - Transcription in Original Language
 - Notes generated in Original Language
@@ -198,7 +198,7 @@ All transcriptions are automatically saved to your browser's history:
 - **Clear All**: Remove all history with confirmation dialog
 - **Cross-Tab Sync**: History updates automatically across multiple browser tabs
 - **Relative Timestamps**: "2 hours ago", "3 days ago" for easy reference
-- **Source Icons**: Visual indicators for YouTube videos (â–¶ï¸), URLs (ðŸ”—), and uploaded files (ðŸ“)
+- **Source Icons**: Visual indicators for YouTube videos (▶️), URLs (🔗), and uploaded files (📁)
 - **Persistent Storage**: Stored locally in browser (localStorage)
 
 **Note**: History is stored locally in your browser. Clearing browser data will remove all history.
@@ -290,32 +290,32 @@ ANTHROPIC_API_KEY=sk-ant-...
 ANTHROPIC_MODEL=claude-3-opus-20240229
 ```
 
-## ðŸ—ï¸ Architecture
+## 🏗️ Architecture
 
 ### Project Structure
 
 ```
 LectureAI/
-â”œâ”€â”€ actions/              # Server Actions
-â”‚   â””â”€â”€ transcription.ts  # Main processing logic
-â”œâ”€â”€ app/                  # Next.js App Router
-â”‚   â”œâ”€â”€ api/             # API routes
-â”‚   â”œâ”€â”€ layout.js        # Root layout
-â”‚   â”œâ”€â”€ page.js          # Home page
-â”‚   â””â”€â”€ globals.css      # Global styles
-â”œâ”€â”€ components/          # React components (JS)
-â”‚   â”œâ”€â”€ upload.js        # Upload form
-â”‚   â”œâ”€â”€ progress.js      # Progress indicator
-â”‚   â””â”€â”€ notes-display.js # Notes viewer
-â”œâ”€â”€ lib/                 # Core libraries (TS)
-â”‚   â”œâ”€â”€ ai.ts           # AI provider abstraction
-â”‚   â”œâ”€â”€ ffmpeg.ts       # Audio extraction
-â”‚   â””â”€â”€ upload.ts       # File handling
-â”œâ”€â”€ types/              # TypeScript definitions
-â”‚   â””â”€â”€ index.ts
-â”œâ”€â”€ utils/              # Utility functions
-â”‚   â””â”€â”€ validateFile.ts
-â””â”€â”€ public/             # Static assets
+├── actions/              # Server Actions
+│   └── transcription.ts  # Main processing logic
+├── app/                  # Next.js App Router
+│   ├── api/             # API routes
+│   ├── layout.js        # Root layout
+│   ├── page.js          # Home page
+│   └── globals.css      # Global styles
+├── components/          # React components (JS)
+│   ├── upload.js        # Upload form
+│   ├── progress.js      # Progress indicator
+│   └── notes-display.js # Notes viewer
+├── lib/                 # Core libraries (TS)
+│   ├── ai.ts           # AI provider abstraction
+│   ├── ffmpeg.ts       # Audio extraction
+│   └── upload.ts       # File handling
+├── types/              # TypeScript definitions
+│   └── index.ts
+├── utils/              # Utility functions
+│   └── validateFile.ts
+└── public/             # Static assets
 ```
 
 ### Server Actions Flow
@@ -344,7 +344,7 @@ interface MutationResult<T> {
 }
 ```
 
-## ðŸ”§ Configuration
+## 🔧 Configuration
 
 ### File Upload Limits
 
@@ -369,7 +369,7 @@ OPENAI_SUMMARIZATION_MODEL=gpt-4-turbo-preview
 GROQ_MODEL=whisper-large-v3
 ```
 
-## ðŸ“ API Reference
+## 📝 API Reference
 
 ### Server Actions
 
@@ -411,7 +411,7 @@ Generates structured notes from transcript.
 
 Extracts audio from video file using FFmpeg.
 
-## ðŸ§ª Development
+## 🧪 Development
 
 ### Testing
 
@@ -457,9 +457,9 @@ pnpm build
 pnpm start
 ```
 
-## ðŸš¢ Deployment
+## 🚢 Deployment
 
-### Fly.io (Recommended - Free Tier) â­
+### Fly.io (Recommended - Free Tier) ⭐
 
 **Full features supported**: Video, YouTube, Large files, FFmpeg, yt-dlp
 
@@ -484,7 +484,7 @@ flyctl deploy
 
 ### Vercel (Limited Features)
 
-âš ï¸ **Limitations**: No FFmpeg, No yt-dlp, 4.5MB max body size, 10-60s timeout
+⚠️ **Limitations**: No FFmpeg, No yt-dlp, 4.5MB max body size, 10-60s timeout
 
 Only suitable for:
 
@@ -528,7 +528,7 @@ Optional:
 - `ALLOWED_AUDIO_FORMATS`
 - `ALLOWED_VIDEO_FORMATS`
 
-## ðŸ¤ Contributing
+## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
@@ -552,7 +552,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `test:` - Adding or updating tests
 - `chore:` - Maintenance tasks
 
-## ðŸ“š Documentation
+## 📚 Documentation
 
 - [Quick Start](QUICKSTART.md) - Get started in 5 minutes
 - [Setup Guide](SETUP.md) - Detailed installation, configuration, and pnpm guide
@@ -562,11 +562,11 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 - [URL Source Feature](URL-SOURCE.md) - Using direct URLs for media
 - [Contributing](CONTRIBUTING.md) - How to contribute
 
-## ï¿½ðŸ“„ License
+## �📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## ðŸ™ Acknowledgments
+## 🙏 Acknowledgments
 
 - [Next.js](https://nextjs.org/) - React framework
 - [OpenAI](https://openai.com/) - Whisper and GPT models
@@ -575,13 +575,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Formidable](https://github.com/node-formidable/formidable) - File uploads
 - [pnpm](https://pnpm.io/) - Fast, disk space efficient package manager
 
-## ðŸ“ž Support
+## 📞 Support
 
-- ðŸ“« Issues: [GitHub Issues](https://github.com/taufiqelrahman/LectureAI/issues)
-- ðŸ’¬ Discussions: [GitHub Discussions](https://github.com/taufiqelrahman/LectureAI/discussions)
-- ðŸ“– Docs: [Architecture Documentation](ARCHITECTURE.md)
+- 📫 Issues: [GitHub Issues](https://github.com/taufiqelrahman/LectureAI/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/taufiqelrahman/LectureAI/discussions)
+- 📖 Docs: [Architecture Documentation](ARCHITECTURE.md)
 
-## ðŸ—ºï¸ Roadmap
+## 🗺️ Roadmap
 
 - [ ] Real-time progress tracking
 - [ ] Batch processing
@@ -593,4 +593,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with â¤ï¸ by the LectureAI community**
+**Made with ❤️ by the LectureAI community**
+

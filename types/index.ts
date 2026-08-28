@@ -66,7 +66,7 @@ export interface NotesMetadata {
   duration?: number;
   wordCount: number;
   sourceUrl?: string;
-  sourceType?: 'youtube' | 'url';
+  sourceType?: 'upload' | 'youtube' | 'url';
   note?: string;
 }
 
@@ -118,13 +118,17 @@ export interface HistoryItem {
 }
 
 export interface TranscriptionOptions {
+  customGroqKey?: string;
   language?: string;
   prompt?: string;
   temperature?: number;
 }
 
 export interface SummarizationOptions {
+  customGroqKey?: string;
   detailLevel?: 'concise' | 'detailed' | 'comprehensive';
   focusAreas?: string[];
   language?: 'english' | 'hinglish';
 }
+
+

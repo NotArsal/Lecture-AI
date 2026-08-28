@@ -75,7 +75,7 @@ export default function GlobalError({
               <p className="text-sm text-gray-500 text-center">
                 If this error persists, please{' '}
                 <a
-                  href="https://github.com/taufiqelrahman/talk2notes/issues"
+                  href="https://github.com/taufiqelrahman/lectureai/issues"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-red-600 hover:text-red-700 underline"
@@ -90,3 +90,4 @@ export default function GlobalError({
     </html>
   );
 }
+

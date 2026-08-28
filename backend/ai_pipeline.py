@@ -10,33 +10,41 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-def transcribe_local(audio_path: str) -> str:
-    """Helper function to run local transcription."""
-    try:
+
+_whisper_model = None
+
+def get_whisper_model():
+    global _whisper_model
+    if _whisper_model is None:
         import os, sys
         site_packages = next((p for p in sys.path if 'site-packages' in p), None)
         if site_packages:
             nvidia_cublas = os.path.join(site_packages, "nvidia", "cublas", "bin")
             nvidia_cudnn = os.path.join(site_packages, "nvidia", "cudnn", "bin")
             os.environ["PATH"] = f"{nvidia_cublas};{nvidia_cudnn};" + os.environ.get("PATH", "")
-
+        
         from faster_whisper import WhisperModel
+        print("Loading Whisper 'turbo' on NVIDIA RTX 4060 (CUDA)...")
         try:
-            print("Attempting to run Whisper 'turbo' on NVIDIA RTX 4060 (CUDA)...")
-            model = WhisperModel("turbo", device="cuda", compute_type="float16")
-            segments, _ = model.transcribe(audio_path, beam_size=5)
-            transcript = " ".join([segment.text for segment in segments])
-            return transcript
-        except Exception as cuda_err:
-            print(f"CUDA failed ({cuda_err}). Safely falling back to CPU...")
-            model_cpu = WhisperModel("base.en", device="cpu", compute_type="int8")
-            segments, _ = model_cpu.transcribe(audio_path, beam_size=5)
-            transcript = " ".join([segment.text for segment in segments])
-            return transcript
+            _whisper_model = WhisperModel("turbo", device="cuda", compute_type="float16")
+        except Exception as e:
+            print(f"CUDA failed ({e}). Loading CPU model...")
+            _whisper_model = WhisperModel("base.en", device="cpu", compute_type="int8")
+            
+    return _whisper_model
+
+def transcribe_local(audio_path: str) -> str:
+    """Helper function to run local transcription."""
+    try:
+        model = get_whisper_model()
+        segments, _ = model.transcribe(audio_path, beam_size=5)
+        transcript = " ".join([segment.text for segment in segments])
+        return transcript
     except ImportError:
         return "Local transcription failed. Please run 'pip install faster-whisper'."
     except Exception as e:
         return f"Local transcription error: {e}"
+
 
 def extract_local(prompt: str) -> dict:
     """Helper function to run local extraction with Ollama."""
