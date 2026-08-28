@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { UploadForm } from '@/components/upload';
@@ -7,7 +7,7 @@ import History from '@/components/history';
 import { ErrorBoundary } from '@/components/error-boundary';
 import type { LectureNotes } from '@/types';
 
-const STORAGE_KEY = 'talk2notes_last_result';
+const STORAGE_KEY = 'lectureai_last_result';
 
 export default function HomePage() {
   const [lectureNotes, setLectureNotes] = useState<LectureNotes | null>(null);

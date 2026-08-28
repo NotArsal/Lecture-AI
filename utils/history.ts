@@ -1,6 +1,6 @@
 import type { HistoryItem, LectureNotes } from '@/types';
 
-const HISTORY_KEY = 'talk2notes_history';
+const HISTORY_KEY = 'lectureai_history';
 const MAX_HISTORY_ITEMS = 50;
 
 export function getHistory(): HistoryItem[] {

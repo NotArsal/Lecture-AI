@@ -46,7 +46,7 @@ test.describe('History Management', () => {
     ];
 
     await page.evaluate((history) => {
-      localStorage.setItem('talk2notes_history', JSON.stringify(history));
+      localStorage.setItem('lectureai_history', JSON.stringify(history));
     }, mockHistory);
 
     await page.reload();
@@ -91,7 +91,7 @@ test.describe('History Management', () => {
     ];
 
     await page.evaluate((history) => {
-      localStorage.setItem('talk2notes_history', JSON.stringify(history));
+      localStorage.setItem('lectureai_history', JSON.stringify(history));
     }, mockHistory);
 
     await page.reload();
@@ -168,7 +168,7 @@ test.describe('History Management', () => {
     ];
 
     await page.evaluate((history) => {
-      localStorage.setItem('talk2notes_history', JSON.stringify(history));
+      localStorage.setItem('lectureai_history', JSON.stringify(history));
     }, mockHistory);
 
     await page.reload();
@@ -230,7 +230,7 @@ test.describe('History Management', () => {
     }
 
     await page.evaluate((history) => {
-      localStorage.setItem('talk2notes_history', JSON.stringify(history));
+      localStorage.setItem('lectureai_history', JSON.stringify(history));
     }, mockHistory);
 
     await page.reload();

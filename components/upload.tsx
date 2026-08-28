@@ -28,7 +28,7 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [mediaUrl, setMediaUrl] = useState('');
   const [inputMode, setInputMode] = useState<'file' | 'youtube' | 'url'>('file');
-  const [language, setLanguage] = useState<'english' | 'indonesian' | 'arabic'>('english');
+  const [language, setLanguage] = useState<'english' | 'hinglish'>('english');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Rate limit display
@@ -614,9 +614,9 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
           !isUploading && (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Output Language / Bahasa Output
+                Output Language
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setLanguage('english')}
@@ -631,32 +631,17 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setLanguage('indonesian')}
+                  onClick={() => setLanguage('hinglish')}
                   className={`flex items-center justify-center px-4 py-3 rounded-lg border-2 transition-all ${
-                    language === 'indonesian'
+                    language === 'hinglish'
                       ? 'border-primary-500 bg-primary-50 text-primary-700 font-medium'
                       : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
                   }`}
                 >
-                  <span className="text-2xl mr-2">🇮🇩</span>
-                  <span>Bahasa Indonesia</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage('arabic')}
-                  className={`flex items-center justify-center px-4 py-3 rounded-lg border-2 transition-all ${
-                    language === 'arabic'
-                      ? 'border-primary-500 bg-primary-50 text-primary-700 font-medium'
-                      : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                  }`}
-                >
-                  <span className="text-2xl mr-2">🇸🇦</span>
-                  <span>العربية</span>
+                  <span className="text-2xl mr-2">🇮🇳</span>
+                  <span>Hinglish</span>
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                📖 Arabic text (Quran/Hadith) will be preserved with transliteration and translation
-              </p>
             </div>
           )}
 
