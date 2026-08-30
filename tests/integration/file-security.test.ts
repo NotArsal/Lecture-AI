@@ -121,7 +121,7 @@ describe('File Security - Magic Bytes Validation', () => {
 
       const result = await validateFileSignature(filepath);
       expect(result.valid).toBe(false);
-      expect(result.error).toContain('does not match');
+      expect(result.error).toContain('magic bytes');
     });
 
     it('should reject executable disguised as audio', async () => {
@@ -144,7 +144,7 @@ describe('File Security - Magic Bytes Validation', () => {
 
       const result = await validateFileSignature(filepath);
       expect(result.valid).toBe(false);
-      expect(result.error).toContain('does not match');
+      expect(result.error).toContain('magic bytes');
     });
 
     it('should validate M4A file (ftypM4A)', async () => {
@@ -292,3 +292,4 @@ describe('File Security - Magic Bytes Validation', () => {
     });
   });
 });
+

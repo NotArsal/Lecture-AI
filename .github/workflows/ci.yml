@@ -42,7 +42,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build Native Media for Linux
-        run: cd native-media && npm i -g @napi-rs/cli && napi build --platform --release
+        run: cd native-media && cp index.d.ts index.d.ts.bak && npm i -g @napi-rs/cli && napi build --platform --release && mv -f index.d.ts.bak index.d.ts
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -91,7 +91,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build Native Media for Linux
-        run: cd native-media && npm i -g @napi-rs/cli && napi build --platform --release
+        run: cd native-media && cp index.d.ts index.d.ts.bak && npm i -g @napi-rs/cli && napi build --platform --release && mv -f index.d.ts.bak index.d.ts
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -145,7 +145,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build Native Media for Linux
-        run: cd native-media && npm i -g @napi-rs/cli && napi build --platform --release
+        run: cd native-media && cp index.d.ts index.d.ts.bak && npm i -g @napi-rs/cli && napi build --platform --release && mv -f index.d.ts.bak index.d.ts
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
