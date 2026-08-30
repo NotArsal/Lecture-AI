@@ -37,7 +37,8 @@ async def audio_transcriptions(
         f.write(await file.read())
         
     try:
-        transcript = transcribe_local(file_path)
+        import asyncio
+        transcript = await asyncio.to_thread(transcribe_local, file_path)
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -79,3 +80,4 @@ async def chat_completions(request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
