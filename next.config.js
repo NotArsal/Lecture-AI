@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  webpack: (config, { isServer }) => { if (isServer) { config.externals.push('native-media'); } return config; },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('native-media');
+    }
+    return config;
+  },
   serverExternalPackages: ['native-media'],
   experimental: {
     serverActions: {
@@ -11,6 +16,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
-
-

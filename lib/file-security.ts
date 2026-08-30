@@ -132,7 +132,9 @@ function matchesSignature(buffer: Buffer, signature: FileSignature): boolean {
 /**
  * Validate file signature against known audio/video formats
  */
-export async function validateFileSignature(filepath: string) { return validateFileSignatureNative(filepath); }
+export async function validateFileSignature(filepath: string) {
+  return validateFileSignatureNative(filepath);
+}
 
 /**
  * Validate that file signature matches claimed MIME type and extension
@@ -282,4 +284,3 @@ export async function validateFileSecurely(
     warnings: contentScan.warnings.length > 0 ? contentScan.warnings : undefined,
   };
 }
-

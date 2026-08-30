@@ -41,6 +41,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Native Media for Linux
+        run: cd native-media && npm i -g @napi-rs/cli && napi build --platform --release
+
       - name: Run ESLint
         run: pnpm lint
 
@@ -83,6 +89,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Native Media for Linux
+        run: cd native-media && npm i -g @napi-rs/cli && napi build --platform --release
 
       - name: Run integration tests
         run: pnpm test:run
@@ -132,6 +144,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Native Media for Linux
+        run: cd native-media && npm i -g @napi-rs/cli && napi build --platform --release
+
       - name: Build Next.js application
         run: pnpm build
         env:
@@ -164,3 +182,4 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
+
