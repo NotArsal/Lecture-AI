@@ -46,6 +46,7 @@
     "@google/genai": "^2.19.0",
     "fluent-ffmpeg": "^2.1.2",
     "formidable": "^3.5.1",
+    "native-media": "file:native-media",
     "next": "^15.0.0",
     "openai": "^4.28.0",
     "p-retry": "^7.1.1",
