@@ -176,9 +176,11 @@ export async function extractAudioFromVideo(
     `[FFmpeg] Video size: ${videoSizeMB.toFixed(2)}MB, using ${bitrate}kbps audio bitrate`
   );
 
-  return new Promise((resolve, reject) => {
-    extractAndCompressAudio(videoPath, outputPath).then(result => { if(result.success) { resolve({ audioPath: outputPath, duration: 0, format: 'mp3' }); } else { reject(new Error(result.error || 'Rust ffmpeg wrapper failed')); } }).catch(reject);
-  });
+  const result = await extractAndCompressAudio(videoPath, outputPath);
+  if (!result.success) {
+    throw new Error(result.error || 'Rust ffmpeg wrapper failed');
+  }
+  return { audioPath: outputPath, duration: 0, format: 'mp3' };
 }
 
 export async function getAudioDuration(filePath: string): Promise<number> {
@@ -315,5 +317,7 @@ export async function getAudioMetadata(filePath: string): Promise<{
     });
   });
 }
+
+
 
 

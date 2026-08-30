@@ -11,26 +11,27 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 
+import threading
 _whisper_model = None
+_model_lock = threading.Lock()
 
 def get_whisper_model():
     global _whisper_model
-    if _whisper_model is None:
-        import os, sys
-        site_packages = next((p for p in sys.path if 'site-packages' in p), None)
-        if site_packages:
-            nvidia_cublas = os.path.join(site_packages, "nvidia", "cublas", "bin")
-            nvidia_cudnn = os.path.join(site_packages, "nvidia", "cudnn", "bin")
-            os.environ["PATH"] = f"{nvidia_cublas};{nvidia_cudnn};" + os.environ.get("PATH", "")
-        
-        from faster_whisper import WhisperModel
-        print("Loading Whisper 'turbo' on NVIDIA RTX 4060 (CUDA)...")
-        try:
-            _whisper_model = WhisperModel("turbo", device="cuda", compute_type="float16")
-        except Exception as e:
-            print(f"CUDA failed ({e}). Loading CPU model...")
-            _whisper_model = WhisperModel("base.en", device="cpu", compute_type="int8")
-            
+    with _model_lock:
+        if _whisper_model is None:
+            import os, sys
+            site_packages = next((p for p in sys.path if 'site-packages' in p), None)
+            if site_packages:
+                nvidia_cublas = os.path.join(site_packages, "nvidia", "cublas", "bin")
+                nvidia_cudnn = os.path.join(site_packages, "nvidia", "cudnn", "bin")
+                os.environ["PATH"] = f"{nvidia_cublas};{nvidia_cudnn};" + os.environ.get("PATH", "")
+            from faster_whisper import WhisperModel
+            print("Loading Whisper 'turbo' on NVIDIA RTX 4060 (CUDA)...")
+            try:
+                _whisper_model = WhisperModel("turbo", device="cuda", compute_type="float16")
+            except Exception as e:
+                print(f"CUDA failed ({e}). Loading CPU model...")
+                _whisper_model = WhisperModel("base.en", device="cpu", compute_type="int8")
     return _whisper_model
 
 def transcribe_local(audio_path: str) -> str:
@@ -71,7 +72,7 @@ def transcribe_audio(audio_path: str) -> str:
             client = Groq(api_key=GROQ_API_KEY)
             with open(audio_path, "rb") as file:
                 response = client.audio.transcriptions.create(
-                    file=(audio_path, file.read()),
+                    file=(os.path.basename(audio_path), file),
                     model="whisper-large-v3-turbo",
                     response_format="text"
                 )
@@ -112,3 +113,6 @@ def extract_lecture_info(transcript: str) -> dict:
             
     print("Running local Ollama (gemma4:e4b)...")
     return extract_local(prompt)
+
+
+

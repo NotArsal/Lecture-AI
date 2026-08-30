@@ -34,7 +34,11 @@ async def audio_transcriptions(
     
     with open(file_path, "wb") as f:
 
-        f.write(await file.read())
+        while True:
+              chunk = await file.read(1024 * 1024)
+              if not chunk:
+                  break
+              f.write(chunk)
         
     try:
         import asyncio
@@ -65,19 +69,15 @@ async def chat_completions(request: Request):
     
     async def forward():
         async with httpx.AsyncClient() as client:
-            req = client.build_request(
-                method="POST", 
-                url=OLLAMA_URL, 
-                json=body,
-                headers={"Authorization": "Bearer dummy"}
-            )
-            r = await client.send(req, stream=True)
-            async for chunk in r.aiter_raw():
-                yield chunk
+            async with client.stream("POST", OLLAMA_URL, json=body, headers={"Authorization": "Bearer dummy"}) as r:
+                  async for chunk in r.aiter_raw():
+                      yield chunk
 
     return StreamingResponse(forward(), media_type="application/json")
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
 
