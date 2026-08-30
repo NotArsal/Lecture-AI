@@ -6,7 +6,7 @@ extern crate napi_derive;
 use napi::bindgen_prelude::*;
 use std::fs::File;
 use std::io::Read;
-use std::process::Command;
+use tokio::process::Command;
 
 #[napi(object)]
 pub struct SignatureCheckResult {
@@ -107,7 +107,7 @@ pub async fn extract_and_compress_audio(input_path: String, output_path: String)
             &output_path,
             "-y"
         ])
-        .output();
+        .output().await;
 
     match output {
         Ok(out) => {
@@ -133,3 +133,5 @@ pub async fn extract_and_compress_audio(input_path: String, output_path: String)
         }),
     }
 }
+
+
