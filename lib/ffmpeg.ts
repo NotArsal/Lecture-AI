@@ -1,3 +1,4 @@
+import { extractAndCompressAudio } from 'native-media';
 import { promises as fs } from 'fs';
 import os from 'os';
 import path from 'path';
@@ -176,59 +177,7 @@ export async function extractAudioFromVideo(
   );
 
   return new Promise((resolve, reject) => {
-    ffmpeg(videoPath)
-      .toFormat('mp3')
-      .audioBitrate(bitrate)
-      .audioChannels(1)
-      .audioFrequency(16000)
-      .audioCodec('libmp3lame')
-      .on('start', (cmd) => {
-        console.log(`[FFmpeg] Starting extraction: ${cmd}`);
-      })
-      .on('end', async () => {
-        try {
-          const duration = await getAudioDuration(outputPath);
-
-          // Check if output file is within safe limits
-          const stats = await fs.stat(outputPath);
-          const fileSizeMB = stats.size / (1024 * 1024);
-
-          console.log(
-            `[FFmpeg] Extracted audio: ${fileSizeMB.toFixed(2)}MB, duration: ${duration.toFixed(2)}s`
-          );
-
-          // Reject if > 25MB (OpenAI limit)
-          if (fileSizeMB > 25) {
-            await fs.unlink(outputPath).catch(() => {});
-            reject(
-              new Error(
-                `Extracted audio is ${fileSizeMB.toFixed(2)}MB, exceeds 25MB limit. ` +
-                  `Please use a shorter video.`
-              )
-            );
-            return;
-          }
-
-          // Warn if > 10MB (less reliable)
-          if (fileSizeMB > 10) {
-            console.warn(
-              `[FFmpeg] Warning: Audio file is ${fileSizeMB.toFixed(2)}MB, may cause upload issues`
-            );
-          }
-
-          resolve({
-            audioPath: outputPath,
-            duration,
-            format: 'mp3',
-          });
-        } catch (error) {
-          reject(error);
-        }
-      })
-      .on('error', (err) => {
-        reject(new Error(`FFmpeg extraction failed: ${err.message}`));
-      })
-      .save(outputPath);
+    extractAndCompressAudio(videoPath, outputPath).then(result => { if(result.success) { resolve({ audioPath: outputPath, duration: 0, format: 'mp3' }); } else { reject(new Error(result.error || 'Rust ffmpeg wrapper failed')); } }).catch(reject);
   });
 }
 
@@ -366,3 +315,5 @@ export async function getAudioMetadata(filePath: string): Promise<{
     });
   });
 }
+
+

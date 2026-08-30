@@ -1,3 +1,4 @@
+import { validateFileSignature as validateFileSignatureNative } from 'native-media';
 import { promises as fs } from 'fs';
 
 /**
@@ -131,36 +132,7 @@ function matchesSignature(buffer: Buffer, signature: FileSignature): boolean {
 /**
  * Validate file signature against known audio/video formats
  */
-export async function validateFileSignature(
-  filepath: string
-): Promise<{ valid: boolean; detectedType?: string; detectedMime?: string; error?: string }> {
-  try {
-    // Read first 12 bytes (enough for most signatures)
-    const header = await readFileHeader(filepath, 12);
-
-    // Check against all known signatures
-    for (const signature of FILE_SIGNATURES) {
-      if (matchesSignature(header, signature)) {
-        return {
-          valid: true,
-          detectedType: signature.extension,
-          detectedMime: signature.mimeType,
-        };
-      }
-    }
-
-    // No matching signature found
-    return {
-      valid: false,
-      error: 'File signature does not match any supported audio/video format',
-    };
-  } catch (error) {
-    return {
-      valid: false,
-      error: `Failed to read file signature: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    };
-  }
-}
+export async function validateFileSignature(filepath: string) { return validateFileSignatureNative(filepath); }
 
 /**
  * Validate that file signature matches claimed MIME type and extension
@@ -310,3 +282,4 @@ export async function validateFileSecurely(
     warnings: contentScan.warnings.length > 0 ? contentScan.warnings : undefined,
   };
 }
+

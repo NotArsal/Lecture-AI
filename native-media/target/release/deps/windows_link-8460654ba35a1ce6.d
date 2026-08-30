@@ -1,0 +1,8 @@
+D:\Vit\Academics Sem-5\DTPLM\DTPLM CP\talk2notes\native-media\target\release\deps\windows_link-8460654ba35a1ce6.d: C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\lib.rs C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\../readme.md
+
+D:\Vit\Academics Sem-5\DTPLM\DTPLM CP\talk2notes\native-media\target\release\deps\libwindows_link-8460654ba35a1ce6.rlib: C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\lib.rs C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\../readme.md
+
+D:\Vit\Academics Sem-5\DTPLM\DTPLM CP\talk2notes\native-media\target\release\deps\libwindows_link-8460654ba35a1ce6.rmeta: C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\lib.rs C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\../readme.md
+
+C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\lib.rs:
+C:\Users\shaik\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows-link-0.2.1\src\../readme.md:
