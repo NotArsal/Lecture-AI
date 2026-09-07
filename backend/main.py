@@ -7,7 +7,18 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from ai_pipeline import transcribe_local
 
-app = FastAPI(title="LectureAI Local Proxy", version="1.0.0")
+from contextlib import asynccontextmanager
+from ai_pipeline import load_whisper_model, unload_whisper_model
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load ML models into VRAM eagerly on startup so the first request doesn't block
+    load_whisper_model()
+    yield
+    # Clean up ML models on shutdown to release VRAM
+    unload_whisper_model()
+
+app = FastAPI(title="LectureAI Local Proxy", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -78,6 +89,7 @@ async def chat_completions(request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
 
 

@@ -15,7 +15,7 @@ import threading
 _whisper_model = None
 _model_lock = threading.Lock()
 
-def get_whisper_model():
+def load_whisper_model():
     global _whisper_model
     with _model_lock:
         if _whisper_model is None:
@@ -33,6 +33,17 @@ def get_whisper_model():
                 print(f"CUDA failed ({e}). Loading CPU model...")
                 _whisper_model = WhisperModel("base.en", device="cpu", compute_type="int8")
     return _whisper_model
+
+def unload_whisper_model():
+    global _whisper_model
+    with _model_lock:
+        if _whisper_model is not None:
+            print("Unloading Whisper model to free up VRAM...")
+            del _whisper_model
+            _whisper_model = None
+
+def get_whisper_model():
+    return load_whisper_model()
 
 def transcribe_local(audio_path: str) -> str:
     """Helper function to run local transcription."""
@@ -113,6 +124,8 @@ def extract_lecture_info(transcript: str) -> dict:
             
     print("Running local Ollama (gemma4:e4b)...")
     return extract_local(prompt)
+
+
 
 
 
