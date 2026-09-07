@@ -292,4 +292,3 @@ describe('File Security - Magic Bytes Validation', () => {
     });
   });
 });
-
