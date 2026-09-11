@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { extractAndCompressAudio } from 'native-media';
 import { promises as fs } from 'fs';
 import os from 'os';
@@ -8,7 +9,7 @@ import type { TranscriptionSegment } from '@/types';
 
 // Auto-detect FFmpeg and FFprobe paths with runtime verification
 function detectBinaryPath(binaryName: string): string {
-  console.log(`[FFmpeg] Detecting ${binaryName}...`);
+  logger.info(`[FFmpeg] Detecting ${binaryName}...`);
 
   // Try common installation locations directly first (faster)
   const commonPaths = [
@@ -27,7 +28,7 @@ function detectBinaryPath(binaryName: string): string {
       }).trim();
 
       if (result === 'exists') {
-        console.log(`[FFmpeg] Found ${binaryName} at: ${testPath}`);
+        logger.info(`[FFmpeg] Found ${binaryName} at: ${testPath}`);
         return testPath;
       }
     } catch (error) {
@@ -43,22 +44,22 @@ function detectBinaryPath(binaryName: string): string {
     }).trim();
 
     if (result && result.length > 0) {
-      console.log(`[FFmpeg] Found ${binaryName} via 'which': ${result}`);
+      logger.info(`[FFmpeg] Found ${binaryName} via 'which': ${result}`);
       return result;
     }
   } catch (error) {
-    console.log(`[FFmpeg] 'which' command failed for ${binaryName}`);
+    logger.info(`[FFmpeg] 'which' command failed for ${binaryName}`);
   }
 
   // Last resort: just use the binary name (rely on PATH at runtime)
-  console.warn(`[FFmpeg] Using binary name as fallback: ${binaryName}`);
+  logger.warn(`[FFmpeg] Using binary name as fallback: ${binaryName}`);
   return binaryName;
 }
 
 const FFMPEG_PATH = process.env.FFMPEG_PATH || detectBinaryPath('ffmpeg');
 const FFPROBE_PATH = process.env.FFPROBE_PATH || detectBinaryPath('ffprobe');
 
-console.log(`[FFmpeg] Configured paths:`, { FFMPEG_PATH, FFPROBE_PATH });
+logger.info(`[FFmpeg] Configured paths:`, { FFMPEG_PATH, FFPROBE_PATH });
 
 // Set paths for fluent-ffmpeg
 ffmpeg.setFfmpegPath(FFMPEG_PATH);
@@ -71,10 +72,10 @@ function validateFFmpegInstallation(): { isValid: boolean; details: string } {
   // Test FFmpeg
   try {
     execSync(`"${FFMPEG_PATH}" -version`, { stdio: 'ignore', timeout: 5000 });
-    console.log(`[FFmpeg] ✓ ffmpeg is working (${FFMPEG_PATH})`);
+    logger.info(`[FFmpeg] ✓ ffmpeg is working (${FFMPEG_PATH})`);
   } catch (error: any) {
     const errorMsg = `ffmpeg not executable at: ${FFMPEG_PATH}`;
-    console.error(`[FFmpeg] ${errorMsg}`, error.message);
+    logger.error(`[FFmpeg] ${errorMsg}`, error.message);
     errors.push(errorMsg);
 
     // Try alternative paths
@@ -91,10 +92,10 @@ function validateFFmpegInstallation(): { isValid: boolean; details: string } {
   // Test FFprobe
   try {
     execSync(`"${FFPROBE_PATH}" -version`, { stdio: 'ignore', timeout: 5000 });
-    console.log(`[FFmpeg] ✓ ffprobe is working (${FFPROBE_PATH})`);
+    logger.info(`[FFmpeg] ✓ ffprobe is working (${FFPROBE_PATH})`);
   } catch (error: any) {
     const errorMsg = `ffprobe not executable at: ${FFPROBE_PATH}`;
-    console.error(`[FFmpeg] ${errorMsg}`, error.message);
+    logger.error(`[FFmpeg] ${errorMsg}`, error.message);
     errors.push(errorMsg);
 
     // Try alternative paths
@@ -131,7 +132,7 @@ export function checkFFmpegAvailable(): boolean {
     const result = validateFFmpegInstallation();
     return result.isValid;
   } catch (error) {
-    console.error('[FFmpeg] Validation error:', error);
+    logger.error('[FFmpeg] Validation error:', error);
     return false;
   }
 }
@@ -172,7 +173,7 @@ export async function extractAudioFromVideo(
     bitrate = 64; // For smaller videos
   }
 
-  console.log(
+  logger.info(
     `[FFmpeg] Video size: ${videoSizeMB.toFixed(2)}MB, using ${bitrate}kbps audio bitrate`
   );
 
@@ -247,11 +248,11 @@ export async function compressAudioIfNeeded(
   const stats = await fs.stat(inputPath);
   const currentSizeMB = stats.size / (1024 * 1024);
 
-  console.log(`[Compress] Current size: ${currentSizeMB.toFixed(2)}MB, target: ${targetSizeMB}MB`);
+  logger.info(`[Compress] Current size: ${currentSizeMB.toFixed(2)}MB, target: ${targetSizeMB}MB`);
 
   // If already under target, return original
   if (currentSizeMB <= targetSizeMB) {
-    console.log(`[Compress] File already within target size`);
+    logger.info(`[Compress] File already within target size`);
     return inputPath;
   }
 
@@ -265,7 +266,7 @@ export async function compressAudioIfNeeded(
   const targetBitrate = Math.floor((targetSizeMB * 8192) / duration);
   const bitrate = Math.max(32, Math.min(targetBitrate, 64)); // Between 32-64 kbps
 
-  console.log(`[Compress] Compressing with ${bitrate}kbps (duration: ${duration.toFixed(2)}s)`);
+  logger.info(`[Compress] Compressing with ${bitrate}kbps (duration: ${duration.toFixed(2)}s)`);
 
   return new Promise((resolve, reject) => {
     ffmpeg(inputPath)
@@ -277,7 +278,7 @@ export async function compressAudioIfNeeded(
       .on('end', async () => {
         const newStats = await fs.stat(outputPath);
         const newSizeMB = newStats.size / (1024 * 1024);
-        console.log(`[Compress] Compressed to ${newSizeMB.toFixed(2)}MB`);
+        logger.info(`[Compress] Compressed to ${newSizeMB.toFixed(2)}MB`);
         resolve(outputPath);
       })
       .on('error', (err) => {
@@ -291,7 +292,7 @@ export async function cleanupTempFile(filePath: string): Promise<void> {
   try {
     await fs.unlink(filePath);
   } catch (error) {
-    console.error(`Failed to cleanup temp file ${filePath}:`, error);
+    logger.error(`Failed to cleanup temp file ${filePath}:`, error);
   }
 }
 

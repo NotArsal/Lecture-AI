@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import OpenAI from 'openai';
 import pRetry from 'p-retry';
 import type { AIConfig } from '@/types';
@@ -10,7 +11,7 @@ export function retryOptions(label: string): Parameters<typeof pRetry>[1] {
     maxTimeout: 10000,
     randomize: true,
     onFailedAttempt: (error) => {
-      console.log(
+      logger.info(
         `[${label}] Attempt ${error.attemptNumber} failed. ${error.retriesLeft} retries left.`
       );
     },

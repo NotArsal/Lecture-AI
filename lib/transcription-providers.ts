@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import OpenAI from 'openai';
 import { promises as fs } from 'fs';
 import pRetry, { AbortError } from 'p-retry';
@@ -20,7 +21,7 @@ export async function transcribeWithOpenAI(
   }
 
   const shouldCompress = fileSizeMB > 10;
-  console.log(
+  logger.info(
     `[Transcription] File size: ${fileSizeMB.toFixed(2)}MB${shouldCompress ? ' - Will attempt compression' : ''}`
   );
 
@@ -28,15 +29,15 @@ export async function transcribeWithOpenAI(
     timeout: 600000,
     maxRetries: 0,
   });
-  console.log(`[Transcription] Using OpenAI baseURL: ${openai.baseURL}`);
+  logger.info(`[Transcription] Using OpenAI baseURL: ${openai.baseURL}`);
 
   return pRetry(async (attemptNumber) => {
     try {
-      console.log(`[Transcription] Attempt ${attemptNumber}/${3}...`);
+      logger.info(`[Transcription] Attempt ${attemptNumber}/${3}...`);
 
       const audioBuffer = await fs.readFile(audioPath);
       const blob = new Blob([audioBuffer], { type: 'audio/mpeg' });
-      console.log(`[Transcription] Uploading ${blob.size} bytes to OpenAI...`);
+      logger.info(`[Transcription] Uploading ${blob.size} bytes to OpenAI...`);
 
       const response = await openai.audio.transcriptions.create({
         file: blob as any,
@@ -47,7 +48,7 @@ export async function transcribeWithOpenAI(
         response_format: 'verbose_json',
       });
 
-      console.log(`[Transcription] Success! Duration: ${response.duration}s`);
+      logger.info(`[Transcription] Success! Duration: ${response.duration}s`);
 
       return {
         text: response.text,
@@ -61,7 +62,7 @@ export async function transcribeWithOpenAI(
         })),
       };
     } catch (error: any) {
-      console.error(`[Transcription] Attempt ${attemptNumber} failed:`, error.message);
+      logger.error(`[Transcription] Attempt ${attemptNumber} failed:`, error.message);
       if (error.status === 401 || error.status === 400) throw new AbortError(error.message);
       throw error;
     }
@@ -81,7 +82,7 @@ export async function transcribeWithGroq(
   options: TranscriptionOptions
 ): Promise<TranscriptionResult> {
   return pRetry(async (attemptNumber) => {
-    console.log(`[Groq Transcription] Attempt ${attemptNumber}...`);
+    logger.info(`[Groq Transcription] Attempt ${attemptNumber}...`);
 
     const audioFile = await fs.readFile(audioPath);
     const blob = new Blob([audioFile], { type: 'audio/mpeg' });
@@ -117,7 +118,7 @@ export async function transcribeWithDeepgram(
   options: TranscriptionOptions
 ): Promise<TranscriptionResult> {
   return pRetry(async (attemptNumber) => {
-    console.log(`[Deepgram Transcription] Attempt ${attemptNumber}...`);
+    logger.info(`[Deepgram Transcription] Attempt ${attemptNumber}...`);
 
     const audioBuffer = await fs.readFile(audioPath);
     const response = await fetch(

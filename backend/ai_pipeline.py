@@ -1,3 +1,5 @@
+from logger import get_logger
+logger = get_logger(__name__)
 import os
 import json
 from groq import Groq
@@ -26,11 +28,11 @@ def load_whisper_model():
                 nvidia_cudnn = os.path.join(site_packages, "nvidia", "cudnn", "bin")
                 os.environ["PATH"] = f"{nvidia_cublas};{nvidia_cudnn};" + os.environ.get("PATH", "")
             from faster_whisper import WhisperModel
-            print("Loading Whisper 'turbo' on NVIDIA RTX 4060 (CUDA)...")
+            logger.info("Loading Whisper 'turbo' on NVIDIA RTX 4060 (CUDA)...")
             try:
                 _whisper_model = WhisperModel("turbo", device="cuda", compute_type="float16")
             except Exception as e:
-                print(f"CUDA failed ({e}). Loading CPU model...")
+                logger.info(f"CUDA failed ({e}). Loading CPU model...")
                 _whisper_model = WhisperModel("base.en", device="cpu", compute_type="int8")
     return _whisper_model
 
@@ -38,7 +40,7 @@ def unload_whisper_model():
     global _whisper_model
     with _model_lock:
         if _whisper_model is not None:
-            print("Unloading Whisper model to free up VRAM...")
+            logger.info("Unloading Whisper model to free up VRAM...")
             del _whisper_model
             _whisper_model = None
 
@@ -90,9 +92,9 @@ def transcribe_audio(audio_path: str) -> str:
             # Response format 'text' returns a string directly
             return response
         except Exception as e:
-            print(f"Groq API failed or exhausted ({e}). Falling back to local...")
+            logger.info(f"Groq API failed or exhausted ({e}). Falling back to local...")
     
-    print("Running local faster-whisper...")
+    logger.info("Running local faster-whisper...")
     return transcribe_local(audio_path)
 
 def extract_lecture_info(transcript: str) -> dict:
@@ -120,9 +122,9 @@ def extract_lecture_info(transcript: str) -> dict:
             )
             return json.loads(response.text)
         except Exception as e:
-            print(f"Gemini API failed or exhausted ({e}). Falling back to local...")
+            logger.info(f"Gemini API failed or exhausted ({e}). Falling back to local...")
             
-    print("Running local Ollama (gemma4:e4b)...")
+    logger.info("Running local Ollama (gemma4:e4b)...")
     return extract_local(prompt)
 
 

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import formidable, { File as FormidableFile } from 'formidable';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -55,7 +56,7 @@ export async function parseFormData(req: IncomingMessage): Promise<ParsedFormDat
             );
 
             if (!validation.valid) {
-              fs.unlink(file.filepath).catch(console.error);
+              fs.unlink(file.filepath).catch(logger.error);
               reject(new Error(validation.error));
               return;
             }
@@ -105,7 +106,7 @@ export async function saveUploadedFile(file: File, filename?: string): Promise<U
 
   // Log warnings if any (but allow upload)
   if (securityCheck.warnings && securityCheck.warnings.length > 0) {
-    console.warn(
+    logger.warn(
       `[Security] File validation warnings for ${savedFilename}:`,
       securityCheck.warnings
     );
@@ -123,7 +124,7 @@ export async function cleanupUploadedFile(filepath: string): Promise<void> {
   try {
     await fs.unlink(filepath);
   } catch (error) {
-    console.error(`Failed to cleanup uploaded file ${filepath}:`, error);
+    logger.error(`Failed to cleanup uploaded file ${filepath}:`, error);
   }
 }
 

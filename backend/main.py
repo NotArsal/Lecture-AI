@@ -1,3 +1,5 @@
+from logger import get_logger
+logger = get_logger(__name__)
 import os
 import tempfile
 import uuid
@@ -20,6 +22,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="LectureAI Local Proxy", version="1.0.0", lifespan=lifespan)
 
+
+import time
+from fastapi import Request
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    logger.info(f"{request.method} {request.url.path} - {response.status_code} - {process_time:.4f}s")
+    return response
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -34,7 +48,7 @@ async def audio_transcriptions(
     file: UploadFile = File(...),
     model: str = Form("whisper-1")
 ):
-    print(f"Received transcription request for model: {model}")
+    logger.info(f"Received transcription request for model: {model}")
     
     # Save temp file
     
@@ -69,7 +83,7 @@ async def audio_transcriptions(
 @app.post("/v1/chat/completions")
 @app.post("/chat/completions")
 async def chat_completions(request: Request):
-    print("Received chat completion request, proxying to Ollama...")
+    logger.info("Received chat completion request, proxying to Ollama...")
     body = await request.json()
     
     # Force model to gemma4:e4b or keep as is

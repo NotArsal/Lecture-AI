@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { describe, it, expect, vi } from 'vitest';
 import {
   retryOptions,
@@ -47,7 +48,7 @@ describe('retryOptions', () => {
   });
 
   it('logs the label on failed attempt', () => {
-    const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const spy = vi.spyOn(logger, 'info').mockImplementation(() => {});
     const opts = retryOptions('MyLabel');
     opts!.onFailedAttempt!({ attemptNumber: 1, retriesLeft: 2 } as any);
     expect(spy).toHaveBeenCalledWith(expect.stringContaining('MyLabel'));
@@ -137,3 +138,5 @@ describe('addBasicParagraphs', () => {
     expect(result.length).toBeGreaterThan(0);
   });
 });
+
+

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -34,10 +35,10 @@ async function processAudioPipeline(
   try {
     const stats = await fs.stat(currentAudioPath);
     const fileSizeMB = stats.size / (1024 * 1024);
-    console.log(`[Pipeline] Audio size: ${fileSizeMB.toFixed(2)}MB`);
+    logger.info(`[Pipeline] Audio size: ${fileSizeMB.toFixed(2)}MB`);
 
     if (fileSizeMB > 24) {
-      console.log('[Pipeline] Audio too large, compressing...');
+      logger.info('[Pipeline] Audio too large, compressing...');
       compressedAudio = await compressAudioIfNeeded(currentAudioPath, 24);
       currentAudioPath = compressedAudio;
     }
@@ -247,7 +248,7 @@ export async function createTranscriptionMutation(
       if (tempAudioPath) await cleanupUploadedFile(tempAudioPath).catch(() => {});
     }
   } catch (error) {
-    console.error('Transcription failed:', error);
+    logger.error('Transcription failed:', error);
     return {
       success: false,
       error: formatApiError(error),
@@ -285,7 +286,7 @@ export async function validateFileMutation(
       },
     };
   } catch (error) {
-    console.error('File validation failed:', error);
+    logger.error('File validation failed:', error);
     return {
       success: false,
       error: formatApiError(error),
@@ -314,7 +315,7 @@ export async function cleanupFilesAction(filePaths: string[]): Promise<MutationR
       success: true,
     };
   } catch (error) {
-    console.error('Cleanup failed:', error);
+    logger.error('Cleanup failed:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Cleanup failed',

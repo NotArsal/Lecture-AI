@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import pRetry, { AbortError } from 'p-retry';
 import type {
   TranscriptionResult,
@@ -122,11 +123,11 @@ export async function transcribeAudio(
         throw new Error(`Transcription not supported for provider: ${config.provider}`);
     }
   } catch (error: any) {
-    console.error(`[Transcription] Primary provider (${config.provider}) failed:`, error.message);
+    logger.error(`[Transcription] Primary provider (${config.provider}) failed:`, error.message);
 
     // Quick fallback to local proxy if Groq fails or API key is exhausted
     if (config.provider !== 'openai' && process.env.OPENAI_BASE_URL) {
-      console.log(`[Transcription] Falling back to local AI proxy...`);
+      logger.info(`[Transcription] Falling back to local AI proxy...`);
       const fallbackConfig = {
         provider: 'openai' as const,
         transcriptionModel: process.env.OPENAI_TRANSCRIPTION_MODEL || 'turbo',
@@ -153,7 +154,7 @@ export async function translateTranscript(
     throw new Error(`API key not configured for provider: ${config.provider}`);
   }
 
-  console.log(`[Translation] Translating transcript to Indonesian...`);
+  logger.info(`[Translation] Translating transcript to Indonesian...`);
 
   try {
     if (config.provider === 'openai' || config.provider === 'groq') {
@@ -181,7 +182,7 @@ export async function translateTranscript(
       });
 
       const translated = response.choices[0].message.content || transcript;
-      console.log(`[Translation] ✓ Translation complete`);
+      logger.info(`[Translation] ✓ Translation complete`);
       return translated;
     } else if (config.provider === 'gemini') {
       const ai = new GoogleGenAI({ apiKey: config.apiKey });
@@ -194,15 +195,15 @@ export async function translateTranscript(
           temperature: 0.3,
         },
       });
-      console.log(`[Translation] ✓ Translation complete`);
+      logger.info(`[Translation] ✓ Translation complete`);
       return response.text || transcript;
     } else {
       // For other providers, return original transcript
-      console.log(`[Translation] Translation not supported for provider: ${config.provider}`);
+      logger.info(`[Translation] Translation not supported for provider: ${config.provider}`);
       return transcript;
     }
   } catch (error) {
-    console.error('[Translation] Translation failed:', error);
+    logger.error('[Translation] Translation failed:', error);
     // Return original transcript if translation fails
     return transcript;
   }
@@ -228,7 +229,7 @@ export async function formatTranscript(
       const estimatedTokens = Math.ceil(transcript.length / 4);
       let processedTranscript = transcript;
       if (estimatedTokens > maxTokens) {
-        console.log(`[Format] Transcript too long, cropping to ${maxTokens} tokens for formatting`);
+        logger.info(`[Format] Transcript too long, cropping to ${maxTokens} tokens for formatting`);
         processedTranscript = cropToTokenLimit(transcript, maxTokens);
       }
       const response = await openai.chat.completions.create({
@@ -253,7 +254,7 @@ export async function formatTranscript(
       const estimatedTokens = Math.ceil(transcript.length / 4);
       let processedTranscript = transcript;
       if (estimatedTokens > maxTokens) {
-        console.log(`[Format] Transcript too long, cropping to ${maxTokens} tokens for formatting`);
+        logger.info(`[Format] Transcript too long, cropping to ${maxTokens} tokens for formatting`);
         processedTranscript = cropToTokenLimit(transcript, maxTokens);
       }
       const response = await ai.models.generateContent({
@@ -271,7 +272,7 @@ export async function formatTranscript(
     }
     return addBasicParagraphs(transcript);
   } catch (error) {
-    console.error('[Format] Formatting failed:', error);
+    logger.error('[Format] Formatting failed:', error);
     return addBasicParagraphs(transcript);
   }
 }
@@ -289,18 +290,18 @@ export async function summarizeTranscript(
 
   const maxInputTokens = config.provider === 'groq' ? GROQ_MAX_INPUT_TOKENS : 100000;
   const estimatedTokens = Math.ceil(transcript.length / 4);
-  console.log(`[Summarization] Estimated tokens: ${estimatedTokens}, Max: ${maxInputTokens}`);
+  logger.info(`[Summarization] Estimated tokens: ${estimatedTokens}, Max: ${maxInputTokens}`);
 
   let processedTranscript = transcript;
   let wasCropped = false;
 
   if (estimatedTokens > maxInputTokens) {
-    console.log(
+    logger.info(
       `[Summarization] Transcript too long (${estimatedTokens} tokens), cropping to ${maxInputTokens} tokens...`
     );
     processedTranscript = cropToTokenLimit(transcript, maxInputTokens);
     wasCropped = true;
-    console.log(
+    logger.info(
       `[Summarization] Cropped transcript to ${Math.ceil(processedTranscript.length / 4)} tokens`
     );
   }
@@ -312,7 +313,7 @@ export async function summarizeTranscript(
     if (config.provider === 'openai' || config.provider === 'groq') {
       const openai = createOpenAIClient(config, { maxRetries: 0 });
       summaryText = await pRetry(async (attemptNumber) => {
-        console.log(`[Summarization] Attempt ${attemptNumber}...`);
+        logger.info(`[Summarization] Attempt ${attemptNumber}...`);
         const response = await openai.chat.completions.create({
           model: config.summarizationModel,
           messages: [
@@ -328,7 +329,7 @@ export async function summarizeTranscript(
     } else if (config.provider === 'gemini') {
       const ai = new GoogleGenAI({ apiKey: config.apiKey });
       summaryText = await pRetry(async (attemptNumber) => {
-        console.log(`[Gemini Summarization] Attempt ${attemptNumber}...`);
+        logger.info(`[Gemini Summarization] Attempt ${attemptNumber}...`);
         const response = await ai.models.generateContent({
           model: config.summarizationModel,
           contents: processedTranscript,
@@ -342,7 +343,7 @@ export async function summarizeTranscript(
       }, retryOptions('Summarization'));
     } else if (config.provider === 'anthropic') {
       summaryText = await pRetry(async (attemptNumber) => {
-        console.log(`[Anthropic Summarization] Attempt ${attemptNumber}...`);
+        logger.info(`[Anthropic Summarization] Attempt ${attemptNumber}...`);
         const response = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           headers: {
@@ -372,11 +373,11 @@ export async function summarizeTranscript(
       throw new Error(`Summarization not supported for provider: ${config.provider}`);
     }
   } catch (error: any) {
-    console.error(`[Summarization] Primary provider (${config.provider}) failed:`, error.message);
+    logger.error(`[Summarization] Primary provider (${config.provider}) failed:`, error.message);
 
     // Quick fallback to local proxy
     if (config.provider !== 'openai' && process.env.OPENAI_BASE_URL) {
-      console.log(`[Summarization] Falling back to local AI proxy...`);
+      logger.info(`[Summarization] Falling back to local AI proxy...`);
       const fallbackConfig = {
         provider: 'openai' as const,
         transcriptionModel: process.env.OPENAI_TRANSCRIPTION_MODEL || 'turbo',
@@ -386,7 +387,7 @@ export async function summarizeTranscript(
 
       const fallbackOpenai = createOpenAIClient(fallbackConfig, { maxRetries: 0 });
       summaryText = await pRetry(async (attemptNumber) => {
-        console.log(`[Summarization] Fallback Attempt ${attemptNumber}...`);
+        logger.info(`[Summarization] Fallback Attempt ${attemptNumber}...`);
         const response = await fallbackOpenai.chat.completions.create({
           model: fallbackConfig.summarizationModel,
           messages: [
