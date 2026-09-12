@@ -1,6 +1,6 @@
-import { logger } from '@/lib/logger';
-('use server');
+'use server';
 
+import { logger } from '@/lib/logger';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import type { MutationResult, LectureNotes, UploadedFile, ProcessingState } from '@/types';
