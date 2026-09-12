@@ -138,5 +138,3 @@ describe('addBasicParagraphs', () => {
     expect(result.length).toBeGreaterThan(0);
   });
 });
-
-

@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import formidable, { File as FormidableFile } from 'formidable';
 import { promises as fs } from 'fs';
 import path from 'path';

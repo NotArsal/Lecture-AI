@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import pRetry, { AbortError } from 'p-retry';
 import type {
   TranscriptionResult,

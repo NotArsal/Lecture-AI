@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import OpenAI from 'openai';
 import { promises as fs } from 'fs';
 import pRetry, { AbortError } from 'p-retry';

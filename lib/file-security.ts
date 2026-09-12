@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import { validateFileSignature as validateFileSignatureNative } from 'native-media';
 import { promises as fs } from 'fs';
 

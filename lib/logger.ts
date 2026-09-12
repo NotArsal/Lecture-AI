@@ -43,5 +43,5 @@ export const logger = {
     } else if (args.length > 0) {
       pinoLogger.error(args[0], ...args.slice(1));
     }
-  }
+  },
 };

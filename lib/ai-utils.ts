@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 import OpenAI from 'openai';
 import pRetry from 'p-retry';
 import type { AIConfig } from '@/types';
