@@ -47,17 +47,43 @@ def unload_whisper_model():
 def get_whisper_model():
     return load_whisper_model()
 
-def transcribe_local(audio_path: str) -> str:
-    """Helper function to run local transcription."""
+def transcribe_local_detailed(audio_path: str) -> dict:
+    """Run local transcription and return transcript, duration, and segments."""
     try:
         model = get_whisper_model()
-        segments, _ = model.transcribe(audio_path, beam_size=5)
-        transcript = " ".join([segment.text for segment in segments])
-        return transcript
-    except ImportError:
-        return "Local transcription failed. Please run 'pip install faster-whisper'."
+        segments_gen, info = model.transcribe(audio_path, beam_size=5)
+        segments_list = []
+        text_parts = []
+        for idx, segment in enumerate(segments_gen):
+            text_parts.append(segment.text.strip())
+            segments_list.append({
+                "id": idx,
+                "start": round(segment.start, 2),
+                "end": round(segment.end, 2),
+                "text": segment.text.strip()
+            })
+        full_transcript = " ".join(text_parts)
+        duration = round(info.duration, 2) if hasattr(info, 'duration') and info.duration else (segments_list[-1]["end"] if segments_list else 0.0)
+        language = info.language if hasattr(info, 'language') and info.language else "en"
+        return {
+            "text": full_transcript,
+            "duration": duration,
+            "language": language,
+            "segments": segments_list
+        }
     except Exception as e:
-        return f"Local transcription error: {e}"
+        logger.error(f"Local transcription error: {e}")
+        return {
+            "text": f"Local transcription error: {e}",
+            "duration": 0.0,
+            "language": "en",
+            "segments": []
+        }
+
+def transcribe_local(audio_path: str) -> str:
+    """Helper function to run local transcription."""
+    result = transcribe_local_detailed(audio_path)
+    return result["text"]
 
 
 def extract_local(prompt: str) -> dict:
