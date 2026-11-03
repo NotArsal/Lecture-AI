@@ -1,11 +1,23 @@
 import { logger } from '@/lib/logger';
-import { extractAndCompressAudio } from 'native-media';
 import { promises as fs } from 'fs';
 import os from 'os';
 import path from 'path';
 import { execSync } from 'child_process';
 import ffmpeg from 'fluent-ffmpeg';
 import type { TranscriptionSegment } from '@/types';
+
+// Safely attempt to load native-media if available on the current platform
+let nativeMedia: {
+  extractAndCompressAudio?: (
+    input: string,
+    output: string
+  ) => Promise<{ success: boolean; error?: string }>;
+} | null = null;
+try {
+  nativeMedia = require('native-media');
+} catch {
+  // Graceful fallback to fluent-ffmpeg
+}
 
 // Auto-detect FFmpeg and FFprobe paths with runtime verification
 function detectBinaryPath(binaryName: string): string {
@@ -177,11 +189,29 @@ export async function extractAudioFromVideo(
     `[FFmpeg] Video size: ${videoSizeMB.toFixed(2)}MB, using ${bitrate}kbps audio bitrate`
   );
 
-  const result = await extractAndCompressAudio(videoPath, outputPath);
-  if (!result.success) {
-    throw new Error(result.error || 'Rust ffmpeg wrapper failed');
+  if (nativeMedia?.extractAndCompressAudio) {
+    try {
+      const result = await nativeMedia.extractAndCompressAudio(videoPath, outputPath);
+      if (result.success) {
+        return { audioPath: outputPath, duration: 0, format: 'mp3' };
+      }
+    } catch {
+      // Fall through to fluent-ffmpeg
+    }
   }
-  return { audioPath: outputPath, duration: 0, format: 'mp3' };
+
+  // Fallback to fluent-ffmpeg
+  return new Promise((resolve, reject) => {
+    ffmpeg(videoPath)
+      .toFormat('mp3')
+      .audioBitrate(bitrate)
+      .audioChannels(1)
+      .audioFrequency(16000)
+      .audioCodec('libmp3lame')
+      .on('end', () => resolve({ audioPath: outputPath, duration: 0, format: 'mp3' }))
+      .on('error', (err) => reject(new Error(`Audio extraction failed: ${err.message}`)))
+      .save(outputPath);
+  });
 }
 
 export async function getAudioDuration(filePath: string): Promise<number> {

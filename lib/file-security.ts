@@ -1,6 +1,13 @@
 import { logger } from '@/lib/logger';
-import { validateFileSignature as validateFileSignatureNative } from 'native-media';
 import { promises as fs } from 'fs';
+
+// Safely attempt to load native-media if available on the current platform
+let nativeMedia: { validateFileSignature?: (filepath: string) => any } | null = null;
+try {
+  nativeMedia = require('native-media');
+} catch {
+  // Graceful fallback to pure JS magic-bytes validation on Vercel or systems without compiled binary
+}
 
 /**
  * File signature validation using magic bytes
@@ -134,7 +141,36 @@ function matchesSignature(buffer: Buffer, signature: FileSignature): boolean {
  * Validate file signature against known audio/video formats
  */
 export async function validateFileSignature(filepath: string) {
-  return validateFileSignatureNative(filepath);
+  if (nativeMedia?.validateFileSignature) {
+    try {
+      return nativeMedia.validateFileSignature(filepath);
+    } catch {
+      // Fallback to JS implementation
+    }
+  }
+
+  // Pure JavaScript magic-byte validation fallback
+  try {
+    const buffer = await readFileHeader(filepath, 12);
+    for (const signature of FILE_SIGNATURES) {
+      if (matchesSignature(buffer, signature)) {
+        return {
+          valid: true,
+          detectedType: signature.extension,
+          detectedMime: signature.mimeType,
+        };
+      }
+    }
+    return {
+      valid: false,
+      error: 'Could not determine file type from magic bytes',
+    };
+  } catch (error: any) {
+    return {
+      valid: false,
+      error: `Failed to read file header: ${error.message}`,
+    };
+  }
 }
 
 /**
