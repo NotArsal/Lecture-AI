@@ -89,6 +89,17 @@ async function downloadFile(url: string, outputPath: string): Promise<void> {
           return;
         }
 
+        const contentType = (response.headers['content-type'] || '').toLowerCase();
+        if (contentType.includes('text/html')) {
+          file.close();
+          reject(
+            new Error(
+              'The provided URL returned a webpage (HTML) rather than a direct audio or video file. If this is a YouTube video, please use the YouTube tab instead.'
+            )
+          );
+          return;
+        }
+
         response.pipe(file);
 
         file.on('finish', () => {

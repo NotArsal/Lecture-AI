@@ -569,7 +569,15 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
                 type="url"
                 id="media-url"
                 value={mediaUrl}
-                onChange={(e) => setMediaUrl(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setMediaUrl(val);
+                  if (val.includes('youtube.com/') || val.includes('youtu.be/')) {
+                    setYoutubeUrl(val.trim());
+                    setMediaUrl('');
+                    setInputMode('youtube');
+                  }
+                }}
                 placeholder="https://example.com/audio.mp3"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 disabled={isUploading}
@@ -582,7 +590,7 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
                   <strong>Supported:</strong> Direct links to audio/video files, Google Drive,
                   Dropbox, etc.
                   <br />
-                  <strong>Note:</strong> The URL must be a direct download link to the media file.
+                  <strong>Note:</strong> Must be a direct download link to a media file. For YouTube videos, please use the <strong>YouTube</strong> tab above.
                 </p>
               </div>
             </div>

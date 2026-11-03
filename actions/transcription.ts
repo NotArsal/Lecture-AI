@@ -138,32 +138,38 @@ export async function createTranscriptionMutation(
 
     // Handle Media URL (generic URL download)
     if (mediaUrl) {
-      if (!isValidMediaUrl(mediaUrl)) {
-        return {
-          success: false,
-          error: 'Invalid media URL',
-        };
-      }
+      // If user pasted a YouTube link in the URL field, automatically route to YouTube processor
+      if (isValidYoutubeUrl(mediaUrl)) {
+        youtubeUrl = mediaUrl;
+        mediaUrl = undefined;
+      } else {
+        if (!isValidMediaUrl(mediaUrl)) {
+          return {
+            success: false,
+            error: 'Invalid media URL',
+          };
+        }
 
-      let downloadedAudio: { audioPath: string; title: string } | null = null;
-      let compressedAudio: string | null = null;
+        let downloadedAudio: { audioPath: string; title: string } | null = null;
+        let compressedAudio: string | null = null;
 
-      try {
-        downloadedAudio = await downloadMediaFromUrl(mediaUrl);
-        const result = await processAudioPipeline(
-          downloadedAudio.audioPath,
-          `${downloadedAudio.title}.mp3`,
-          language,
-          customGroqKey || undefined,
-          mediaUrl,
-          'url'
-        );
-        await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
-        return result;
-      } catch (error) {
-        if (downloadedAudio?.audioPath)
+        try {
+          downloadedAudio = await downloadMediaFromUrl(mediaUrl);
+          const result = await processAudioPipeline(
+            downloadedAudio.audioPath,
+            `${downloadedAudio.title}.mp3`,
+            language,
+            customGroqKey || undefined,
+            mediaUrl,
+            'url'
+          );
           await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
-        throw error;
+          return result;
+        } catch (error) {
+          if (downloadedAudio?.audioPath)
+            await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
+          throw error;
+        }
       }
     }
 

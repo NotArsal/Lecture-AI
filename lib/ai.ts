@@ -125,6 +125,17 @@ export async function transcribeAudio(
   } catch (error: any) {
     logger.error(`[Transcription] Primary provider (${config.provider}) failed:`, error.message);
 
+    const isInvalidFile =
+      error.message?.includes('invalid_media_file') ||
+      error.message?.includes('could not process file') ||
+      error.message?.includes('is it a valid media file');
+
+    if (isInvalidFile) {
+      throw new Error(
+        'The audio file could not be processed because it is not a valid media file (e.g., it may be an HTML webpage, corrupted, or an unsupported audio format).'
+      );
+    }
+
     // Quick fallback to local proxy if Groq fails or API key is exhausted
     if (config.provider !== 'openai' && process.env.OPENAI_BASE_URL) {
       logger.info(`[Transcription] Falling back to local AI proxy...`);
