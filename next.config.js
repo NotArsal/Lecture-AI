@@ -8,10 +8,8 @@ const nextConfig = {
     return config;
   },
   serverExternalPackages: ['native-media'],
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '500mb',
-    },
+  serverActions: {
+    bodySizeLimit: '500mb',
   },
 };
 

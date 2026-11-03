@@ -173,11 +173,11 @@ export default function History({ onSelectItem }: HistoryProps) {
                   </span>
                   <span>•</span>
                   <span>
-                    {item.language === 'id'
-                      ? '🇮🇩 Indonesian'
-                      : item.language === 'ar'
-                        ? '🇸🇦 Arabic'
-                        : '🇬🇧 English'}
+                    {item.language === 'hinglish' ||
+                    item.language === 'hi' ||
+                    item.language === 'id'
+                      ? '🇮🇳 Hinglish'
+                      : '🇬🇧 English'}
                   </span>
                   <span>•</span>
                   <span>{formatTimestamp(item.timestamp)}</span>

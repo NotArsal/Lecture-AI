@@ -14,7 +14,7 @@ import {
   cropToTokenLimit,
   addBasicParagraphs,
 } from '@/lib/ai-utils';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 import {
   transcribeWithOpenAI,
   transcribeWithGroq,
@@ -154,7 +154,7 @@ export async function translateTranscript(
     throw new Error(`API key not configured for provider: ${config.provider}`);
   }
 
-  logger.info(`[Translation] Translating transcript to Indonesian...`);
+  logger.info(`[Translation] Translating transcript to Hinglish...`);
 
   try {
     if (config.provider === 'openai' || config.provider === 'groq') {
@@ -336,6 +336,78 @@ export async function summarizeTranscript(
           config: {
             systemInstruction: systemPrompt,
             responseMimeType: 'application/json',
+            responseJsonSchema: {
+              type: Type.OBJECT,
+              properties: {
+                title: { type: Type.STRING },
+                summary: { type: Type.STRING },
+                paragraphs: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING },
+                },
+                bulletPoints: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING },
+                },
+                keyConcepts: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      concept: { type: Type.STRING },
+                      explanation: { type: Type.STRING },
+                      importance: { type: Type.STRING },
+                    },
+                    required: ['concept', 'explanation'],
+                  },
+                },
+                definitions: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      term: { type: Type.STRING },
+                      definition: { type: Type.STRING },
+                      context: { type: Type.STRING },
+                    },
+                    required: ['term', 'definition'],
+                  },
+                },
+                exampleProblems: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      problem: { type: Type.STRING },
+                      solution: { type: Type.STRING },
+                      explanation: { type: Type.STRING },
+                    },
+                    required: ['problem', 'solution'],
+                  },
+                },
+                quizQuestions: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      question: { type: Type.STRING },
+                      options: {
+                        type: Type.ARRAY,
+                        items: { type: Type.STRING },
+                      },
+                      correctAnswer: { type: Type.INTEGER },
+                      explanation: { type: Type.STRING },
+                    },
+                    required: ['question', 'options', 'correctAnswer', 'explanation'],
+                  },
+                },
+                actionItems: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING },
+                },
+              },
+              required: ['title', 'summary', 'paragraphs', 'bulletPoints'],
+            },
             temperature: 0.3,
           },
         });

@@ -44,7 +44,8 @@ async function processAudioPipeline(
     }
 
     const transcriptionResult = await transcribeAudio(currentAudioPath, {
-      language: language === 'hinglish' ? 'id' : 'en',
+      language: language === 'hinglish' ? 'hi' : 'en',
+      prompt: language === 'hinglish' ? 'Hinglish, Hindi and English mixed lecture.' : undefined,
       customGroqKey,
     });
 

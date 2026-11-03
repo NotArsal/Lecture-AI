@@ -274,7 +274,7 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
           saveToHistory({
             title: result.data.title || 'YouTube Video',
             notes: result.data,
-            language: language === 'hinglish' ? 'id' : language === 'english' ? 'ar' : 'en',
+            language,
             source: 'youtube',
             youtubeUrl,
           });
@@ -314,7 +314,7 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
           saveToHistory({
             title: result.data.title || 'Media from URL',
             notes: result.data,
-            language: language === 'hinglish' ? 'id' : language === 'english' ? 'ar' : 'en',
+            language,
             source: 'url',
             mediaUrl,
           });
@@ -396,7 +396,7 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
           saveToHistory({
             title: result.data.title || selectedFile!.name,
             notes: result.data,
-            language: language === 'hinglish' ? 'id' : language === 'english' ? 'ar' : 'en',
+            language,
             source: 'file',
             filename: selectedFile!.name,
           });
