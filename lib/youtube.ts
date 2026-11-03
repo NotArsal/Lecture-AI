@@ -1,9 +1,10 @@
-import { exec } from 'child_process';
+import { exec, execFile } from 'child_process';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import path from 'path';
 
 const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 
 export interface YoutubeDownloadResult {
   audioPath: string;
@@ -57,16 +58,34 @@ export async function downloadYoutubeAudio(url: string): Promise<YoutubeDownload
     // --no-playlist: only download single video, not playlist
     // --newline: output newlines for easier parsing
     // --no-simulate: actually download (not just simulate)
-    const command = `yt-dlp -x --audio-format mp3 --audio-quality 0 --max-filesize 500M --no-playlist --newline --no-simulate -o "${outputTemplate}.%(ext)s" --print title --print duration "${url}"`;
+    const args = [
+      '-x',
+      '--audio-format',
+      'mp3',
+      '--audio-quality',
+      '0',
+      '--max-filesize',
+      '500M',
+      '--no-playlist',
+      '--newline',
+      '--no-simulate',
+      '-o',
+      `${outputTemplate}.%(ext)s`,
+      '--print',
+      'title',
+      '--print',
+      'duration',
+      url,
+    ];
 
-    console.log('[YouTube] Executing command:', command);
+    console.log('[YouTube] Executing yt-dlp with arguments for URL:', url);
     console.log('[YouTube] Expected output file pattern:', `${outputTemplate}.*`);
 
     let stdout: string;
     let stderr: string;
 
     try {
-      const result = await execPromise(command, {
+      const result = await execFilePromise('yt-dlp', args, {
         maxBuffer: 50 * 1024 * 1024, // 50MB buffer for longer output
         timeout: 5 * 60 * 1000, // 5 minutes timeout for long videos
       });

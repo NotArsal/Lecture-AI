@@ -261,12 +261,20 @@ export async function compressAudioIfNeeded(
 
   await fs.mkdir(outputDir, { recursive: true });
 
-  // Calculate required bitrate to reach target size
-  const duration = await getAudioDuration(inputPath);
-  const targetBitrate = Math.floor((targetSizeMB * 8192) / duration);
-  const bitrate = Math.max(32, Math.min(targetBitrate, 64)); // Between 32-64 kbps
-
-  logger.info(`[Compress] Compressing with ${bitrate}kbps (duration: ${duration.toFixed(2)}s)`);
+  // Calculate required bitrate to reach target size with safe fallback
+  let bitrate = 48;
+  try {
+    const duration = await getAudioDuration(inputPath);
+    if (duration > 0 && Number.isFinite(duration)) {
+      const targetBitrate = Math.floor((targetSizeMB * 8192) / duration);
+      bitrate = Math.max(32, Math.min(targetBitrate, 64)); // Between 32-64 kbps
+      logger.info(`[Compress] Compressing with ${bitrate}kbps (duration: ${duration.toFixed(2)}s)`);
+    } else {
+      logger.info(`[Compress] Unknown duration, using default ${bitrate}kbps`);
+    }
+  } catch (error) {
+    logger.warn('[Compress] Could not probe duration, using default 48kbps bitrate');
+  }
 
   return new Promise((resolve, reject) => {
     ffmpeg(inputPath)

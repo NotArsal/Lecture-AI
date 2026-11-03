@@ -113,7 +113,37 @@ async function downloadFile(url: string, outputPath: string): Promise<void> {
 export function isValidMediaUrl(url: string): boolean {
   try {
     const parsed = new URL(url);
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return false;
+    }
+
+    const hostname = parsed.hostname.toLowerCase();
+
+    // Prevent SSRF: block localhost, loopback, link-local, and private networks
+    if (
+      hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      hostname === '::1' ||
+      hostname === '0.0.0.0' ||
+      hostname === '169.254.169.254' ||
+      hostname.endsWith('.local') ||
+      hostname.endsWith('.internal')
+    ) {
+      return false;
+    }
+
+    // Check private IPv4 ranges (10.x.x.x, 172.16-31.x.x, 192.168.x.x)
+    const ipv4Regex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+    const match = hostname.match(ipv4Regex);
+    if (match) {
+      const octet1 = parseInt(match[1], 10);
+      const octet2 = parseInt(match[2], 10);
+      if (octet1 === 10) return false;
+      if (octet1 === 172 && octet2 >= 16 && octet2 <= 31) return false;
+      if (octet1 === 192 && octet2 === 168) return false;
+    }
+
+    return true;
   } catch {
     return false;
   }
