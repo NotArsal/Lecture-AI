@@ -1,5 +1,5 @@
 import { logger } from '@/lib/logger';
-import { existsSync, promises as fs } from 'fs';
+import { existsSync, readdirSync, promises as fs } from 'fs';
 import os from 'os';
 import path from 'path';
 import { execSync } from 'child_process';
@@ -31,13 +31,47 @@ function detectBinaryPath(binaryName: string): string {
         .trim()
         .split(/\r?\n/)[0];
 
-      if (result) {
+      if (result && existsSync(result)) {
         logger.info(`[FFmpeg] Found ${binaryName} at: ${result}`);
         return result;
       }
     } catch {
-      // Not in current PATH, fallback to binary name
+      // Not in current PATH, check WinGet and standard install paths
     }
+
+    // Check WinGet packages directory
+    const localAppData = process.env.LOCALAPPDATA || '';
+    const wingetPackages = path.join(localAppData, 'Microsoft', 'WinGet', 'Packages');
+    if (existsSync(wingetPackages)) {
+      try {
+        const dirs = readdirSync(wingetPackages).filter((d) => d.toLowerCase().includes('ffmpeg'));
+        for (const dir of dirs) {
+          const fullDir = path.join(wingetPackages, dir);
+          const subdirs = readdirSync(fullDir);
+          for (const sub of subdirs) {
+            const candidate = path.join(fullDir, sub, 'bin', `${binaryName}.exe`);
+            if (existsSync(candidate)) {
+              logger.info(`[FFmpeg] Found ${binaryName} in WinGet packages: ${candidate}`);
+              return candidate;
+            }
+          }
+        }
+      } catch {}
+    }
+
+    // Check standard Windows install locations
+    const commonWinPaths = [
+      `C:\\ffmpeg\\bin\\${binaryName}.exe`,
+      `C:\\Program Files\\ffmpeg\\bin\\${binaryName}.exe`,
+      path.join(process.env.USERPROFILE || '', 'ffmpeg', 'bin', `${binaryName}.exe`),
+    ];
+    for (const testPath of commonWinPaths) {
+      if (existsSync(testPath)) {
+        logger.info(`[FFmpeg] Found ${binaryName} at: ${testPath}`);
+        return testPath;
+      }
+    }
+
     logger.warn(`[FFmpeg] Using binary name as fallback: ${binaryName}`);
     return binaryName;
   }
@@ -77,8 +111,18 @@ function detectBinaryPath(binaryName: string): string {
   return binaryName;
 }
 
-const FFMPEG_PATH = process.env.FFMPEG_PATH || detectBinaryPath('ffmpeg');
-const FFPROBE_PATH = process.env.FFPROBE_PATH || detectBinaryPath('ffprobe');
+export const FFMPEG_PATH = process.env.FFMPEG_PATH || detectBinaryPath('ffmpeg');
+export const FFPROBE_PATH = process.env.FFPROBE_PATH || detectBinaryPath('ffprobe');
+
+/**
+ * Get directory containing ffmpeg/ffprobe binary for external tools (e.g. yt-dlp)
+ */
+export function getFFmpegLocation(): string | null {
+  if (FFMPEG_PATH && existsSync(FFMPEG_PATH)) {
+    return path.dirname(FFMPEG_PATH);
+  }
+  return null;
+}
 
 logger.info(`[FFmpeg] Configured paths:`, { FFMPEG_PATH, FFPROBE_PATH });
 

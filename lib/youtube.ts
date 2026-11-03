@@ -2,6 +2,7 @@ import { exec, execFile } from 'child_process';
 import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { getFFmpegLocation } from '@/lib/ffmpeg';
 
 const execPromise = promisify(exec);
 const execFilePromise = promisify(execFile);
@@ -93,6 +94,7 @@ export async function downloadYoutubeAudio(url: string): Promise<YoutubeDownload
     // --no-playlist: only download single video, not playlist
     // --newline: output newlines for easier parsing
     // --no-simulate: actually download (not just simulate)
+    const ffmpegLocation = getFFmpegLocation();
     const args = [
       ...executable.argsPrefix,
       '-x',
@@ -105,6 +107,7 @@ export async function downloadYoutubeAudio(url: string): Promise<YoutubeDownload
       '--no-playlist',
       '--newline',
       '--no-simulate',
+      ...(ffmpegLocation ? ['--ffmpeg-location', ffmpegLocation] : []),
       '-o',
       `${outputTemplate}.%(ext)s`,
       '--print',
