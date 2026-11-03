@@ -30,6 +30,7 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
   const [inputMode, setInputMode] = useState<'file' | 'youtube' | 'url' | 'record'>('file');
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [isDragActive, setIsDragActive] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -64,11 +65,19 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
   };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsDragActive(false);
 
     const file = e.dataTransfer.files?.[0];
     if (file) {
@@ -671,8 +680,13 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
           </div>
         ) : (
           <div
-            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary-500 transition-colors"
+            className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
+              isDragActive
+                ? 'border-primary-500 bg-primary-50/60 shadow-md scale-[1.01]'
+                : 'border-slate-300 bg-white hover:border-primary-400 hover:bg-slate-50/50'
+            }`}
             onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
             <input

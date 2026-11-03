@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { LectureNotes } from '@/types';
 import { MediaPlayer } from './media-player';
+import { generateAsciiMindMap } from '@/utils/ascii-tree';
 
 function getCleanTranscript(transcript?: string): string {
   if (!transcript) return '';
@@ -96,6 +97,19 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
     const a = document.createElement('a');
     a.href = url;
     a.download = `${notes.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_notes.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadAsciiTree = () => {
+    const content = generateAsciiMindMap(notes);
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${notes.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_ascii_tree.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -313,17 +327,88 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
           </div>
           <div className="flex flex-wrap gap-2">
             <button
+              onClick={handleDownloadAsciiTree}
+              className="px-3.5 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md hover:bg-emerald-100 transition-colors flex items-center gap-1.5"
+              title="Download ASCII Concept Tree for Obsidian and Terminal notes"
+            >
+              <span>🌳</span>
+              <span>ASCII Tree</span>
+            </button>
+            <button
               onClick={handleDownloadMarkdown}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-3.5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               Download MD
             </button>
             <button
               onClick={handleDownload}
-              className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700"
+              className="px-3.5 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors"
             >
               Download JSON
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Bento Grid Study Dashboard (inspired by 21st.dev) */}
+      <div className="p-6 bg-slate-50/60 border-b border-gray-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* Card 1: Study Pace */}
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
+            <div className="p-2.5 bg-sky-50 text-sky-600 rounded-lg text-lg">⏱️</div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Reading Pace</div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
+                ~{Math.max(1, Math.ceil((notes.metadata?.wordCount || 100) / 200))} min read
+              </div>
+              <div className="text-xs text-slate-500 truncate">{notes.metadata.wordCount.toLocaleString()} words</div>
+            </div>
+          </div>
+
+          {/* Card 2: Flashcards Readiness */}
+          <div
+            onClick={() => setActiveTab('flashcards')}
+            className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3 cursor-pointer hover:border-primary-400 hover:shadow-md transition-all group"
+          >
+            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg text-lg group-hover:scale-105 transition-transform">📇</div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Flashcards</div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">{flashcards.length} Cards</div>
+              <div className="text-xs text-primary-600 font-medium group-hover:underline">Practice now →</div>
+            </div>
+          </div>
+
+          {/* Card 3: Quiz Assessment */}
+          <div
+            onClick={() => setActiveTab('quiz')}
+            className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3 cursor-pointer hover:border-emerald-400 hover:shadow-md transition-all group"
+          >
+            <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg text-lg group-hover:scale-105 transition-transform">🎯</div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Quiz Ready</div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
+                {notes.quizQuestions?.length || 0} {notes.quizQuestions?.length === 1 ? 'Item' : 'Items'}
+              </div>
+              <div className="text-xs text-emerald-600 font-medium group-hover:underline">Test yourself →</div>
+            </div>
+          </div>
+
+          {/* Card 4: Key Concepts Tags */}
+          <div
+            onClick={() => setActiveTab('concepts')}
+            className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between cursor-pointer hover:border-amber-400 hover:shadow-md transition-all group"
+          >
+            <div>
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Core Topics</div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">{notes.keyConcepts?.length || 0} Concepts</div>
+            </div>
+            <div className="flex flex-wrap gap-1 mt-2">
+              {notes.keyConcepts?.slice(0, 2).map((c, i) => (
+                <span key={i} className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 truncate max-w-[110px]">
+                  {c.concept}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -338,21 +423,25 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
         </div>
       )}
 
-      <div className="border-b border-gray-200">
-        <nav className="flex overflow-x-auto">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                activeTab === tab.id
-                  ? 'border-primary-600 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+      {/* Fluid Sliding Tabs (inspired by 21st.dev) */}
+      <div className="border-b border-gray-200 bg-slate-50/50 px-4 pt-3">
+        <nav className="flex space-x-1.5 overflow-x-auto pb-3 scrollbar-none" aria-label="Tabs">
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-150 flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-white text-primary-700 shadow-sm border border-slate-200/90 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 border border-transparent'
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
         </nav>
       </div>
 

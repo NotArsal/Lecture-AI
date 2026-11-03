@@ -1,11 +1,24 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
 interface ProgressIndicatorProps {
   progress: number;
   step: string;
   details?: string;
   estimatedTime?: string;
 }
+
+const WAVE_FRAMES = [
+  ' ▂▃▄▅▆▇█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃ ',
+  '▂▃▄▅▆▇█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃▂',
+  '▃▄▅▆▇█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃▂ ',
+  '▄▅▆▇█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂',
+  '▅▆▇█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂▃',
+  '▆▇█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂▃▄',
+  '▇█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂▃▄▅',
+  '█▇▆▅▄▃▂   ▂▃▄▅▆▇█▇▆▅▄▃▂ ▂▃▄▅▆',
+];
 
 const stepIcons: Record<string, string> = {
   'Validating file': '🔍',
@@ -23,10 +36,40 @@ export function ProgressIndicator({
   details,
   estimatedTime,
 }: ProgressIndicatorProps) {
+  const [frameIndex, setFrameIndex] = useState(0);
+
+  useEffect(() => {
+    if (progress >= 100) return;
+    const interval = setInterval(() => {
+      setFrameIndex((prev) => (prev + 1) % WAVE_FRAMES.length);
+    }, 140);
+    return () => clearInterval(interval);
+  }, [progress]);
+
   const icon = Object.entries(stepIcons).find(([key]) => step.includes(key))?.[1] || '⏳';
 
   return (
     <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      {/* ASCII Soundwave Terminal Visualizer (ascii-magic inspired) */}
+      {progress < 100 && (
+        <div className="bg-slate-950 text-emerald-400 font-mono text-xs p-3 rounded-lg border border-slate-800 shadow-inner">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 pb-1 border-b border-slate-800/80">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              AI AUDIO PIPELINE
+            </span>
+            <span className="text-[10px] text-slate-500">Groq Whisper • Gemini</span>
+          </div>
+          <div className="text-center py-1 tracking-widest text-emerald-400 font-bold select-none text-sm">
+            {WAVE_FRAMES[frameIndex]}
+          </div>
+          <div className="flex justify-between items-center text-[10px] text-slate-400 mt-1 pt-1 border-t border-slate-800/60">
+            <span className="truncate max-w-[200px]">{step}</span>
+            <span>{progress}%</span>
+          </div>
+        </div>
+      )}
+
       {/* Main progress */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-sm">
