@@ -240,6 +240,101 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
     );
   }
 
+  if (sourceType === 'upload') {
+    const isAudio =
+      !fileName.match(/\.(mp4|mov|mkv)$/i) &&
+      !sourceUrl.match(/\.(mp4|mov|mkv)$/i);
+
+    return (
+      <div
+        ref={playerRef}
+        className={`bg-indigo-50/80 rounded-xl border border-indigo-200 select-none shadow-sm ${
+          isDragging ? '' : 'transition-all duration-300'
+        } ${
+          isSticky ? 'fixed z-40 shadow-xl w-80' : 'w-full'
+        } ${isMinimized ? 'p-1.5' : isSticky ? 'p-2' : 'p-4'} ${isDragging ? 'cursor-grabbing' : isSticky ? 'cursor-grab' : ''}`}
+        style={isSticky ? { left: `${position.x}px`, top: `${position.y}px` } : undefined}
+        onMouseDown={handleMouseDown}
+      >
+        <div className="flex items-center gap-1.5 mb-2">
+          <div className="p-1 rounded bg-indigo-100 text-indigo-700">
+            <svg
+              className={`${isSticky ? 'w-3 h-3' : 'w-4 h-4'}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+              />
+            </svg>
+          </div>
+          <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} font-semibold text-indigo-950`}>
+            {isAudio ? 'Audio' : 'Media'}
+          </span>
+          <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} text-indigo-700 truncate flex-1 font-medium`}>
+            {fileName}
+          </span>
+          <button
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="p-0.5 hover:bg-indigo-100 rounded transition-colors text-indigo-700"
+            title={isMinimized ? 'Expand player' : 'Minimize player'}
+          >
+            <svg
+              className={`${isSticky ? 'w-3 h-3' : 'w-4 h-4'}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isMinimized ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 15l7-7 7 7"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
+        <div className={isMinimized ? 'hidden' : ''}>
+          {isAudio ? (
+            <audio
+              controls
+              preload="metadata"
+              className="w-full h-10 outline-none rounded-lg"
+              onError={() => setError('Failed to load audio')}
+            >
+              <source src={sourceUrl} />
+              Your browser does not support audio playback.
+            </audio>
+          ) : (
+            <video
+              controls
+              preload="metadata"
+              className="w-full rounded-md"
+              onError={() => setError('Failed to load media')}
+            >
+              <source src={sourceUrl} />
+              Your browser does not support video playback.
+            </video>
+          )}
+        </div>
+        {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
+      </div>
+    );
+  }
+
   // For direct media URLs
   return (
     <div

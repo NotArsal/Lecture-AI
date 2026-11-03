@@ -213,25 +213,54 @@ function sanitizeFormattedTranscript(output: string, fallback: string): string {
   if (!output) return fallback;
   let text = output.trim();
   if (text.startsWith('```')) {
-    text = text.replace(/^```[a-zA-Z]*\n?/, '').replace(/\n?```$/, '').trim();
+    text = text.replace(/^```(?:json|markdown)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
   }
-  if (
-    text.startsWith('{') &&
-    (text.includes('"paragraphs"') || text.includes('"summary"') || text.includes('"text"'))
-  ) {
+
+  const isLikelyJson =
+    text.startsWith('{') ||
+    text.startsWith('[') ||
+    (text.includes('"title":') && text.includes('"paragraphs":'));
+
+  if (isLikelyJson) {
     try {
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
         return parsed.paragraphs.join('\n\n');
       }
+      if (typeof parsed.transcript === 'string' && parsed.transcript.trim()) {
+        return parsed.transcript.trim();
+      }
       if (typeof parsed.text === 'string' && parsed.text.trim()) {
-        return parsed.text;
+        return parsed.text.trim();
       }
       if (typeof parsed.summary === 'string' && parsed.summary.trim()) {
-        return parsed.summary;
+        return parsed.summary.trim();
       }
-    } catch {}
+      // If it parsed as an object without recognized text fields, use fallback
+      return fallback;
+    } catch {
+      // Regex extraction fallback for malformed or truncated JSON
+      const paragraphsMatch =
+        text.match(/"paragraphs"\s*:\s*\[([\s\S]*?)\]/) ||
+        text.match(/"paragraphs"\s*:\s*\[([\s\S]*)/);
+      if (paragraphsMatch) {
+        const matches = [...paragraphsMatch[1].matchAll(/"((?:[^"\\]|\\.)*)"/g)];
+        if (matches.length > 0) {
+          return matches
+            .map((m) => m[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim())
+            .filter(Boolean)
+            .join('\n\n');
+        }
+      }
+      const summaryMatch = text.match(/"summary"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+      if (summaryMatch) {
+        return summaryMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim();
+      }
+      // Never return broken JSON text as transcript
+      return fallback;
+    }
   }
+
   return text || fallback;
 }
 

@@ -14,6 +14,7 @@ import {
 } from '@/lib/ffmpeg';
 import { transcribeAudio, summarizeTranscript, translateTranscript } from '@/lib/ai';
 import { saveUploadedFile, cleanupUploadedFile } from '@/lib/upload';
+import path from 'path';
 import { promises as fs } from 'fs';
 import { rateLimiter, RATE_LIMITS, getClientId, formatTimeRemaining } from '@/lib/rate-limiter';
 import { downloadMediaFromUrl, isValidMediaUrl } from '@/lib/media-downloader';
@@ -225,28 +226,38 @@ export async function createTranscriptionMutation(
     const uploadedFile = await saveUploadedFile(file);
     let audioPath = uploadedFile.filepath;
     let tempAudioPath: string | null = null;
+    let isVideo = validation.fileType === 'video';
 
     try {
-      if (validation.fileType === 'video') {
+      if (isVideo) {
         const extractionResult = await extractAudioFromVideo(uploadedFile.filepath);
         tempAudioPath = extractionResult.audioPath;
         audioPath = tempAudioPath;
+        // Clean up the bulky raw video file to save disk space now that audio is extracted
+        await cleanupUploadedFile(uploadedFile.filepath).catch(() => {});
       }
+
+      const mediaFilename = path.basename(audioPath);
+      const sourceUrl = `/api/media?file=${encodeURIComponent(mediaFilename)}`;
 
       const result = await processAudioPipeline(
         audioPath,
         file.name,
         language,
         customGroqKey || undefined,
-        undefined,
+        sourceUrl,
         'upload'
       );
       return result;
     } catch (error) {
+      // Clean up files only on error
+      if (!isVideo) {
+        await cleanupUploadedFile(uploadedFile.filepath).catch(() => {});
+      }
+      if (tempAudioPath) {
+        await cleanupUploadedFile(tempAudioPath).catch(() => {});
+      }
       throw error;
-    } finally {
-      await cleanupUploadedFile(uploadedFile.filepath).catch(() => {});
-      if (tempAudioPath) await cleanupUploadedFile(tempAudioPath).catch(() => {});
     }
   } catch (error) {
     logger.error('Transcription failed:', error);

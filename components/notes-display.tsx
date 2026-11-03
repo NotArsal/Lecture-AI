@@ -7,30 +7,59 @@ import type { LectureNotes } from '@/types';
 import { MediaPlayer } from './media-player';
 import { generateAsciiMindMap } from '@/utils/ascii-tree';
 
-function getCleanTranscript(transcript?: string): string {
+export function getCleanTranscript(transcript?: string): string {
   if (!transcript) return '';
   let cleaned = transcript.trim();
   if (cleaned.startsWith('```')) {
-    cleaned = cleaned.replace(/^```[a-zA-Z]*\n?/, '').replace(/\n?```$/, '').trim();
+    cleaned = cleaned.replace(/^```(?:json|markdown)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
   }
-  if (
-    cleaned.startsWith('{') &&
-    (cleaned.includes('"paragraphs"') || cleaned.includes('"summary"') || cleaned.includes('"text"'))
-  ) {
+
+  const isLikelyJson =
+    cleaned.startsWith('{') ||
+    cleaned.startsWith('[') ||
+    (cleaned.includes('"title":') && cleaned.includes('"paragraphs":'));
+
+  if (isLikelyJson) {
     try {
       const parsed = JSON.parse(cleaned);
       if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
         return parsed.paragraphs.join('\n\n');
       }
+      if (typeof parsed.transcript === 'string' && parsed.transcript.trim()) {
+        return parsed.transcript.trim();
+      }
       if (typeof parsed.text === 'string' && parsed.text.trim()) {
-        return parsed.text;
+        return parsed.text.trim();
       }
       if (typeof parsed.summary === 'string' && parsed.summary.trim()) {
-        return parsed.summary;
+        return parsed.summary.trim();
       }
     } catch {}
+
+    // Regex extraction fallback for malformed or truncated JSON strings
+    const paragraphsMatch =
+      cleaned.match(/"paragraphs"\s*:\s*\[([\s\S]*?)\]/) ||
+      cleaned.match(/"paragraphs"\s*:\s*\[([\s\S]*)/);
+    if (paragraphsMatch) {
+      const matches = [...paragraphsMatch[1].matchAll(/"((?:[^"\\]|\\.)*)"/g)];
+      if (matches.length > 0) {
+        return matches
+          .map((m) => m[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim())
+          .filter(Boolean)
+          .join('\n\n');
+      }
+    }
+
+    const summaryMatch = cleaned.match(/"summary"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+    if (summaryMatch) {
+      return summaryMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n').trim();
+    }
+
+    // Do not return raw JSON syntax to the user
+    return '';
   }
-  return transcript;
+
+  return cleaned;
 }
 
 interface NotesDisplayProps {

@@ -2,18 +2,9 @@ import pino from 'pino';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
+// Avoid worker-thread based pino transports in Next.js bundler
 const pinoLogger = pino({
-  level: process.env.LOG_LEVEL || 'info',
-  transport: isDev
-    ? {
-        target: 'pino-pretty',
-        options: {
-          colorize: true,
-          ignore: 'pid,hostname',
-          translateTime: 'SYS:standard',
-        },
-      }
-    : undefined,
+  level: process.env.LOG_LEVEL || (isDev ? 'info' : 'warn'),
   base: {
     env: process.env.NODE_ENV,
   },

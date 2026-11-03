@@ -187,4 +187,42 @@ describe('MediaPlayer', () => {
     expect(iframe).toBeInTheDocument();
     expect(iframe?.parentElement).not.toHaveClass('hidden');
   });
+
+  it('renders audio player for uploaded audio files', () => {
+    render(
+      <MediaPlayer
+        sourceUrl="/api/media?file=lecture_12345.mp3"
+        sourceType="upload"
+        fileName="lecture_12345.mp3"
+      />
+    );
+
+    expect(screen.getByText('Audio')).toBeInTheDocument();
+    expect(screen.getByText('lecture_12345.mp3')).toBeInTheDocument();
+
+    const audioElement = document.querySelector('audio');
+    expect(audioElement).toBeInTheDocument();
+    expect(audioElement?.getAttribute('controls')).toBe('');
+    expect(audioElement?.getAttribute('preload')).toBe('metadata');
+
+    const sourceElement = audioElement?.querySelector('source');
+    expect(sourceElement?.getAttribute('src')).toBe('/api/media?file=lecture_12345.mp3');
+  });
+
+  it('renders video player for uploaded video files', () => {
+    render(
+      <MediaPlayer
+        sourceUrl="/api/media?file=lecture_12345.mp4"
+        sourceType="upload"
+        fileName="lecture_12345.mp4"
+      />
+    );
+
+    expect(screen.getByText('Media')).toBeInTheDocument();
+    expect(screen.getByText('lecture_12345.mp4')).toBeInTheDocument();
+
+    const videoElement = document.querySelector('video');
+    expect(videoElement).toBeInTheDocument();
+    expect(videoElement?.getAttribute('controls')).toBe('');
+  });
 });
