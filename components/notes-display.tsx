@@ -1,10 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { LectureNotes } from '@/types';
 import { MediaPlayer } from './media-player';
+
+function getCleanTranscript(transcript?: string): string {
+  if (!transcript) return '';
+  const trimmed = transcript.trim();
+  if (
+    trimmed.startsWith('{') &&
+    (trimmed.includes('"paragraphs"') || trimmed.includes('"summary"'))
+  ) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
+        return parsed.paragraphs.join('\n\n');
+      }
+      if (typeof parsed.text === 'string') {
+        return parsed.text;
+      }
+    } catch {}
+  }
+  return transcript;
+}
 
 interface NotesDisplayProps {
   notes: LectureNotes;
@@ -17,6 +37,8 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
   const [showResults, setShowResults] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isCardFlipped, setIsCardFlipped] = useState(false);
+
+  const cleanTranscript = useMemo(() => getCleanTranscript(notes?.transcript), [notes?.transcript]);
 
   if (!notes) {
     return null;
@@ -75,7 +97,7 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
   };
 
   const handleDownloadTranscript = () => {
-    if (!notes.transcript) return;
+    if (!cleanTranscript) return;
 
     let content = `# ${notes.title}\n\n`;
     content += `## Full Transcript\n\n`;
@@ -83,7 +105,7 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
     content += `Generated: ${formatDate(notes.metadata.generatedAt)}\n`;
     content += `Word Count: ${notes.metadata.wordCount.toLocaleString()}\n\n`;
     content += `---\n\n`;
-    content += notes.transcript;
+    content += cleanTranscript;
 
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -785,7 +807,7 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
 
         {activeTab === 'transcript' && (
           <div className="space-y-4">
-            {notes.transcript ? (
+            {cleanTranscript ? (
               <div className="bg-gray-50 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Full Transcript</h3>
@@ -821,11 +843,11 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
                   prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline
                 "
                 >
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes.transcript}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{cleanTranscript}</ReactMarkdown>
                 </div>
                 <div className="mt-4 pt-4 border-t border-gray-200 text-sm text-gray-500">
                   <p>Word count: {notes.metadata.wordCount.toLocaleString()}</p>
-                  <p>Characters: {notes.transcript.length.toLocaleString()}</p>
+                  <p>Characters: {cleanTranscript.length.toLocaleString()}</p>
                 </div>
               </div>
             ) : (

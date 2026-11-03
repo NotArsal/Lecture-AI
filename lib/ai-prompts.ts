@@ -47,6 +47,26 @@ const SUMMARIZATION_JSON_SCHEMA = `{
 
 }`;
 
+export const FORMAT_PROMPTS: Record<'english' | 'hinglish', string> = {
+  english:
+    'You are an expert transcript editor. Format this raw spoken transcript into clean, readable Markdown text.\n\n' +
+    'Rules:\n' +
+    "1. Divide the transcript into logical sections with descriptive '## Section Title' headings based on the topics discussed.\n" +
+    '2. Group sentences into coherent paragraphs (3-5 sentences per paragraph) with blank lines between them.\n' +
+    '3. Fix punctuation, sentence boundaries, and capitalization.\n' +
+    '4. DO NOT summarize, compress, or omit any spoken content. Preserve the exact content and details of what was said.\n' +
+    '5. Output ONLY the formatted markdown text. DO NOT output JSON, code blocks, preambles, or conversational commentary.',
+
+  hinglish:
+    'You are an expert transcript editor. Format this raw spoken Hinglish transcript into clean, readable Markdown text.\n\n' +
+    'Rules:\n' +
+    "1. Divide the transcript into logical sections with descriptive '## Section Title' headings.\n" +
+    '2. Group sentences into coherent paragraphs (3-5 sentences per paragraph) with blank lines between them.\n' +
+    '3. Fix punctuation, sentence boundaries, and capitalization while maintaining natural colloquial Hinglish (Hindi words in English/Latin script).\n' +
+    '4. DO NOT summarize, compress, or omit any spoken content. Keep all details and explanations.\n' +
+    '5. Output ONLY the formatted markdown text. DO NOT output JSON, code blocks, preambles, or conversational commentary.',
+};
+
 export function buildSummarizationPrompt(options: SummarizationOptions): string {
   const detailLevel = options.detailLevel || 'detailed';
   const focusAreas = options.focusAreas?.join(', ') || 'all topics';

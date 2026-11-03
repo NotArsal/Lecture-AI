@@ -7,7 +7,7 @@ import type {
   TranscriptionOptions,
   SummarizationOptions,
 } from '@/types';
-import { buildSummarizationPrompt } from '@/lib/ai-prompts';
+import { buildSummarizationPrompt, FORMAT_PROMPTS } from '@/lib/ai-prompts';
 import {
   retryOptions,
   createOpenAIClient,
@@ -237,17 +237,26 @@ export async function formatTranscript(
         messages: [
           {
             role: 'system',
-            content: buildSummarizationPrompt({
-              language: langKey as 'english' | 'hinglish',
-              detailLevel: 'detailed',
-            }),
+            content: FORMAT_PROMPTS[langKey],
           },
           { role: 'user', content: processedTranscript },
         ],
         temperature: 0.2,
         ...(config.provider === 'groq' && { max_tokens: GROQ_MAX_OUTPUT_TOKENS }),
       });
-      return response.choices[0].message.content || transcript;
+      const output = response.choices[0].message.content?.trim() || transcript;
+      if (
+        output.startsWith('{') &&
+        (output.includes('"paragraphs"') || output.includes('"summary"'))
+      ) {
+        try {
+          const parsed = JSON.parse(output);
+          if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
+            return parsed.paragraphs.join('\n\n');
+          }
+        } catch {}
+      }
+      return output;
     } else if (config.provider === 'gemini') {
       const ai = new GoogleGenAI({ apiKey: config.apiKey });
       const maxTokens = 100000;
@@ -261,14 +270,23 @@ export async function formatTranscript(
         model: config.summarizationModel,
         contents: processedTranscript,
         config: {
-          systemInstruction: buildSummarizationPrompt({
-            language: langKey as 'english' | 'hinglish',
-            detailLevel: 'detailed',
-          }),
+          systemInstruction: FORMAT_PROMPTS[langKey],
           temperature: 0.2,
         },
       });
-      return response.text || transcript;
+      const output = response.text?.trim() || transcript;
+      if (
+        output.startsWith('{') &&
+        (output.includes('"paragraphs"') || output.includes('"summary"'))
+      ) {
+        try {
+          const parsed = JSON.parse(output);
+          if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
+            return parsed.paragraphs.join('\n\n');
+          }
+        } catch {}
+      }
+      return output;
     }
     return addBasicParagraphs(transcript);
   } catch (error) {
