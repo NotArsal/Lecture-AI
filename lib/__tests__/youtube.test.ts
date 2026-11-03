@@ -1,0 +1,28 @@
+import { describe, it, expect } from 'vitest';
+import { getYtDlpExecutable, isValidYoutubeUrl, getYoutubeVideoId } from '@/lib/youtube';
+import { getFFmpegLocation } from '@/lib/ffmpeg';
+
+describe('YouTube Integration & Path Resolution', () => {
+  it('should detect yt-dlp executable or python fallback', async () => {
+    const executable = await getYtDlpExecutable();
+    expect(executable).not.toBeNull();
+    expect(executable?.cmd).toBeDefined();
+  });
+
+  it('should resolve ffmpeg location directory', () => {
+    const location = getFFmpegLocation();
+    expect(location).toBeDefined();
+    expect(typeof location).toBe('string');
+  });
+
+  it('should validate valid and invalid youtube URLs', () => {
+    expect(isValidYoutubeUrl('https://www.youtube.com/watch?v=GyJkC1hql2E')).toBe(true);
+    expect(isValidYoutubeUrl('https://youtu.be/GyJkC1hql2E')).toBe(true);
+    expect(isValidYoutubeUrl('https://example.com/video.mp4')).toBe(false);
+  });
+
+  it('should extract video ID correctly', () => {
+    expect(getYoutubeVideoId('https://www.youtube.com/watch?v=GyJkC1hql2E')).toBe('GyJkC1hql2E');
+    expect(getYoutubeVideoId('https://youtu.be/GyJkC1hql2E?si=123')).toBe('GyJkC1hql2E');
+  });
+});
