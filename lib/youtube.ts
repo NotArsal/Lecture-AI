@@ -17,26 +17,35 @@ interface YtDlpExecutable {
   argsPrefix: string[];
 }
 
+let cachedExecutable: YtDlpExecutable | null = null;
+
 /**
  * Detect available yt-dlp executable or Python module fallback
  */
 export async function getYtDlpExecutable(): Promise<YtDlpExecutable | null> {
+  if (cachedExecutable) {
+    return cachedExecutable;
+  }
+
   // 1. Try direct yt-dlp binary
   try {
     await execPromise('yt-dlp --version');
-    return { cmd: 'yt-dlp', argsPrefix: [] };
+    cachedExecutable = { cmd: 'yt-dlp', argsPrefix: [] };
+    return cachedExecutable;
   } catch {}
 
   // 2. Try python -m yt_dlp
   try {
     await execPromise('python -m yt_dlp --version');
-    return { cmd: 'python', argsPrefix: ['-m', 'yt_dlp'] };
+    cachedExecutable = { cmd: 'python', argsPrefix: ['-m', 'yt_dlp'] };
+    return cachedExecutable;
   } catch {}
 
   // 3. Try python3 -m yt_dlp
   try {
     await execPromise('python3 -m yt_dlp --version');
-    return { cmd: 'python3', argsPrefix: ['-m', 'yt_dlp'] };
+    cachedExecutable = { cmd: 'python3', argsPrefix: ['-m', 'yt_dlp'] };
+    return cachedExecutable;
   } catch {}
 
   return null;

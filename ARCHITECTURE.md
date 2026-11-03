@@ -1,525 +1,185 @@
-﻿# LectureAI Architecture
+# LectureAI Architecture Specification
 
-This document provides a comprehensive overview of the LectureAI architecture, design decisions, and implementation patterns.
-
-## ðŸŽ¯ Design Philosophy
-
-### Core Principles
-
-1. **Separation of Concerns**: TypeScript for server logic, JavaScript for client UI
-2. **Type Safety**: Comprehensive TypeScript types for data models and APIs
-3. **Security First**: Input validation, file sanitization, secure API handling
-4. **Modularity**: Reusable components and abstracted integrations
-5. **Developer Experience**: Clear patterns, consistent naming, good documentation
-
-## ðŸ—ï¸ System Architecture
-
-```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                         Client Layer                         â”‚
-â”‚                        (JavaScript)                          â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
-â”‚  â”‚ Upload Form  â”‚  â”‚   Progress   â”‚  â”‚    Notes     â”‚     â”‚
-â”‚  â”‚ Component    â”‚  â”‚  Indicator   â”‚  â”‚   Display    â”‚     â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                           â”‚
-                           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                     Next.js App Router                       â”‚
-â”‚                                                               â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
-â”‚  â”‚   page.js    â”‚  â”‚  layout.js   â”‚  â”‚  API Routes  â”‚     â”‚
-â”‚  â”‚  (Home)      â”‚  â”‚  (Root)      â”‚  â”‚ /transcribe  â”‚     â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                           â”‚
-                           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    Server Actions Layer                      â”‚
-â”‚                       (TypeScript)                           â”‚
-â”‚                                                               â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”‚
-â”‚  â”‚      createTranscriptionMutation()             â”‚         â”‚
-â”‚  â”‚  - Validate file                                â”‚         â”‚
-â”‚  â”‚  - Process upload                               â”‚         â”‚
-â”‚  â”‚  - Extract audio (if video)                     â”‚         â”‚
-â”‚  â”‚  - Transcribe                                   â”‚         â”‚
-â”‚  â”‚  - Summarize                                    â”‚         â”‚
-â”‚  â”‚  - Cleanup                                      â”‚         â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                           â”‚
-                           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                      Service Layer                           â”‚
-â”‚                      (TypeScript)                            â”‚
-â”‚                                                               â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
-â”‚  â”‚   AI Service â”‚  â”‚    FFmpeg    â”‚  â”‚    Upload    â”‚     â”‚
-â”‚  â”‚              â”‚  â”‚   Service    â”‚  â”‚   Service    â”‚     â”‚
-â”‚  â”‚ - Transcribe â”‚  â”‚ - Extract    â”‚  â”‚ - Validate   â”‚     â”‚
-â”‚  â”‚ - Summarize  â”‚  â”‚ - Convert    â”‚  â”‚ - Save       â”‚     â”‚
-â”‚  â”‚ - Abstract   â”‚  â”‚ - Metadata   â”‚  â”‚ - Cleanup    â”‚     â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                           â”‚
-                           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                    External Services                         â”‚
-â”‚                                                               â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚
-â”‚  â”‚   OpenAI     â”‚  â”‚     Groq     â”‚  â”‚  Deepgram    â”‚     â”‚
-â”‚  â”‚  Whisper     â”‚  â”‚   Whisper    â”‚  â”‚    Nova      â”‚     â”‚
-â”‚  â”‚   GPT-4      â”‚  â”‚   Mixtral    â”‚  â”‚              â”‚     â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-```
-
-## ðŸ“ Directory Structure
-
-```
-LectureAI/
-â”œâ”€â”€ actions/              # Server Actions (use server)
-â”‚   â””â”€â”€ transcription.ts  # Main processing mutation
-â”‚
-â”œâ”€â”€ app/                  # Next.js App Router
-â”‚   â”œâ”€â”€ api/             # API routes
-â”‚   â”‚   â””â”€â”€ transcribe/
-â”‚   â”‚       â””â”€â”€ route.ts  # REST API endpoint
-â”‚   â”œâ”€â”€ layout.js        # Root layout (metadata, header, footer)
-â”‚   â”œâ”€â”€ page.js          # Home page (upload + display)
-â”‚   â””â”€â”€ globals.css      # Global styles
-â”‚
-â”œâ”€â”€ components/          # Client components (JavaScript/TypeScript)
-â”‚   â”œâ”€â”€ upload.tsx       # File upload with drag-drop
-â”‚   â”œâ”€â”€ progress.js      # Progress indicator
-â”‚   â”œâ”€â”€ notes-display.js # Tabbed notes viewer
-â”‚   â””â”€â”€ history.tsx      # History list with delete
-â”‚
-â”œâ”€â”€ lib/                 # Core libraries (TypeScript)
-â”‚   â”œâ”€â”€ ai.ts           # AI provider abstraction
-â”‚   â”œâ”€â”€ ffmpeg.ts       # Audio extraction utilities
-â”‚   â””â”€â”€ upload.ts       # File upload handling
-â”‚
-â”œâ”€â”€ types/              # TypeScript type definitions
-â”‚   â””â”€â”€ index.ts        # All interfaces and types
-â”‚
-â”œâ”€â”€ utils/              # Utility functions (TypeScript)
-â”‚   â”œâ”€â”€ validateFile.ts # File validation logic
-â”‚   â””â”€â”€ history.ts      # History management (localStorage)
-â”‚
-â””â”€â”€ public/             # Static assets
-```
-
-## ðŸ”„ Data Flow
-
-### Upload to Notes Pipeline
-
-```
-1. User uploads file (upload.tsx)
-   â†“
-2. FormData sent to /api/transcribe
-   â†“
-3. API route calls createTranscriptionMutation()
-   â†“
-4. Server Action pipeline:
-   a. validateFile() - Check format, size
-   b. saveUploadedFile() - Store temporarily
-   c. [If video] extractAudioFromVideo() - FFmpeg conversion
-   d. transcribeAudio() - AI transcription
-   e. summarizeTranscript() - AI summarization
-   f. Cleanup temp files
-   â†“
-5. Return LectureNotes JSON
-   â†“
-6. Save to history (saveToHistory()) - localStorage
-   â†“
-7. Client displays structured notes (notes-display.js)
-```
-
-### History Management Flow
-
-```
-1. Transcription completes successfully
-   â†“
-2. saveToHistory() called with:
-   - title (filename or YouTube title)
-   - notes (complete LectureNotes)
-   - language (en/id)
-   - source (file/youtube)
-   - timestamp (auto-generated)
-   â†“
-3. Stored in localStorage (max 50 items)
-   â†“
-4. Dispatch 'historyUpdated' event
-   â†“
-5. History component auto-refreshes
-   â†“
-6. User can:
-   - View all past transcriptions
-   - Click to restore notes
-   - Delete individual items
-   - Clear all history
-```
-
-## ðŸ”Œ AI Provider Abstraction
-
-### Design Pattern
-
-The AI service uses a provider abstraction pattern to support multiple AI services:
-
-```typescript
-// lib/ai.ts
-export function getAIConfig(): AIConfig {
-  switch (AI_PROVIDER) {
-    case 'openai': return { ... }
-    case 'groq': return { ... }
-    case 'deepgram': return { ... }
-    case 'anthropic': return { ... }
-  }
-}
-
-export async function transcribeAudio(
-  audioPath: string,
-  options: TranscriptionOptions
-): Promise<TranscriptionResult> {
-  const config = getAIConfig();
-
-  // Route to appropriate provider
-  switch (config.provider) {
-    case 'openai': return transcribeWithOpenAI(...)
-    case 'groq': return transcribeWithGroq(...)
-    // ...
-  }
-}
-```
-
-### Adding New Providers
-
-To add a new AI provider:
-
-1. Update `AIProvider` type in `types/index.ts`
-2. Add configuration in `getAIConfig()`
-3. Implement `transcribeWith[Provider]()` function
-4. Add to switch statements in `transcribeAudio()` and `summarizeTranscript()`
-5. Document in README
-
-## ðŸŽ­ Server Actions Pattern
-
-### Mutation Pattern
-
-All server actions follow a consistent mutation result pattern:
-
-```typescript
-interface MutationResult<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
-```
-
-### Implementation
-
-```typescript
-'use server';
-
-export async function createTranscriptionMutation(
-  formData: FormData
-): Promise<MutationResult<LectureNotes>> {
-  try {
-    // Process logic
-    return {
-      success: true,
-      data: lectureNotes,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-}
-```
-
-### Benefits
-
-- **Consistent error handling**: Errors never throw, always return
-- **Type safety**: Generic type for data payload
-- **Easy client consumption**: Check `success` field
-- **Logging friendly**: Centralized error capture
-
-## ðŸŽ¨ Component Architecture
-
-### Client Components (JavaScript)
-
-All UI components are client-side JavaScript for simplicity and flexibility.
-
-#### UploadForm Component
-
-```javascript
-// components/upload.js
-'use client';
-
-Features:
-- Drag-and-drop support
-- File validation
-- Progress tracking
-- Error handling
-- Optimistic UI updates
-```
-
-#### NotesDisplay Component
-
-```javascript
-// components/notes-display.js
-'use client';
-
-Features:
-- Tabbed interface
-- JSON/Markdown export
-- Formatted display
-- Responsive design
-```
-
-### Design Decisions
-
-- **Client-side state**: React hooks for local state
-- **No server components for UI**: Simplifies data flow
-- **Progressive enhancement**: Works without JS for static content
-
-## ðŸ” Security Architecture
-
-### Multi-Layer Validation
-
-```
-Client â†’ Server Action â†’ Service Layer
-  â†“           â†“              â†“
-[Basic]   [Full Validation] [Final Check]
-```
-
-### File Upload Security
-
-1. **MIME type checking**: Validate against whitelist
-2. **Extension validation**: Check file extension
-3. **Size limits**: Enforce maximum file size
-4. **Sanitized storage**: Random filenames, isolated directory
-5. **Automatic cleanup**: Remove files after processing
-
-### API Security
-
-- No hardcoded secrets
-- Environment variable configuration
-- Input sanitization at every layer
-- Structured error messages (no sensitive data leaks)
-
-## ðŸ“Š Data Models
-
-### Core Types
-
-```typescript
-// Uploaded file metadata
-interface UploadedFile {
-  filepath: string;
-  originalFilename: string;
-  mimetype: string;
-  size: number;
-}
-
-// AI transcription result
-interface TranscriptionResult {
-  text: string;
-  duration?: number;
-  language?: string;
-  segments?: TranscriptionSegment[];
-}
-
-// Final structured notes
-interface LectureNotes {
-  title: string;
-  summary: string;
-  paragraphs: string[];
-  bulletPoints: string[];
-  keyConcepts: KeyConcept[];
-  definitions: Definition[];
-  exampleProblems: ExampleProblem[];
-  actionItems: string[];
-  metadata: NotesMetadata;
-}
-```
-
-## ðŸŽ¯ Prompt Engineering
-
-### Transcription Prompt
-
-```typescript
-{
-  language: 'en',
-  temperature: 0,  // Deterministic output
-  prompt: undefined  // Let model auto-detect
-}
-```
-
-### Summarization Prompt
-
-Located in `lib/ai.ts` â†’ `buildSummarizationPrompt()`:
-
-**Key elements:**
-
-- JSON schema specification
-- Detail level control (concise/detailed/comprehensive)
-- Focus areas (if specified)
-- Structured output requirements
-- Academic writing style
-- Relationship identification
-- Example extraction rules
-
-## âš¡ Performance Considerations
-
-### Optimizations
-
-1. **Streaming not implemented**: Batch processing for simplicity
-2. **Single file processing**: No concurrent uploads (yet)
-3. **Temp file cleanup**: Automatic removal after processing
-4. **Audio optimization**: Convert to mono, 16kHz for smaller payload
-
-### Future Improvements
-
-- [ ] Streaming responses
-- [ ] Queue system for batch processing
-- [ ] Caching for repeated files
-- [ ] Chunk large files
-- [ ] Background job processing
-
-## ðŸš€ Deployment Architecture
-
-### Environment Requirements
-
-- Node.js 18+ runtime
-- FFmpeg binaries
-- Writable /tmp directory
-- Environment variables for API keys
-
-### Vercel Deployment
-
-**Considerations:**
-
-- FFmpeg availability (use serverless layer or custom build)
-- File size limits (100MB default)
-- Function timeout (10s default, upgrade needed)
-- Environment variable configuration
-
-### Docker Deployment
-
-**Included:**
-
-- FFmpeg in container
-- Node.js runtime
-- All dependencies
-- Environment variable support
-
-## ðŸ”§ Configuration System
-
-### Environment Variables
-
-```env
-# AI Provider Selection
-AI_PROVIDER=openai|groq|deepgram|anthropic
-
-# Provider-specific keys
-OPENAI_API_KEY=...
-GROQ_API_KEY=...
-
-# File upload configuration
-MAX_FILE_SIZE_MB=100
-ALLOWED_AUDIO_FORMATS=mp3,wav,...
-ALLOWED_VIDEO_FORMATS=mp4,mkv,...
-
-# FFmpeg paths (optional)
-FFMPEG_PATH=/usr/local/bin/ffmpeg
-FFPROBE_PATH=/usr/local/bin/ffprobe
-```
-
-### Runtime Configuration
-
-Configuration is loaded at module initialization:
-
-- `lib/ai.ts` â†’ AI provider config
-- `utils/validateFile.ts` â†’ Upload limits
-- `lib/upload.ts` â†’ Upload directory
-
-## ðŸ§ª Testing Strategy
-
-### Current State
-
-Manual testing for MVP release.
-
-### Future Testing
-
-- **Unit tests**: Core utilities and validation
-- **Integration tests**: Server Actions end-to-end
-- **E2E tests**: Full upload â†’ notes flow
-- **Mock AI providers**: Test without API calls
-
-## ðŸ“ˆ Monitoring & Logging
-
-### Current Logging
-
-```typescript
-console.error('Operation failed:', error);
-```
-
-### Future Enhancements
-
-- Structured logging (Winston, Pino)
-- Error tracking (Sentry)
-- Analytics (Plausible, Umami)
-- Performance monitoring (Vercel Analytics)
-
-## ðŸ”„ Migration Path
-
-### Version 1.x â†’ 2.x
-
-Potential breaking changes:
-
-- API response format changes
-- Provider configuration updates
-- Type definition modifications
-
-Migration guide will be provided with major releases.
-
-## ðŸ¤ Extension Points
-
-### Adding Features
-
-**Easy to add:**
-
-- New AI providers (abstraction layer ready)
-- New export formats (component pattern established)
-- Additional validation rules (modular design)
-- Custom prompt templates (configuration-based)
-
-**More complex:**
-
-- Real-time processing (requires streaming)
-- Batch uploads (requires queue system)
-- Collaboration (requires database)
-
-## ðŸ“š Additional Resources
-
-- [Next.js App Router Docs](https://nextjs.org/docs/app)
-- [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
-- [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
-- [FFmpeg Documentation](https://ffmpeg.org/documentation.html)
+This document provides a comprehensive overview of the LectureAI architecture, system design, data flows, and engineering patterns.
 
 ---
 
-This architecture is designed to be:
+## 🎯 Design Philosophy
 
-- **Extensible**: Easy to add providers and features
-- **Maintainable**: Clear separation of concerns
-- **Secure**: Multiple validation layers
-- **Type-safe**: TypeScript throughout server layer
-- **Developer-friendly**: Consistent patterns and good documentation
+1. **Separation of Concerns**: Type-safe Server Actions orchestrate heavy backend processing, while modern React 19 Client Components handle responsive UI state.
+2. **Deterministic Outputs**: AI summarization enforces strict JSON Schema contracts via Google Gemini (`responseJsonSchema`) and Groq/OpenAI function schemas to eliminate parsing hallucinations.
+3. **High-Availability Hybrid Topology**: Next.js cloud APIs seamlessly fall back to local hardware acceleration (NVIDIA RTX 4060 CUDA Whisper + local Ollama proxy) when cloud rate limits are exceeded.
+4. **Security-First Media Ingestion**: Defense-in-depth protections include binary magic-byte validation, SSRF filtering against private network interfaces, and parameterized CLI execution.
+5. **Zero-Configuration Portability**: Works uniformly across local development (Windows/macOS/Linux), containerized Docker runtimes, and serverless edge hosts (Vercel).
 
-For questions or discussions about architecture decisions, please open a [GitHub Discussion](https://github.com/taufiqelrahman/LectureAI/discussions).
+---
+
+## 🏛️ System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                             Client UI Layer                                 │
+│                               (React 19)                                    │
+│                                                                             │
+│  ┌──────────────┐  ┌───────────────┐  ┌────────────────┐  ┌──────────────┐  │
+│  │  UploadForm  │  │ NotesDisplay  │  │ 3D Flashcards  │  │ MediaPlayer  │  │
+│  │ (File/YT/URL)│  │ (8 View Tabs) │  │  (Flip Study)  │  │ (Floating)   │  │
+│  └──────┬───────┘  └───────▲───────┘  └────────▲───────┘  └──────▲───────┘  │
+└─────────┼──────────────────┼───────────────────┼─────────────────┼──────────┘
+          │                  │                   │                 │
+          ▼                  │                   │                 │
+┌──────────────────────────────────────────────────────────────────┴──────────┐
+│                         Next.js 15 App Router                               │
+│                                                                             │
+│  ┌─────────────────────────┐             ┌───────────────────────────────┐  │
+│  │ app/page.tsx            │             │ app/api/limits/route.ts       │  │
+│  │ app/layout.tsx          │             │ app/api/transcribe/route.ts   │  │
+│  └──────────┬──────────────┘             └───────────────────────────────┘  │
+└─────────────┼───────────────────────────────────────────────────────────────┘
+              ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      Server Actions Mutation Layer                          │
+│                                                                             │
+│  actions/transcription.ts -> createTranscriptionMutation()                  │
+│   ├── Step 1: File integrity & magic-byte validation (lib/file-security.ts) │
+│   ├── Step 2: Rate limit check (lib/rate-limiter.ts)                        │
+│   ├── Step 3: Media acquisition & extraction (lib/youtube.ts, lib/ffmpeg.ts)│
+│   ├── Step 4: Speech-to-Text transcription (lib/ai.ts)                      │
+│   ├── Step 5: Structured note synthesis (lib/ai.ts -> Gemini/Groq)          │
+│   └── Step 6: Temp file cleanup & result caching                            │
+└─────────────┬───────────────────────────────────────────────────────────────┘
+              │
+      ┌───────┴───────────────────────────────┐
+      ▼                                       ▼
+┌─────────────────────────────┐   ┌───────────────────────────────────────────┐
+│     Cloud AI Providers      │   │          Local Hybrid Proxy               │
+│                             │   │          (FastAPI on Port 8000)           │
+│ 1. Google Gemini 2.5 Flash  │   │                                           │
+│    (@google/genai SDK)      │   │ 1. faster-whisper (NVIDIA CUDA float16)   │
+│ 2. Groq Cloud (Whisper L3)  │   │ 2. Ollama Local Proxy (gemma4)            │
+│ 3. OpenAI / Deepgram        │   │ 3. 120s Streaming keep-alive              │
+└─────────────────────────────┘   └───────────────────────────────────────────┘
+```
+
+---
+
+## 📁 Codebase Layout
+
+```
+talk2notes/
+├── actions/
+│   └── transcription.ts          # Server Action entry point ('use server')
+├── app/
+│   ├── api/                      # Next.js route handlers
+│   │   ├── limits/route.ts       # Rate limit queries
+│   │   └── transcribe/route.ts   # REST API endpoint
+│   ├── layout.tsx                # Metadata & theme structure
+│   ├── page.tsx                  # Root client container
+│   ├── error.tsx                 # Route error boundary
+│   ├── not-found.tsx             # 404 page
+│   └── globals.css               # Tailwind CSS & custom animations
+├── backend/                      # Python FastAPI local acceleration proxy
+│   ├── main.py                   # FastAPI server & route handlers
+│   ├── ai_pipeline.py            # faster-whisper (CUDA) & Ollama pipeline
+│   └── requirements.txt          # Python dependencies
+├── components/                   # React 19 UI components
+│   ├── upload.tsx                # Drag-and-drop, YouTube, and URL inputs
+│   ├── notes-display.tsx         # Notes viewer, Quiz, and 3D Flashcards
+│   ├── media-player.tsx          # Floating PiP player for streaming media
+│   ├── history.tsx               # Client-side history drawer
+│   ├── progress.tsx              # Multi-step progress bars
+│   └── error-boundary.tsx        # React client component error boundaries
+├── lib/                          # Core business logic & integrations
+│   ├── ai.ts                     # AI provider abstraction (Gemini/Groq/OpenAI)
+│   ├── ai-prompts.ts             # System prompts for English & Hinglish
+│   ├── ffmpeg.ts                 # Audio extraction, duration & compression
+│   ├── file-security.ts          # Magic-byte file validator (native & pure JS)
+│   ├── media-downloader.ts       # SSRF-guarded media URL fetcher
+│   ├── youtube.ts                # Parameterized yt-dlp wrapper
+│   ├── rate-limiter.ts           # Sliding-window rate limiter
+│   └── logger.ts                 # Pino structured logger
+├── types/
+│   └── index.ts                  # Shared TypeScript models and contracts
+└── tests/
+    └── integration/              # Vitest test suites (128 tests)
+```
+
+---
+
+## 🔄 End-to-End Execution Flow
+
+### 1. Ingestion & Pre-Flight Checks
+
+When a user submits a payload:
+
+- **File Upload**: `lib/file-security.ts` reads the initial 12 bytes of the file. It verifies that the magic bytes match authorized audio/video formats (RIFF for WAV, ftyp for MP4/MOV, ID3/MPEG for MP3, etc.).
+- **YouTube Link**: `lib/youtube.ts` verifies URL host validity (`youtube.com`, `youtu.be`) and uses `execFile` without shell interpolation to invoke `yt-dlp` or `python -m yt_dlp`.
+- **Direct URL**: `lib/media-downloader.ts` parses the hostname and resolves its DNS, verifying that it does not point to internal private subnets (`127.0.0.1`, `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`) or link-local cloud metadata endpoints (`169.254.169.254`).
+
+### 2. Audio Processing & Normalization
+
+If the ingested file is a video:
+
+- `lib/ffmpeg.ts` executes an extraction command converting the video stream into a normalized 16kHz mono MP3 or WAV file.
+- If the audio duration or size exceeds provider limits (>24MB), FFmpeg automatically downsamples bitrate while preserving vocal clarity.
+- Platform-native detection resolves `ffmpeg` and `ffprobe` binaries via `where` on Windows and `existsSync` / `which` on Unix.
+
+### 3. Speech-to-Text Transcription
+
+- **Primary Cloud**: Sent to Groq's `whisper-large-v3` API or OpenAI's Whisper API.
+- **Local Fallback**: If cloud credentials are missing or rate limits (HTTP 429) occur, the request is dispatched to `http://localhost:8000/v1/audio/transcriptions`. The local FastAPI server loads `faster-whisper` on NVIDIA RTX 4060 with CUDA acceleration in `float16` precision.
+
+### 4. Structured Synthesis & Flashcards Generation
+
+- The transcription is passed to the AI summarization engine with the selected language target (`English` or `Hinglish`).
+- **Google Gemini 2.5 Flash**: Invoked using `@google/genai` with `responseMimeType: 'application/json'` and `responseJsonSchema`. The strict schema guarantees typed fields:
+  - `summary`: Bulleted executive overview.
+  - `detailedNotes`: Markdown formatted conceptual sections.
+  - `keyConcepts`: Concept titles and explanations.
+  - `definitions`: Terminology glossary.
+  - `examples`: Problem statements with step-by-step solutions.
+  - `quiz`: Multiple-choice questions with answer keys and rationales.
+  - `flashcards`: Study cards with `front`, `back`, `category`, and `priority` (`high` | `medium` | `low`).
+  - `actionItems`: Practice items and follow-up study recommendations.
+
+---
+
+## 📇 Flashcards Interactive Architecture
+
+The flashcards feature in `components/notes-display.tsx` provides an interactive study experience:
+
+- **3D Perspective Flip**: Implemented using CSS `perspective: 1000px`, `transform-style: preserve-3d`, and `transform: rotateY(180deg)`.
+- **Priority Visuals**: Flashcards display color-coded priority badges:
+  - `High`: Red badge for core exam concepts.
+  - `Medium`: Yellow badge for supplementary definitions.
+  - `Low`: Blue badge for contextual examples.
+- **State Preservation**: The current card index and flip state are managed in local component state with keyboard and button navigation.
+
+---
+
+## 🛡️ Security & Reliability Architecture
+
+| Threat / Concern                       | Mitigation Architecture                                                                                              | Location                                 |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| **Command Injection**                  | Switched from `exec` with string formatting to `execFile` with separate argument arrays.                             | `lib/youtube.ts`                         |
+| **Server-Side Request Forgery (SSRF)** | IP address validation blocking loopback (`127.x`), RFC 1918 subnets, and AWS/GCP metadata (`169.254.169.254`).       | `lib/media-downloader.ts`                |
+| **Malicious File Uploads**             | Pure-JS magic-byte header inspection (RIFF, ftyp, ID3, OggS, fLaC, Matroska) rather than trusting client MIME types. | `lib/file-security.ts`                   |
+| **API Rate Limits (429)**              | Sliding-window memory rate limiter + automatic local proxy fallback (FastAPI + CUDA).                                | `lib/rate-limiter.ts`, `backend/main.py` |
+| **Serverless Deployment Crashes**      | Graceful `try/catch` wrappers around optional native C++ bindings with pure TypeScript fallbacks.                    | `lib/file-security.ts`, `lib/ffmpeg.ts`  |
+| **Windows Build Symlink Crashes**      | Gated Next.js `output: 'standalone'` behind `process.env.NEXT_STANDALONE === 'true'`.                                | `next.config.js`                         |
+
+---
+
+## 🌐 Supported Environment Configurations
+
+| Environment Variable       | Description                                     | Default              |
+| -------------------------- | ----------------------------------------------- | -------------------- |
+| `AI_PROVIDER`              | Active AI provider (`gemini`, `groq`, `openai`) | `groq`               |
+| `GEMINI_API_KEY`           | Google Gemini API key for Gemini 2.5 Flash      | Optional             |
+| `GROQ_API_KEY`             | Groq API key for Whisper Large v3               | Optional             |
+| `GROQ_TRANSCRIPTION_MODEL` | Transcription model identifier                  | `whisper-large-v3`   |
+| `GROQ_SUMMARIZATION_MODEL` | Summarization model identifier                  | `openai/gpt-oss-20b` |
+| `OPENAI_BASE_URL`          | Base URL for OpenAI-compatible local proxy      | Optional             |
+| `FFMPEG_PATH`              | Explicit path to `ffmpeg` binary                | Auto-detected        |
+| `FFPROBE_PATH`             | Explicit path to `ffprobe` binary               | Auto-detected        |
+| `NEXT_STANDALONE`          | Enable Next.js standalone container packaging   | `false`              |

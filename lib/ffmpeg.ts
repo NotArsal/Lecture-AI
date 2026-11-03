@@ -1,5 +1,5 @@
 import { logger } from '@/lib/logger';
-import { promises as fs } from 'fs';
+import { existsSync, promises as fs } from 'fs';
 import os from 'os';
 import path from 'path';
 import { execSync } from 'child_process';
@@ -21,9 +21,28 @@ try {
 
 // Auto-detect FFmpeg and FFprobe paths with runtime verification
 function detectBinaryPath(binaryName: string): string {
-  logger.info(`[FFmpeg] Detecting ${binaryName}...`);
+  // 1. Windows platform handling
+  if (process.platform === 'win32') {
+    try {
+      const result = execSync(`where ${binaryName}`, {
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'ignore'],
+      })
+        .trim()
+        .split(/\r?\n/)[0];
 
-  // Try common installation locations directly first (faster)
+      if (result) {
+        logger.info(`[FFmpeg] Found ${binaryName} at: ${result}`);
+        return result;
+      }
+    } catch {
+      // Not in current PATH, fallback to binary name
+    }
+    logger.warn(`[FFmpeg] Using binary name as fallback: ${binaryName}`);
+    return binaryName;
+  }
+
+  // 2. Unix common installation locations via instant fs check (no child process)
   const commonPaths = [
     `/opt/homebrew/bin/${binaryName}`, // M1/M2 Mac (Homebrew)
     `/usr/local/bin/${binaryName}`, // Intel Mac (Homebrew)
@@ -32,23 +51,13 @@ function detectBinaryPath(binaryName: string): string {
   ];
 
   for (const testPath of commonPaths) {
-    try {
-      // Simple existence check - don't verify at module load
-      const result = execSync(`test -f "${testPath}" && echo "exists"`, {
-        encoding: 'utf8',
-        stdio: ['pipe', 'pipe', 'ignore'],
-      }).trim();
-
-      if (result === 'exists') {
-        logger.info(`[FFmpeg] Found ${binaryName} at: ${testPath}`);
-        return testPath;
-      }
-    } catch (error) {
-      // This path doesn't exist, try next
+    if (existsSync(testPath)) {
+      logger.info(`[FFmpeg] Found ${binaryName} at: ${testPath}`);
+      return testPath;
     }
   }
 
-  // Try 'which' command as fallback
+  // 3. Fallback to 'which' command on Unix
   try {
     const result = execSync(`which ${binaryName}`, {
       encoding: 'utf8',
