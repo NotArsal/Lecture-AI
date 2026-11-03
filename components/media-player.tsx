@@ -134,18 +134,45 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
     }
   };
 
+  const getGoogleDriveEmbedUrl = (url: string): string | null => {
+    try {
+      if (!url) return null;
+      const trimmed = url.trim();
+      if (!trimmed.includes('drive.google.com')) return null;
+      const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/file/d/${match[1]}/preview`;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  };
+
   if (error) {
     return (
       <div className="w-full p-4 bg-red-50 border border-red-200 rounded-lg">
-        <div className="flex items-center gap-2 text-red-800">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span className="font-medium">{error}</span>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-red-800">
+            <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className="font-medium text-sm">{error}</span>
+          </div>
+          {sourceUrl && sourceUrl.startsWith('http') && (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-semibold text-red-700 hover:text-red-900 underline shrink-0"
+            >
+              Open source ↗
+            </a>
+          )}
         </div>
       </div>
     );
@@ -335,7 +362,68 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
     );
   }
 
+  const googleDriveEmbedUrl = getGoogleDriveEmbedUrl(sourceUrl);
+  if (googleDriveEmbedUrl) {
+    return (
+      <div
+        ref={playerRef}
+        className={`bg-amber-50/90 rounded-xl border border-amber-300 select-none shadow-sm ${
+          isDragging ? '' : 'transition-all duration-300'
+        } ${
+          isSticky ? 'fixed z-40 shadow-xl w-80' : 'w-full'
+        } ${isMinimized ? 'p-1.5' : isSticky ? 'p-2' : 'p-4'} ${isDragging ? 'cursor-grabbing' : isSticky ? 'cursor-grab' : ''}`}
+        style={isSticky ? { left: `${position.x}px`, top: `${position.y}px` } : undefined}
+        onMouseDown={handleMouseDown}
+      >
+        <div className="flex items-center gap-1.5 mb-2">
+          <div className="px-1.5 py-0.5 rounded bg-amber-200/80 text-amber-900 text-[10px] font-bold tracking-wide uppercase">
+            Drive
+          </div>
+          <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} font-semibold text-amber-950`}>
+            Google Drive
+          </span>
+          <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} text-amber-800 truncate flex-1 font-medium`}>
+            {fileName}
+          </span>
+          <button
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="p-0.5 hover:bg-amber-100 rounded transition-colors text-amber-700"
+            title={isMinimized ? 'Expand player' : 'Minimize player'}
+          >
+            <svg
+              className={`${isSticky ? 'w-3 h-3' : 'w-4 h-4'}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isMinimized ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              )}
+            </svg>
+          </button>
+        </div>
+        <div
+          className={`relative w-full ${isMinimized ? 'hidden' : ''}`}
+          style={{ paddingBottom: '56.25%' }}
+        >
+          <iframe
+            src={googleDriveEmbedUrl}
+            className="absolute top-0 left-0 w-full h-full rounded-md border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    );
+  }
+
   // For direct media URLs
+  const isAudio =
+    !fileName.match(/\.(mp4|mov|mkv|webm|avi)$/i) &&
+    !sourceUrl.match(/\.(mp4|mov|mkv|webm|avi)$/i);
+
   return (
     <div
       ref={playerRef}
@@ -368,7 +456,7 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
           />
         </svg>
         <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} font-medium text-blue-900`}>
-          Media
+          {isAudio ? 'Audio' : 'Media'}
         </span>
         <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} text-blue-700 truncate flex-1`}>
           {fileName}

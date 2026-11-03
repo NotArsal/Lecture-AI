@@ -55,12 +55,15 @@ async function processAudioPipeline(
       transcriptText = await translateTranscript(transcriptText, 'hinglish', { customGroqKey });
     }
 
-    const formattedTranscript = await formatTranscript(transcriptText, language, { customGroqKey });
-    const lectureNotes = await summarizeTranscript(transcriptText, originalFilename, {
-      language,
-      detailLevel: 'detailed',
-      customGroqKey,
-    });
+    // Run transcript formatting and structured summarization in parallel to cut latency
+    const [formattedTranscript, lectureNotes] = await Promise.all([
+      formatTranscript(transcriptText, language, { customGroqKey }),
+      summarizeTranscript(transcriptText, originalFilename, {
+        language,
+        detailLevel: 'detailed',
+        customGroqKey,
+      }),
+    ]);
 
     return {
       success: true,
@@ -168,18 +171,21 @@ export async function createTranscriptionMutation(
             audioToProcess = extractedAudioPath;
           }
 
+          const mediaFilename = path.basename(audioToProcess);
+          const sourceUrl = `/api/media?file=${encodeURIComponent(mediaFilename)}`;
+
           const result = await processAudioPipeline(
             audioToProcess,
             `${downloadedAudio.title}.mp3`,
             language,
             customGroqKey || undefined,
-            mediaUrl,
-            'url'
+            sourceUrl,
+            'upload'
           );
 
-          await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
-          if (extractedAudioPath) {
-            await cleanupUploadedFile(extractedAudioPath).catch(() => {});
+          // Clean up the bulky raw video file to save disk space if audio was extracted separately
+          if (isVideo && downloadedAudio.audioPath !== audioToProcess) {
+            await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
           }
           return result;
         } catch (error) {

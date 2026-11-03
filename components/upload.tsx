@@ -258,25 +258,14 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
 
       if (inputMode === 'youtube') {
         setCurrentStep('Processing YouTube video...');
-        setProgressDetails('Downloading and extracting audio...');
-        const uploadTimer = simulateProgress(15, 35, 3000);
+        setProgressDetails('Downloading and transcribing audio with AI...');
+        const uploadTimer = simulateProgress(15, 85, 20000);
 
-        // Start actual processing
-        const processingPromise = createTranscriptionMutation(formData);
-
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        // Start actual processing immediately without artificial sleep
+        const result = await createTranscriptionMutation(formData);
         clearInterval(uploadTimer);
-        setProgress(35);
-
-        // Continue with transcription
-        const transcribeStart = 35;
-        setCurrentStep('Transcribing audio to text...');
-        setProgressDetails('Converting speech to text with AI...');
-        simulateProgress(transcribeStart, 70, 15000);
-
-        const result = await processingPromise;
         setProgress(100);
-        setCurrentStep('Complete!');
+        setCurrentStep('Complete! ✅');
 
         if (result.success && result.data) {
           // Save to history
@@ -298,25 +287,14 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
         }
       } else if (inputMode === 'url') {
         setCurrentStep('Processing media from URL...');
-        setProgressDetails('Downloading and extracting audio...');
-        const uploadTimer = simulateProgress(15, 35, 3000);
+        setProgressDetails('Downloading and transcribing audio with AI...');
+        const uploadTimer = simulateProgress(15, 85, 20000);
 
-        // Start actual processing
-        const processingPromise = createTranscriptionMutation(formData);
-
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        // Start actual processing immediately without artificial sleep
+        const result = await createTranscriptionMutation(formData);
         clearInterval(uploadTimer);
-        setProgress(35);
-
-        // Continue with transcription
-        const transcribeStart = 35;
-        setCurrentStep('Transcribing audio to text...');
-        setProgressDetails('Converting speech to text with AI...');
-        simulateProgress(transcribeStart, 70, 15000);
-
-        const result = await processingPromise;
         setProgress(100);
-        setCurrentStep('Complete!');
+        setCurrentStep('Complete! ✅');
 
         if (result.success && result.data) {
           // Save to history
@@ -340,61 +318,30 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
         setCurrentStep('Uploading file...');
         setProgressDetails(`Uploading ${formatFileSize(selectedFile!.size)}...`);
 
-        // Upload simulation (15-25%)
-        const uploadTimer = simulateProgress(15, 25, 1000);
-
-        // Start actual processing
-        const processingPromise = createTranscriptionMutation(formData);
-
-        // Complete upload simulation
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        clearInterval(uploadTimer);
-
-        setProgress(25);
-
-        // Check if video or audio
         const isVideo = selectedFile!.type.startsWith('video/');
         const fileSizeMB = selectedFile!.size / (1024 * 1024);
 
         if (isVideo) {
           setCurrentStep('Extracting audio from video...');
           setProgressDetails('Converting video to audio format...');
-          simulateProgress(25, 35, 2000);
-          await new Promise((resolve) => setTimeout(resolve, 2000));
+        } else if (fileSizeMB > 10) {
+          setCurrentStep('Processing large audio file...');
+          setProgressDetails(`Processing ${fileSizeMB.toFixed(1)}MB audio...`);
+        } else {
+          setCurrentStep('Transcribing audio with AI...');
+          setProgressDetails('Converting speech to text and generating notes...');
         }
 
-        // Compression check (if file > 10MB)
-        if (fileSizeMB > 10) {
-          setProgress(isVideo ? 35 : 25);
-          setCurrentStep('Compressing audio for better reliability...');
-          setProgressDetails(`Reducing ${fileSizeMB.toFixed(1)}MB to ~8MB...`);
-          simulateProgress(isVideo ? 35 : 25, isVideo ? 45 : 35, 3000);
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-        }
+        // Smooth progressive ticker without blocking async execution
+        const progressTimer = simulateProgress(15, 88, Math.max(8000, fileSizeMB * 1200));
 
-        // Transcription phase (longest part)
-        const transcribeStart = fileSizeMB > 10 ? (isVideo ? 45 : 35) : isVideo ? 35 : 25;
-        setProgress(transcribeStart);
-        setCurrentStep('Transcribing audio with AI...');
-        setProgressDetails('Converting speech to text... This may take a few minutes.');
-
-        // Slower progress for transcription (it's the longest step)
-        const transcribeDuration = Math.max(8000, fileSizeMB * 1000); // At least 8 seconds
-        simulateProgress(transcribeStart, 75, transcribeDuration);
-
-        // Wait for actual result
-        const result = await processingPromise;
+        // Start actual processing immediately
+        const result = await createTranscriptionMutation(formData);
+        clearInterval(progressTimer);
 
         if (!result.success) {
           throw new Error(result.error || 'Processing failed');
         }
-
-        // Summarization phase
-        setProgress(80);
-        setCurrentStep('Generating structured notes...');
-        setProgressDetails('Creating summary, key concepts, and action items...');
-        simulateProgress(80, 95, 3000);
-        await new Promise((resolve) => setTimeout(resolve, 3000));
 
         setProgress(100);
         setCurrentStep('Complete! ✅');
