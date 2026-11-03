@@ -15,10 +15,29 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
   const [copied, setCopied] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: number }>({});
   const [showResults, setShowResults] = useState(false);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isCardFlipped, setIsCardFlipped] = useState(false);
 
   if (!notes) {
     return null;
   }
+
+  const flashcards = [
+    ...(notes.definitions || []).map((def) => ({
+      front: def.term,
+      back: def.definition,
+      category: 'Definition',
+      context: def.context,
+      badge: undefined as string | undefined,
+    })),
+    ...(notes.keyConcepts || []).map((c) => ({
+      front: c.concept,
+      back: c.explanation,
+      category: 'Key Concept',
+      context: undefined as string | undefined,
+      badge: c.importance,
+    })),
+  ];
 
   const tabs = [
     { id: 'summary', label: 'Summary' },
@@ -26,6 +45,7 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
     { id: 'concepts', label: 'Key Concepts' },
     { id: 'definitions', label: 'Definitions' },
     { id: 'problems', label: 'Examples' },
+    { id: 'flashcards', label: '📇 Flashcards' },
     { id: 'quiz', label: 'Quiz' },
     { id: 'actions', label: 'Action Items' },
     { id: 'transcript', label: 'Full Transcript' },
@@ -489,6 +509,106 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
               ))
             ) : (
               <p className="text-gray-500 text-center py-8">No example problems found</p>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'flashcards' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Study Flashcards</h3>
+                <p className="text-sm text-gray-500">
+                  Click the card or press Flip to reveal definitions and explanations
+                </p>
+              </div>
+              {flashcards.length > 0 && (
+                <span className="text-sm font-medium px-3 py-1 bg-primary-50 text-primary-700 rounded-full">
+                  Card {currentCardIndex + 1} of {flashcards.length}
+                </span>
+              )}
+            </div>
+
+            {flashcards.length > 0 ? (
+              <div className="max-w-2xl mx-auto space-y-6">
+                <div
+                  onClick={() => setIsCardFlipped(!isCardFlipped)}
+                  className="cursor-pointer select-none min-h-[260px] p-8 rounded-2xl border-2 border-primary-200 bg-gradient-to-br from-white to-primary-50/30 shadow-md hover:shadow-lg transition-all flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-primary-600 bg-primary-100/60 px-2.5 py-1 rounded-md">
+                      {flashcards[currentCardIndex].category}
+                    </span>
+                    {flashcards[currentCardIndex].badge && (
+                      <span className="text-xs font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-800">
+                        {flashcards[currentCardIndex].badge} priority
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="py-6 text-center">
+                    {!isCardFlipped ? (
+                      <div>
+                        <h4 className="text-2xl font-bold text-gray-900 mb-2">
+                          {flashcards[currentCardIndex].front}
+                        </h4>
+                        {flashcards[currentCardIndex].context && (
+                          <p className="text-sm text-gray-500 italic mt-2">
+                            "{flashcards[currentCardIndex].context}"
+                          </p>
+                        )}
+                        <p className="text-xs text-primary-500 mt-4 font-medium">
+                          Click to flip 🔄
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-base text-gray-800 leading-relaxed font-normal">
+                          {flashcards[currentCardIndex].back}
+                        </p>
+                        <p className="text-xs text-primary-500 mt-4 font-medium">
+                          Click to show term 🔄
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="text-center text-xs text-gray-400">
+                    {isCardFlipped ? 'Answer Side' : 'Question Side'}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => {
+                      setIsCardFlipped(false);
+                      setCurrentCardIndex((prev) => (prev > 0 ? prev - 1 : flashcards.length - 1));
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    ← Previous
+                  </button>
+
+                  <button
+                    onClick={() => setIsCardFlipped(!isCardFlipped)}
+                    className="px-5 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+                  >
+                    Flip Card 🔄
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsCardFlipped(false);
+                      setCurrentCardIndex((prev) => (prev < flashcards.length - 1 ? prev + 1 : 0));
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-500 text-center py-8">No flashcards available</p>
             )}
           </div>
         )}
