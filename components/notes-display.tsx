@@ -11,7 +11,10 @@ export function getCleanTranscript(transcript?: string): string {
   if (!transcript) return '';
   let cleaned = transcript.trim();
   if (cleaned.startsWith('```')) {
-    cleaned = cleaned.replace(/^```(?:json|markdown)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+    cleaned = cleaned
+      .replace(/^```(?:json|markdown)?\s*\n?/i, '')
+      .replace(/\n?```\s*$/i, '')
+      .trim();
   }
 
   const isLikelyJson =
@@ -386,11 +389,15 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
             <div className="p-2.5 bg-sky-50 text-sky-600 rounded-lg text-lg">⏱️</div>
             <div className="min-w-0 flex-1">
-              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Reading Pace</div>
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+                Reading Pace
+              </div>
               <div className="text-base font-bold text-slate-900 mt-0.5">
                 ~{Math.max(1, Math.ceil((notes.metadata?.wordCount || 100) / 200))} min read
               </div>
-              <div className="text-xs text-slate-500 truncate">{notes.metadata.wordCount.toLocaleString()} words</div>
+              <div className="text-xs text-slate-500 truncate">
+                {notes.metadata.wordCount.toLocaleString()} words
+              </div>
             </div>
           </div>
 
@@ -399,11 +406,19 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
             onClick={() => setActiveTab('flashcards')}
             className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3 cursor-pointer hover:border-primary-400 hover:shadow-md transition-all group"
           >
-            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg text-lg group-hover:scale-105 transition-transform">📇</div>
+            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg text-lg group-hover:scale-105 transition-transform">
+              📇
+            </div>
             <div className="min-w-0 flex-1">
-              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Flashcards</div>
-              <div className="text-base font-bold text-slate-900 mt-0.5">{flashcards.length} Cards</div>
-              <div className="text-xs text-primary-600 font-medium group-hover:underline">Practice now →</div>
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+                Flashcards
+              </div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
+                {flashcards.length} Cards
+              </div>
+              <div className="text-xs text-primary-600 font-medium group-hover:underline">
+                Practice now →
+              </div>
             </div>
           </div>
 
@@ -412,13 +427,20 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
             onClick={() => setActiveTab('quiz')}
             className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3 cursor-pointer hover:border-emerald-400 hover:shadow-md transition-all group"
           >
-            <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg text-lg group-hover:scale-105 transition-transform">🎯</div>
+            <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg text-lg group-hover:scale-105 transition-transform">
+              🎯
+            </div>
             <div className="min-w-0 flex-1">
-              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Quiz Ready</div>
-              <div className="text-base font-bold text-slate-900 mt-0.5">
-                {notes.quizQuestions?.length || 0} {notes.quizQuestions?.length === 1 ? 'Item' : 'Items'}
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+                Quiz Ready
               </div>
-              <div className="text-xs text-emerald-600 font-medium group-hover:underline">Test yourself →</div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
+                {notes.quizQuestions?.length || 0}{' '}
+                {notes.quizQuestions?.length === 1 ? 'Item' : 'Items'}
+              </div>
+              <div className="text-xs text-emerald-600 font-medium group-hover:underline">
+                Test yourself →
+              </div>
             </div>
           </div>
 
@@ -428,12 +450,19 @@ export function NotesDisplay({ notes }: NotesDisplayProps) {
             className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between cursor-pointer hover:border-amber-400 hover:shadow-md transition-all group"
           >
             <div>
-              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Core Topics</div>
-              <div className="text-base font-bold text-slate-900 mt-0.5">{notes.keyConcepts?.length || 0} Concepts</div>
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
+                Core Topics
+              </div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
+                {notes.keyConcepts?.length || 0} Concepts
+              </div>
             </div>
             <div className="flex flex-wrap gap-1 mt-2">
               {notes.keyConcepts?.slice(0, 2).map((c, i) => (
-                <span key={i} className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 truncate max-w-[110px]">
+                <span
+                  key={i}
+                  className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 truncate max-w-[110px]"
+                >
                   {c.concept}
                 </span>
               ))}

@@ -224,7 +224,10 @@ function sanitizeFormattedTranscript(output: string, fallback: string): string {
   if (!output) return fallback;
   let text = output.trim();
   if (text.startsWith('```')) {
-    text = text.replace(/^```(?:json|markdown)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+    text = text
+      .replace(/^```(?:json|markdown)?\s*\n?/i, '')
+      .replace(/\n?```\s*$/i, '')
+      .trim();
   }
 
   const isLikelyJson =

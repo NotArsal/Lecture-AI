@@ -214,12 +214,10 @@ export async function validateFileIntegrity(
   const isISOBMFFMatch =
     ['mp4', 'm4a', 'mov'].includes(detectedType) &&
     ['mp4', 'm4a', 'mov'].includes(claimedExt) &&
-    (
-      claimedMime.includes('mp4') ||
+    (claimedMime.includes('mp4') ||
       claimedMime.includes('m4a') ||
       claimedMime.includes('quicktime') ||
-      claimedMime.includes('aac')
-    );
+      claimedMime.includes('aac'));
 
   // Check if detected type matches claimed extension
   const extensionMatch =
@@ -229,8 +227,7 @@ export async function validateFileIntegrity(
 
   // Allow WebM audio/video
   const isWebmMatch =
-    detectedType === 'mkv' &&
-    (claimedMime === 'audio/webm' || claimedMime === 'video/webm');
+    detectedType === 'mkv' && (claimedMime === 'audio/webm' || claimedMime === 'video/webm');
 
   // Check if detected MIME matches claimed MIME (with common variations allowed)
   const mimeMatch =

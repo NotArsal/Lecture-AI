@@ -27,16 +27,19 @@ LectureAI was designed as a zero-cloud-storage lecture synthesis tool. However, 
 We enacted a three-pronged architecture upgrade:
 
 ### 1. Hybrid Media Streaming Endpoint (`/api/media`)
+
 - **HTTP Range Streaming**: Created `app/api/media/route.ts` with RFC 7233 byte-range support (HTTP 206 Partial Content) and stream piping (`Readable.toWeb(createReadStream(...))`). This enables smooth audio seeking, scrubbing, and pause/resume in browser native controls.
 - **Selective Retention**: For file uploads and URL downloads, the server cleans up bulky video files (which can be hundreds of megabytes) but preserves the compact extracted audio track in `uploads/` to power the local streaming endpoint `/api/media?file=...`.
 - **Directory Traversal Protection**: The streaming route enforces strict basename sanitization and path validation to ensure files can only be read from `uploads/`.
 
 ### 2. Multi-Provider Embed Support in `MediaPlayer`
+
 - **Google Drive Native Embeds**: Implemented `getGoogleDriveEmbedUrl()` to parse `/file/d/{id}/view` and `?id={id}` patterns, converting them into sandboxed responsive `https://drive.google.com/file/d/{id}/preview` iframe players with an Amber theme.
 - **Audio vs Video Separation**: Direct URLs are checked against media MIME types. Audio files (`.mp3`, `.wav`, `.m4a`, `.aac`, `.ogg`) render a clean `<audio>` element rather than a blank `<video>` canvas.
 - **Non-blocking Error Recovery**: If an external host blocks playback or requires cookies, `MediaPlayer` presents a prominent **"Open source ↗"** escape hatch rather than a dead-end error box.
 
 ### 3. Pipeline Concurrency & Non-Blocking UI
+
 - **Parallel LLM Synthesis**: In `actions/transcription.ts`, wrapped `formatTranscript()` and `summarizeTranscript()` in `Promise.all()`. Since both consume the raw transcript text independently, they execute concurrently on the AI provider (Gemini 2.5 Flash / Groq), shaving ~6 seconds off backend processing.
 - **Non-Blocking Progress Ticker**: In `components/upload.tsx`, replaced all blocking `await setTimeout()` sleeps with dynamic non-blocking ticker intervals. The millisecond the Server Action resolves, the ticker is cleared, progress hits 100%, and notes render immediately.
 

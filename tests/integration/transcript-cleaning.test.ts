@@ -27,14 +27,19 @@ describe('Transcript Cleaning and Formatting', () => {
     });
 
     const cleaned = getCleanTranscript(jsonNotes);
-    expect(cleaned).toContain('The speaker addresses the perceived importance of specific academic metrics.');
-    expect(cleaned).toContain('A core recommendation for first-year students is to strategically engage with college clubs.');
+    expect(cleaned).toContain(
+      'The speaker addresses the perceived importance of specific academic metrics.'
+    );
+    expect(cleaned).toContain(
+      'A core recommendation for first-year students is to strategically engage with college clubs.'
+    );
     expect(cleaned).not.toContain('"title":');
     expect(cleaned).not.toContain('"paragraphs":');
   });
 
   it('extracts paragraphs from fenced code block ```json', () => {
-    const fencedJson = '```json\n{\n  "title": "Test Title",\n  "paragraphs": [\n    "Paragraph one of the lecture.",\n    "Paragraph two of the lecture."\n  ]\n}\n```';
+    const fencedJson =
+      '```json\n{\n  "title": "Test Title",\n  "paragraphs": [\n    "Paragraph one of the lecture.",\n    "Paragraph two of the lecture."\n  ]\n}\n```';
 
     const cleaned = getCleanTranscript(fencedJson);
     expect(cleaned).toBe('Paragraph one of the lecture.\n\nParagraph two of the lecture.');
@@ -52,7 +57,8 @@ describe('Transcript Cleaning and Formatting', () => {
 
   it('falls back to regex extraction for malformed or truncated JSON', () => {
     // Truncated JSON missing closing brackets
-    const truncatedJson = '{\n  "title": "Truncated Lecture",\n  "paragraphs": [\n    "First complete paragraph.",\n    "Second complete paragraph."';
+    const truncatedJson =
+      '{\n  "title": "Truncated Lecture",\n  "paragraphs": [\n    "First complete paragraph.",\n    "Second complete paragraph."';
 
     const cleaned = getCleanTranscript(truncatedJson);
     expect(cleaned).toContain('First complete paragraph.');

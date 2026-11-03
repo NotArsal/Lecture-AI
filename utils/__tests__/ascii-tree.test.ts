@@ -11,7 +11,8 @@ describe('generateAsciiMindMap', () => {
     keyConcepts: [
       {
         concept: 'Race Condition',
-        explanation: 'When multiple threads access shared data concurrently without synchronization.',
+        explanation:
+          'When multiple threads access shared data concurrently without synchronization.',
         importance: 'high',
       },
       {
@@ -26,6 +27,7 @@ describe('generateAsciiMindMap', () => {
         definition: 'A state in which each process is waiting for another resource.',
       },
     ],
+    exampleProblems: [],
     quizQuestions: [],
     actionItems: ['Review semaphore implementations'],
     metadata: {

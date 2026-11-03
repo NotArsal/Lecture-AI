@@ -171,7 +171,9 @@ describe('File Security - Magic Bytes Validation', () => {
 
     it('should accept M4A files with MP4/isom container signature and audio/x-m4a MIME', async () => {
       // ftypisom header (offset 4)
-      const m4aHeader = Buffer.from([0x00, 0x00, 0x00, 0x20, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d]);
+      const m4aHeader = Buffer.from([
+        0x00, 0x00, 0x00, 0x20, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f, 0x6d,
+      ]);
       const filepath = await createTestFile('lecture.m4a', m4aHeader);
 
       const result = await validateFileIntegrity(filepath, 'audio/x-m4a', 'm4a');

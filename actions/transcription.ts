@@ -17,7 +17,11 @@ import { saveUploadedFile, cleanupUploadedFile } from '@/lib/upload';
 import path from 'path';
 import { promises as fs } from 'fs';
 import { rateLimiter, RATE_LIMITS, getClientId, formatTimeRemaining } from '@/lib/rate-limiter';
-import { downloadMediaFromUrl, isValidMediaUrl, type MediaDownloadResult } from '@/lib/media-downloader';
+import {
+  downloadMediaFromUrl,
+  isValidMediaUrl,
+  type MediaDownloadResult,
+} from '@/lib/media-downloader';
 import { downloadYoutubeAudio, isValidYoutubeUrl } from '@/lib/youtube';
 import { formatTranscript } from '@/lib/ai';
 import { formatApiError } from '@/utils/format-api-error';
@@ -127,8 +131,8 @@ export async function createTranscriptionMutation(
     }
 
     const file = formData.get('file') as File | null;
-    const youtubeUrl = formData.get('youtubeUrl') as string | null;
-    const mediaUrl = formData.get('mediaUrl') as string | null;
+    let youtubeUrl = formData.get('youtubeUrl') as string | null;
+    let mediaUrl = formData.get('mediaUrl') as string | null;
     const language = (formData.get('language') as 'english' | 'hinglish') || 'english';
     const customGroqKey = formData.get('customGroqKey') as string | null;
 
@@ -144,7 +148,7 @@ export async function createTranscriptionMutation(
       // If user pasted a YouTube link in the URL field, automatically route to YouTube processor
       if (isValidYoutubeUrl(mediaUrl)) {
         youtubeUrl = mediaUrl;
-        mediaUrl = undefined;
+        mediaUrl = null;
       } else {
         if (!isValidMediaUrl(mediaUrl)) {
           return {
@@ -161,8 +165,7 @@ export async function createTranscriptionMutation(
           let audioToProcess = downloadedAudio.audioPath;
 
           const isVideo =
-            downloadedAudio.isVideo ||
-            /\.(mp4|mov|mkv|avi|webm)$/i.test(downloadedAudio.audioPath);
+            downloadedAudio.isVideo || /\.(mp4|mov|mkv|avi|webm)$/i.test(downloadedAudio.audioPath);
 
           if (isVideo) {
             logger.info('[Pipeline] Media from URL is video, extracting audio...');

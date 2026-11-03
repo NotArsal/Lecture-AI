@@ -537,7 +537,8 @@ export function UploadForm({ onSuccess, onError }: UploadFormProps) {
                   <strong>Supported:</strong> Direct links to audio/video files, Google Drive,
                   Dropbox, etc.
                   <br />
-                  <strong>Note:</strong> Must be a direct download link to a media file. For YouTube videos, please use the <strong>YouTube</strong> tab above.
+                  <strong>Note:</strong> Must be a direct download link to a media file. For YouTube
+                  videos, please use the <strong>YouTube</strong> tab above.
                 </p>
               </div>
             </div>

@@ -42,8 +42,7 @@ export function resolveDirectMediaUrl(url: string): string {
     // https://docs.google.com/file/d/<FILE_ID>/...
     if (trimmed.includes('drive.google.com') || trimmed.includes('docs.google.com')) {
       const match =
-        trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
-        trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
       if (match && match[1]) {
         return `https://drive.google.com/uc?export=download&id=${match[1]}`;
       }
@@ -197,8 +196,7 @@ export async function downloadMediaFromUrl(rawUrl: string): Promise<MediaDownloa
     throw new Error('Downloaded file is empty (0 bytes)');
   }
 
-  const isVideo =
-    /\.(mp4|mov|mkv|avi|webm)$/i.test(outputPath) || contentType.startsWith('video/');
+  const isVideo = /\.(mp4|mov|mkv|avi|webm)$/i.test(outputPath) || contentType.startsWith('video/');
 
   return {
     audioPath: outputPath,

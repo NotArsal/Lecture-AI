@@ -3,15 +3,20 @@ import { resolveDirectMediaUrl, isValidMediaUrl } from '@/lib/media-downloader';
 
 describe('Media Downloader URL Resolution', () => {
   it('resolves Google Drive view sharing link to direct export URL', () => {
-    const shareLink = 'https://drive.google.com/file/d/1mIX_9sm4eFVoFJeU2OOqN9tmCdkYAc70/view?usp=sharing';
+    const shareLink =
+      'https://drive.google.com/file/d/1mIX_9sm4eFVoFJeU2OOqN9tmCdkYAc70/view?usp=sharing';
     const resolved = resolveDirectMediaUrl(shareLink);
-    expect(resolved).toBe('https://drive.google.com/uc?export=download&id=1mIX_9sm4eFVoFJeU2OOqN9tmCdkYAc70');
+    expect(resolved).toBe(
+      'https://drive.google.com/uc?export=download&id=1mIX_9sm4eFVoFJeU2OOqN9tmCdkYAc70'
+    );
   });
 
   it('resolves Google Drive open?id= link to direct export URL', () => {
     const openLink = 'https://drive.google.com/open?id=1AbCdEfGhIjKlMnOpQrStUvWxYz';
     const resolved = resolveDirectMediaUrl(openLink);
-    expect(resolved).toBe('https://drive.google.com/uc?export=download&id=1AbCdEfGhIjKlMnOpQrStUvWxYz');
+    expect(resolved).toBe(
+      'https://drive.google.com/uc?export=download&id=1AbCdEfGhIjKlMnOpQrStUvWxYz'
+    );
   });
 
   it('resolves Dropbox sharing link to direct download link (dl=1)', () => {

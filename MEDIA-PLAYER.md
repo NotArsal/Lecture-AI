@@ -29,6 +29,7 @@ The media player feature allows users to replay video/audio for **YouTube URLs**
 ### 🔊 Local Audio Streaming Architecture
 
 For local file uploads and direct URLs, audio files are preserved in the server's `.uploads/` directory. The `/api/media` route handler provides:
+
 - **HTTP 206 Partial Content**: Full support for `Range` request headers allowing instant seeking and scrubbing
 - **Zero Heavy In-Memory Buffers**: Uses Node.js file read streams (`fs.createReadStream`) with automatic MIME detection
 - **Path Sanitization**: Path traversal protection ensuring files can only be accessed within the authorized uploads directory

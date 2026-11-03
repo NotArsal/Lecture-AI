@@ -139,7 +139,8 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
       if (!url) return null;
       const trimmed = url.trim();
       if (!trimmed.includes('drive.google.com')) return null;
-      const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      const match =
+        trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
       if (match && match[1]) {
         return `https://drive.google.com/file/d/${match[1]}/preview`;
       }
@@ -268,9 +269,7 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
   }
 
   if (sourceType === 'upload') {
-    const isAudio =
-      !fileName.match(/\.(mp4|mov|mkv)$/i) &&
-      !sourceUrl.match(/\.(mp4|mov|mkv)$/i);
+    const isAudio = !fileName.match(/\.(mp4|mov|mkv)$/i) && !sourceUrl.match(/\.(mp4|mov|mkv)$/i);
 
     return (
       <div
@@ -302,7 +301,9 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
           <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} font-semibold text-indigo-950`}>
             {isAudio ? 'Audio' : 'Media'}
           </span>
-          <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} text-indigo-700 truncate flex-1 font-medium`}>
+          <span
+            className={`${isSticky ? 'text-[10px]' : 'text-xs'} text-indigo-700 truncate flex-1 font-medium`}
+          >
             {fileName}
           </span>
           <button
@@ -382,7 +383,9 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
           <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} font-semibold text-amber-950`}>
             Google Drive
           </span>
-          <span className={`${isSticky ? 'text-[10px]' : 'text-xs'} text-amber-800 truncate flex-1 font-medium`}>
+          <span
+            className={`${isSticky ? 'text-[10px]' : 'text-xs'} text-amber-800 truncate flex-1 font-medium`}
+          >
             {fileName}
           </span>
           <button
@@ -397,9 +400,19 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
               viewBox="0 0 24 24"
             >
               {isMinimized ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 15l7-7 7 7"
+                />
               )}
             </svg>
           </button>
@@ -421,8 +434,7 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
 
   // For direct media URLs
   const isAudio =
-    !fileName.match(/\.(mp4|mov|mkv|webm|avi)$/i) &&
-    !sourceUrl.match(/\.(mp4|mov|mkv|webm|avi)$/i);
+    !fileName.match(/\.(mp4|mov|mkv|webm|avi)$/i) && !sourceUrl.match(/\.(mp4|mov|mkv|webm|avi)$/i);
 
   return (
     <div

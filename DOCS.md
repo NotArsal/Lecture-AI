@@ -18,15 +18,15 @@ Welcome to the LectureAI technical and user documentation directory.
 
 ## 💻 Architecture & Technical References
 
-| Document                                                                                         | Purpose                                                            |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| [Architecture Specification](ARCHITECTURE.md)                                                    | System design, hybrid fallback, security layers, and data flows    |
-| [Project Structure](PROJECT-STRUCTURE.md)                                                        | File and folder layout across Next.js and Python proxy             |
-| [ADR 001: Hybrid Local Fallback](docs/architecture/ADR-001-Local-Fallback.md)                    | Architectural decision record for cloud-to-local fallback          |
-| [ADR 002: Serverless Fallback Strategy](docs/architecture/ADR-002-serverless-native-fallback.md) | Architectural decision record for Vercel/serverless resilience     |
+| Document                                                                                                        | Purpose                                                                          |
+| --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [Architecture Specification](ARCHITECTURE.md)                                                                   | System design, hybrid fallback, security layers, and data flows                  |
+| [Project Structure](PROJECT-STRUCTURE.md)                                                                       | File and folder layout across Next.js and Python proxy                           |
+| [ADR 001: Hybrid Local Fallback](docs/architecture/ADR-001-Local-Fallback.md)                                   | Architectural decision record for cloud-to-local fallback                        |
+| [ADR 002: Serverless Fallback Strategy](docs/architecture/ADR-002-serverless-native-fallback.md)                | Architectural decision record for Vercel/serverless resilience                   |
 | [ADR 003: Hybrid Media Streaming](docs/architecture/ADR-003-hybrid-media-streaming-and-latency-optimization.md) | Architectural decision record for HTTP Range media streaming & latency reduction |
-| [CLI Reference](CLI-REFERENCE.md)                                                                | Complete CLI scripts and npm/pnpm tooling reference                |
-| [Contributing Guidelines](CONTRIBUTING.md)                                                       | Development standards, Git conventions, and pull request workflows |
+| [CLI Reference](CLI-REFERENCE.md)                                                                               | Complete CLI scripts and npm/pnpm tooling reference                              |
+| [Contributing Guidelines](CONTRIBUTING.md)                                                                      | Development standards, Git conventions, and pull request workflows               |
 
 ---
 
