@@ -37,17 +37,28 @@ describe('MediaPlayer', () => {
     expect(videoElement?.getAttribute('controls')).toBe('');
   });
 
-  it('handles youtu.be short URLs', () => {
-    render(
+  it('handles youtu.be short URLs and query parameters', () => {
+    const { rerender } = render(
       <MediaPlayer
-        sourceUrl="https://youtu.be/dQw4w9WgXcQ"
+        sourceUrl="https://youtu.be/dQw4w9WgXcQ?si=f3T0hVqvSku10uzc"
         sourceType="youtube"
         fileName="Short URL Video"
       />
     );
 
-    const iframe = document.querySelector('iframe');
-    expect(iframe?.src).toContain('youtube.com/embed/dQw4w9WgXcQ');
+    let iframe = document.querySelector('iframe');
+    expect(iframe?.src).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
+
+    rerender(
+      <MediaPlayer
+        sourceUrl="https://www.youtube.com/shorts/dQw4w9WgXcQ?feature=share"
+        sourceType="youtube"
+        fileName="Shorts Video"
+      />
+    );
+
+    iframe = document.querySelector('iframe');
+    expect(iframe?.src).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
   });
 
   it('shows warning for invalid YouTube URL', () => {

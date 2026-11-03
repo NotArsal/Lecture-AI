@@ -21,8 +21,13 @@ describe('YouTube Integration & Path Resolution', () => {
     expect(isValidYoutubeUrl('https://example.com/video.mp4')).toBe(false);
   });
 
-  it('should extract video ID correctly', () => {
+  it('should extract video ID correctly from various formats', () => {
     expect(getYoutubeVideoId('https://www.youtube.com/watch?v=GyJkC1hql2E')).toBe('GyJkC1hql2E');
     expect(getYoutubeVideoId('https://youtu.be/GyJkC1hql2E?si=123')).toBe('GyJkC1hql2E');
+    expect(getYoutubeVideoId('https://www.youtube.com/shorts/GyJkC1hql2E')).toBe('GyJkC1hql2E');
+    expect(getYoutubeVideoId('https://youtube.com/live/GyJkC1hql2E')).toBe('GyJkC1hql2E');
+    expect(getYoutubeVideoId('https://www.youtube.com/embed/GyJkC1hql2E')).toBe('GyJkC1hql2E');
+    expect(getYoutubeVideoId('youtu.be/GyJkC1hql2E')).toBe('GyJkC1hql2E');
+    expect(getYoutubeVideoId('https://invalid.com')).toBeNull();
   });
 });

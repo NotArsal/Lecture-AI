@@ -103,13 +103,29 @@ export function MediaPlayer({ sourceUrl, sourceType, fileName }: MediaPlayerProp
 
   const getYouTubeEmbedUrl = (url: string): string | null => {
     try {
-      const urlObj = new URL(url);
+      if (!url) return null;
+      const trimmed = url.trim();
+      const urlObj = new URL(trimmed.startsWith('http') ? trimmed : `https://${trimmed}`);
       let videoId: string | null = null;
 
       if (urlObj.hostname.includes('youtube.com')) {
-        videoId = urlObj.searchParams.get('v');
+        if (urlObj.pathname.startsWith('/shorts/')) {
+          videoId = urlObj.pathname.split('/shorts/')[1]?.split(/[?#&/]/)[0];
+        } else if (urlObj.pathname.startsWith('/embed/')) {
+          videoId = urlObj.pathname.split('/embed/')[1]?.split(/[?#&/]/)[0];
+        } else if (urlObj.pathname.startsWith('/live/')) {
+          videoId = urlObj.pathname.split('/live/')[1]?.split(/[?#&/]/)[0];
+        } else if (urlObj.pathname.startsWith('/v/')) {
+          videoId = urlObj.pathname.split('/v/')[1]?.split(/[?#&/]/)[0];
+        } else {
+          videoId = urlObj.searchParams.get('v');
+        }
       } else if (urlObj.hostname.includes('youtu.be')) {
-        videoId = urlObj.pathname.slice(1);
+        videoId = urlObj.pathname.replace(/^\/+|\/+$/g, '').split('/')[0];
+      }
+
+      if (videoId) {
+        videoId = videoId.split(/[?#&]/)[0];
       }
 
       return videoId ? `https://www.youtube.com/embed/${videoId}` : null;

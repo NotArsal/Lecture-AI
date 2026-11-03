@@ -259,19 +259,32 @@ export function isValidYoutubeUrl(url: string): boolean {
  */
 export function getYoutubeVideoId(url: string): string | null {
   try {
-    const urlObj = new URL(url);
+    if (!url) return null;
+    const trimmed = url.trim();
+    const urlObj = new URL(trimmed.startsWith('http') ? trimmed : `https://${trimmed}`);
+    let videoId: string | null = null;
 
-    // For youtu.be links
-    if (urlObj.hostname === 'youtu.be') {
-      return urlObj.pathname.slice(1);
-    }
-
-    // For youtube.com links
     if (urlObj.hostname.includes('youtube.com')) {
-      return urlObj.searchParams.get('v');
+      if (urlObj.pathname.startsWith('/shorts/')) {
+        videoId = urlObj.pathname.split('/shorts/')[1]?.split(/[?#&/]/)[0];
+      } else if (urlObj.pathname.startsWith('/embed/')) {
+        videoId = urlObj.pathname.split('/embed/')[1]?.split(/[?#&/]/)[0];
+      } else if (urlObj.pathname.startsWith('/live/')) {
+        videoId = urlObj.pathname.split('/live/')[1]?.split(/[?#&/]/)[0];
+      } else if (urlObj.pathname.startsWith('/v/')) {
+        videoId = urlObj.pathname.split('/v/')[1]?.split(/[?#&/]/)[0];
+      } else {
+        videoId = urlObj.searchParams.get('v');
+      }
+    } else if (urlObj.hostname.includes('youtu.be')) {
+      videoId = urlObj.pathname.replace(/^\/+|\/+$/g, '').split('/')[0];
     }
 
-    return null;
+    if (videoId) {
+      videoId = videoId.split(/[?#&]/)[0];
+    }
+
+    return videoId || null;
   } catch {
     return null;
   }

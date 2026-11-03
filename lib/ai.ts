@@ -209,6 +209,32 @@ export async function translateTranscript(
   }
 }
 
+function sanitizeFormattedTranscript(output: string, fallback: string): string {
+  if (!output) return fallback;
+  let text = output.trim();
+  if (text.startsWith('```')) {
+    text = text.replace(/^```[a-zA-Z]*\n?/, '').replace(/\n?```$/, '').trim();
+  }
+  if (
+    text.startsWith('{') &&
+    (text.includes('"paragraphs"') || text.includes('"summary"') || text.includes('"text"'))
+  ) {
+    try {
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
+        return parsed.paragraphs.join('\n\n');
+      }
+      if (typeof parsed.text === 'string' && parsed.text.trim()) {
+        return parsed.text;
+      }
+      if (typeof parsed.summary === 'string' && parsed.summary.trim()) {
+        return parsed.summary;
+      }
+    } catch {}
+  }
+  return text || fallback;
+}
+
 /**
  * Format transcript with paragraphs and sections for better readability
  */
@@ -245,18 +271,7 @@ export async function formatTranscript(
         ...(config.provider === 'groq' && { max_tokens: GROQ_MAX_OUTPUT_TOKENS }),
       });
       const output = response.choices[0].message.content?.trim() || transcript;
-      if (
-        output.startsWith('{') &&
-        (output.includes('"paragraphs"') || output.includes('"summary"'))
-      ) {
-        try {
-          const parsed = JSON.parse(output);
-          if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
-            return parsed.paragraphs.join('\n\n');
-          }
-        } catch {}
-      }
-      return output;
+      return sanitizeFormattedTranscript(output, transcript);
     } else if (config.provider === 'gemini') {
       const ai = new GoogleGenAI({ apiKey: config.apiKey });
       const maxTokens = 100000;
@@ -275,18 +290,7 @@ export async function formatTranscript(
         },
       });
       const output = response.text?.trim() || transcript;
-      if (
-        output.startsWith('{') &&
-        (output.includes('"paragraphs"') || output.includes('"summary"'))
-      ) {
-        try {
-          const parsed = JSON.parse(output);
-          if (Array.isArray(parsed.paragraphs) && parsed.paragraphs.length > 0) {
-            return parsed.paragraphs.join('\n\n');
-          }
-        } catch {}
-      }
-      return output;
+      return sanitizeFormattedTranscript(output, transcript);
     }
     return addBasicParagraphs(transcript);
   } catch (error) {

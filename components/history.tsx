@@ -53,11 +53,21 @@ export default function History({ onSelectItem }: HistoryProps) {
   };
 
   const handleSelectItem = (item: HistoryItem) => {
-    onSelectItem(item.notes);
+    const notesWithMeta: LectureNotes = {
+      ...item.notes,
+      metadata: {
+        ...item.notes?.metadata,
+        sourceUrl: item.notes?.metadata?.sourceUrl || item.youtubeUrl || item.mediaUrl,
+        sourceType:
+          item.notes?.metadata?.sourceType ||
+          (item.source === 'file' ? 'upload' : (item.source as 'youtube' | 'url')),
+      },
+    };
+    onSelectItem(notesWithMeta);
 
     // Save as last result for auto-load
     try {
-      localStorage.setItem('lectureai_last_result', JSON.stringify(item.notes));
+      localStorage.setItem('lectureai_last_result', JSON.stringify(notesWithMeta));
     } catch (error) {
       console.error('Failed to save last result:', error);
     }
