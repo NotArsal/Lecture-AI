@@ -47,6 +47,7 @@ const AUDIO_MIME_TYPES = [
   'audio/x-wav',
   'audio/x-m4a',
   'audio/m4a',
+  'audio/mp4',
   'audio/aac',
   'audio/ogg',
   'audio/flac',

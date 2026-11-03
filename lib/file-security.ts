@@ -76,6 +76,12 @@ const FILE_SIGNATURES: FileSignature[] = [
     extension: 'm4a',
     mimeType: 'audio/m4a',
   },
+  {
+    bytes: [0x66, 0x74, 0x79, 0x70, 0x4d, 0x34, 0x42], // M4B (ftypM4B)
+    offset: 4,
+    extension: 'm4a',
+    mimeType: 'audio/m4a',
+  },
 
   // Video formats
   {
@@ -190,27 +196,57 @@ export async function validateFileIntegrity(
     };
   }
 
-  const { detectedType, detectedMime } = signatureCheck;
+  const detectedType = (
+    signatureCheck.detectedType ||
+    (signatureCheck as any).detected_type ||
+    ''
+  ).toLowerCase();
+  const detectedMime = (
+    signatureCheck.detectedMime ||
+    (signatureCheck as any).detected_mime ||
+    ''
+  ).toLowerCase();
+  const claimedExt = claimedExtension.toLowerCase().replace(/^\./, '');
+  const claimedMime = claimedMimeType.toLowerCase();
+
+  // Allow compatibility between MP4, M4A, and MOV (ISOBMFF container family).
+  // Audio files (.m4a) frequently carry isom or mp42 major brand atoms.
+  const isISOBMFFMatch =
+    ['mp4', 'm4a', 'mov'].includes(detectedType) &&
+    ['mp4', 'm4a', 'mov'].includes(claimedExt) &&
+    (
+      claimedMime.includes('mp4') ||
+      claimedMime.includes('m4a') ||
+      claimedMime.includes('quicktime') ||
+      claimedMime.includes('aac')
+    );
 
   // Check if detected type matches claimed extension
   const extensionMatch =
-    detectedType === claimedExtension.toLowerCase() ||
-    (detectedType === 'mkv' && claimedExtension.toLowerCase() === 'webm');
+    detectedType === claimedExt ||
+    (detectedType === 'mkv' && claimedExt === 'webm') ||
+    isISOBMFFMatch;
 
-  // Check if detected MIME matches claimed MIME (with some flexibility)
-  const mimeMatch =
-    detectedMime === claimedMimeType ||
-    // Allow some common MIME variations
-    (detectedType === 'mp3' && claimedMimeType === 'audio/mp3') ||
-    (detectedType === 'wav' && claimedMimeType.includes('wav')) ||
-    (detectedType === 'm4a' && claimedMimeType.includes('m4a'));
   // Allow WebM audio/video
   const isWebmMatch =
     detectedType === 'mkv' &&
-    (claimedMimeType === 'audio/webm' || claimedMimeType === 'video/webm');
-  const finalMimeMatch = mimeMatch || isWebmMatch;
+    (claimedMime === 'audio/webm' || claimedMime === 'video/webm');
 
-  if (!extensionMatch || !finalMimeMatch) {
+  // Check if detected MIME matches claimed MIME (with common variations allowed)
+  const mimeMatch =
+    detectedMime === claimedMime ||
+    (detectedType === 'mp3' &&
+      (claimedMime === 'audio/mp3' ||
+        claimedMime === 'audio/mpeg' ||
+        claimedMime === 'audio/x-mpeg')) ||
+    (detectedType === 'wav' && claimedMime.includes('wav')) ||
+    (detectedType === 'm4a' && claimedMime.includes('m4a')) ||
+    (detectedType === 'ogg' && claimedMime.includes('ogg')) ||
+    (detectedType === 'flac' && claimedMime.includes('flac')) ||
+    isISOBMFFMatch ||
+    isWebmMatch;
+
+  if (!extensionMatch || !mimeMatch) {
     return {
       valid: false,
       error: `File content mismatch: File appears to be ${detectedType} (${detectedMime}) but claimed as ${claimedExtension} (${claimedMimeType}). Possible file tampering or corruption.`,
