@@ -1,37 +1,37 @@
-﻿# Media Player Feature
+# Media Player Feature
 
 ## Overview
 
-The media player feature allows users to replay video/audio **only for YouTube and Direct URL sources** with a modern compact floating display.
+The media player feature allows users to replay video/audio for **YouTube URLs**, **Direct Media & Google Drive URLs**, and **Local File Uploads** with a modern compact floating display.
 
-### âœ¨ Key Features
+### ✨ Key Features
 
 - **Compact Floating Design**: 320px player that floats on screen
 - **Draggable Player**: Drag & drop player anywhere when floating
 - **Smart Edge Snapping**: Automatically snaps to left/right edge when released
 - **Smart Sticky**: Automatically floats when scrolling past player position, returns to normal when scrolling back up
 - **Minimize/Expand**: Toggle visibility to save screen space
-- **Colorful Themes**: Red for YouTube, blue for media URLs
-- **Smooth Animations**: Smooth transitions for all interactions (except during drag)
-- **Safe Boundaries**: 16px padding from top/bottom edges, 16px left and 32px right padding
+- **Adaptive Theming**:
+  - 🔴 **Red**: YouTube embeds
+  - 🔵 **Blue**: Direct media URLs (MP3, MP4, WAV)
+  - 🟡 **Amber**: Google Drive preview player
+  - 🟢 **Emerald**: Local uploaded audio files (streamed via `/api/media`)
+- **Safe Viewport Boundaries**: 16px padding from top/bottom edges, 16px left and 32px right padding
+- **Error Fallback**: Direct link fallback ("Open original source ↗") if browser CORS or streaming headers fail
 
-### âš ï¸ Important Note
+### 🎵 Supported Sources
 
-**Media player ONLY available for:**
+- ✅ **YouTube URLs**: Direct videos from YouTube (Red theme)
+- ✅ **Google Drive URLs**: Direct Google Drive preview player via iframe embed (Amber theme)
+- ✅ **Direct Media URLs**: Direct links to audio/video files (Blue theme)
+- ✅ **Local File Uploads**: Uploaded audio & video lectures streamed locally via `/api/media?file=...` (Emerald theme)
 
-- âœ… **YouTube URLs**: Direct videos from YouTube (red theme)
-- âœ… **Direct Media URLs**: Direct links to audio/video files (blue theme)
+### 🔊 Local Audio Streaming Architecture
 
-**NOT available for:**
-
-- âŒ Local file uploads (MP3, MP4, etc. uploaded from computer)
-
-### Why Only URLs?
-
-- **No Storage Needed**: URL sources don't need to be stored, accessed directly from their source
-- **Serverless-Friendly**: No filesystem or cloud storage required
-- **Always Available**: Can be played anytime as long as the source is still online
-- **No Size Limits**: No localStorage size limitations
+For local file uploads and direct URLs, audio files are preserved in the server's `.uploads/` directory. The `/api/media` route handler provides:
+- **HTTP 206 Partial Content**: Full support for `Range` request headers allowing instant seeking and scrubbing
+- **Zero Heavy In-Memory Buffers**: Uses Node.js file read streams (`fs.createReadStream`) with automatic MIME detection
+- **Path Sanitization**: Path traversal protection ensuring files can only be accessed within the authorized uploads directory
 
 ## Features
 
@@ -103,9 +103,10 @@ The media player feature allows users to replay video/audio **only for YouTube a
 
 ```tsx
 interface MediaPlayerProps {
-  sourceUrl: string; // YouTube URL or direct media URL
-  sourceType: 'youtube' | 'url'; // Type of source
+  sourceUrl: string; // YouTube URL, direct media URL, or local file path
+  sourceType: 'youtube' | 'url' | 'file'; // Type of source
   fileName: string; // Original filename for display
+  audioUrl?: string; // Optional direct audio stream URL (/api/media?file=...)
 }
 ```
 

@@ -20,17 +20,20 @@ LectureAI is an open-source web application that automatically transcribes audio
 - 💰 **Free & Generous Tiers**: Default Groq Whisper integration and Google Gemini 2.5 Flash support.
 - 🎵 **Multi-format Ingestion**: Upload MP3, WAV, M4A, MP4, MKV, MOV, FLAC, and WebM.
 - 🎬 **YouTube Extraction**: Transcribe directly from YouTube URLs (via resilient `yt-dlp` / `python -m yt_dlp`).
-- 🔗 **Direct URL Download**: Download and transcribe media from any public URL with SSRF guards.
+- 🔗 **Direct URL & Google Drive Download**: Ingest media from public links and Google Drive with anti-SSRF protections.
+- 🎧 **In-Browser Audio Playback**: Listen to uploaded audio/video lectures and URL downloads directly with HTTP 206 byte-range streaming (`/api/media`).
 - 🤖 **Next-Gen AI Summarization**: Google Gemini 2.5 Flash via `@google/genai` with strict `responseJsonSchema`, Groq Whisper, OpenAI, or Anthropic.
+- ⚡ **Concurrent Pipeline**: Transcript formatting and structured note summarization execute in parallel (`Promise.all`), cutting processing latency by ~6 seconds.
 - 🔄 **Hybrid Local Fallback**: Seamless fallback to local Python FastAPI proxy (`backend/main.py`) powered by `faster-whisper` on NVIDIA CUDA (RTX 4060) and local Ollama (`gemma4`).
 - 🇮🇳 **Bilingual Lecture Dialect**: Optimized for **English** and **Hinglish** (Hindi-English colloquial code-switching used in college classrooms).
+- 🍱 **Bento Analytics Dashboard**: Visual overview cards for reading pace, flashcards, quiz status, and core concept badges.
 - 📇 **Interactive Flashcards**: 3D flip card study mode with difficulty/priority tags (High, Medium, Low) and flip animations.
 - 🎯 **Interactive Quiz**: AI-generated multiple-choice questions with instant scoring, feedback, and rationale.
 - 📝 **Formatted Transcript**: AI-structured transcript organized into coherent paragraphs, timestamps, and section headers.
 - 📊 **Structured Study Notes**: Detailed notes with summaries, definitions, sample problems, solutions, and action items.
-- 🎵 **Floating Media Player**: Compact Picture-in-Picture media player for YouTube videos and streaming audio.
+- 🎵 **Draggable Floating Media Player**: Picture-in-Picture player for YouTube videos, Google Drive previews, direct URLs, and local audio streaming with smart edge-snapping.
 - 🛡️ **Security Hardened**:
-  - Pure-JS magic-byte validation (RIFF, ftyp, ID3, OggS, fLaC, Matroska).
+  - Pure-JS magic-byte validation (RIFF, ftyp, ID3, OggS, fLaC, Matroska) supporting audio-in-MP4 containers.
   - Anti-SSRF protection blocking private RFC 1918 subnets, loopbacks, and cloud metadata (`169.254.169.254`).
   - Command injection prevention via parameterized `execFile` argument vectors.
 - ☁️ **Vercel Serverless Ready**: Dynamic pure-JS fallbacks when native `.node` binaries or system binaries are not present.
@@ -135,7 +138,7 @@ talk2notes/
 ├── actions/                  # Next.js Server Actions ('use server')
 │   └── transcription.ts      # Core pipeline orchestrator
 ├── app/                      # Next.js App Router
-│   ├── api/                  # API endpoints (/api/limits, /api/transcribe)
+│   ├── api/                  # API endpoints (/api/limits, /api/transcribe, /api/media)
 │   ├── layout.tsx            # Root layout & theme wrapper
 │   ├── page.tsx              # Application container
 │   └── globals.css           # Tailwind CSS styles

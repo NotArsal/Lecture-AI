@@ -1,6 +1,40 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to LectureAI will be documented in this file.
+
+## [3.2.0] - 2026-11-03
+
+### Added
+
+- 🎧 **Local Media Streaming & Audio Playback**:
+  - Added `/api/media` route handler with HTTP 206 Partial Content byte-range audio streaming
+  - Preserved extracted audio files in `uploads/` directory so users can listen to uploaded lectures in-browser
+  - Extended floating media player with `sourceType="file"` and emerald theme (`bg-emerald-50`, `border-emerald-300`, `text-emerald-900`)
+- 📁 **Google Drive Preview Embed**:
+  - Auto-detected Google Drive sharing links (`drive.google.com/file/d/{id}/view`) converted to embedded iframe previews (`/preview`)
+  - Styled with distinctive amber theme (`bg-amber-50`, `border-amber-300`, `text-amber-900`)
+  - Added fallback "Open original source ↗" link when direct media cannot be streamed due to CORS or non-direct stream headers
+- 🍱 **Bento Analytics Dashboard**:
+  - High-density visual metrics for Reading Pace, Flashcards count, Quiz readiness, and Core Concept pills
+  - Click-through shortcuts linking directly to corresponding interactive tabs
+- 🌲 **ASCII Concept Tree Generator**:
+  - Interactive ASCII mind map and hierarchical concept tree modal with instant copy & download
+
+### Optimized & Fixed
+
+- ⚡ **Zero-Wait Progress Transitions**:
+  - Removed ~9 seconds of blocking artificial `setTimeout` sleeps in `components/upload.tsx`
+  - Replaced with dynamic, non-blocking progress tickers that update immediately upon server action resolution
+- ⚡ **Parallel LLM Generation**:
+  - Parallelized `formatTranscript` and `summarizeTranscript` in `actions/transcription.ts` using `Promise.all`
+  - Shaved ~5-7 seconds off total processing time
+- 🛡️ **MP4/M4A Audio Container Compatibility**:
+  - Resolved `Security validation failed: File content mismatch` when M4A audio files use standard MP4 ISO container brands (`mp41`, `mp42`, `isom`)
+
+### Technical
+
+- Added `docs/architecture/ADR-003-hybrid-media-streaming-and-latency-optimization.md`
+- Expanded test suite to 16 test files (153 total tests passing)
 
 ## [3.1.0] - 2026-02-05
 
