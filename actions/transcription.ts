@@ -17,7 +17,7 @@ import { saveUploadedFile, cleanupUploadedFile } from '@/lib/upload';
 import path from 'path';
 import { promises as fs } from 'fs';
 import { rateLimiter, RATE_LIMITS, getClientId, formatTimeRemaining } from '@/lib/rate-limiter';
-import { downloadMediaFromUrl, isValidMediaUrl } from '@/lib/media-downloader';
+import { downloadMediaFromUrl, isValidMediaUrl, type MediaDownloadResult } from '@/lib/media-downloader';
 import { downloadYoutubeAudio, isValidYoutubeUrl } from '@/lib/youtube';
 import { formatTranscript } from '@/lib/ai';
 import { formatApiError } from '@/utils/format-api-error';
@@ -150,24 +150,45 @@ export async function createTranscriptionMutation(
           };
         }
 
-        let downloadedAudio: { audioPath: string; title: string } | null = null;
-        let compressedAudio: string | null = null;
+        let downloadedAudio: MediaDownloadResult | null = null;
+        let extractedAudioPath: string | null = null;
 
         try {
           downloadedAudio = await downloadMediaFromUrl(mediaUrl);
+          let audioToProcess = downloadedAudio.audioPath;
+
+          const isVideo =
+            downloadedAudio.isVideo ||
+            /\.(mp4|mov|mkv|avi|webm)$/i.test(downloadedAudio.audioPath);
+
+          if (isVideo) {
+            logger.info('[Pipeline] Media from URL is video, extracting audio...');
+            const extraction = await extractAudioFromVideo(downloadedAudio.audioPath);
+            extractedAudioPath = extraction.audioPath;
+            audioToProcess = extractedAudioPath;
+          }
+
           const result = await processAudioPipeline(
-            downloadedAudio.audioPath,
+            audioToProcess,
             `${downloadedAudio.title}.mp3`,
             language,
             customGroqKey || undefined,
             mediaUrl,
             'url'
           );
+
           await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
+          if (extractedAudioPath) {
+            await cleanupUploadedFile(extractedAudioPath).catch(() => {});
+          }
           return result;
         } catch (error) {
-          if (downloadedAudio?.audioPath)
+          if (downloadedAudio?.audioPath) {
             await cleanupUploadedFile(downloadedAudio.audioPath).catch(() => {});
+          }
+          if (extractedAudioPath) {
+            await cleanupUploadedFile(extractedAudioPath).catch(() => {});
+          }
           throw error;
         }
       }

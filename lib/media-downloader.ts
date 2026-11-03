@@ -1,124 +1,210 @@
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import { promises as fs } from 'fs';
+import { promises as fs, createWriteStream } from 'fs';
 import path from 'path';
-import https from 'https';
-import http from 'http';
+import { Readable } from 'stream';
+import { pipeline } from 'stream/promises';
 import { URL } from 'url';
-
-const execPromise = promisify(exec);
 
 export interface MediaDownloadResult {
   audioPath: string;
   title: string;
   duration?: number;
+  isVideo?: boolean;
 }
 
-export async function downloadMediaFromUrl(url: string): Promise<MediaDownloadResult> {
-  const uploadsDir = path.join(process.cwd(), 'uploads');
-  await fs.mkdir(uploadsDir, { recursive: true });
+const MIME_TO_EXT: Record<string, string> = {
+  'video/mp4': '.mp4',
+  'video/webm': '.webm',
+  'video/quicktime': '.mov',
+  'video/x-matroska': '.mkv',
+  'audio/mpeg': '.mp3',
+  'audio/mp3': '.mp3',
+  'audio/wav': '.wav',
+  'audio/x-wav': '.wav',
+  'audio/mp4': '.m4a',
+  'audio/x-m4a': '.m4a',
+  'audio/aac': '.aac',
+  'audio/ogg': '.ogg',
+  'audio/webm': '.webm',
+  'audio/flac': '.flac',
+};
 
-  const timestamp = Date.now();
-  const parsedUrl = new URL(url);
-  const urlPath = parsedUrl.pathname;
-  const extension = path.extname(urlPath).toLowerCase() || '.mp3';
-  const outputPath = path.join(uploadsDir, `media_${timestamp}${extension}`);
-
+/**
+ * Resolves cloud sharing links (e.g. Google Drive, Dropbox) into direct media stream URLs
+ */
+export function resolveDirectMediaUrl(url: string): string {
   try {
-    console.log('[MediaDownloader] Starting download:', url);
-    console.log('[MediaDownloader] Output path:', outputPath);
+    const trimmed = url.trim();
 
-    await downloadFile(url, outputPath);
-
-    const stats = await fs.stat(outputPath);
-    const fileSizeMB = stats.size / (1024 * 1024);
-    console.log(`[MediaDownloader] Downloaded file size: ${fileSizeMB.toFixed(2)}MB`);
-
-    if (stats.size === 0) {
-      throw new Error('Downloaded file is empty');
+    // 1. Google Drive URLs
+    // Formats:
+    // https://drive.google.com/file/d/<FILE_ID>/view?usp=sharing
+    // https://drive.google.com/open?id=<FILE_ID>
+    // https://docs.google.com/file/d/<FILE_ID>/...
+    if (trimmed.includes('drive.google.com') || trimmed.includes('docs.google.com')) {
+      const match =
+        trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+        trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+      }
     }
 
-    const title = path.basename(urlPath, extension) || `Media_${timestamp}`;
-
-    return {
-      audioPath: outputPath,
-      title,
-    };
-  } catch (error) {
-    try {
-      await fs.unlink(outputPath);
-    } catch {}
-
-    if (error instanceof Error) {
-      console.error('[MediaDownloader] Download error:', error.message);
-      throw new Error(`Failed to download media: ${error.message}`);
+    // 2. Dropbox URLs
+    if (trimmed.includes('dropbox.com')) {
+      const u = new URL(trimmed);
+      u.searchParams.set('dl', '1');
+      return u.toString();
     }
-    throw error;
+
+    return trimmed;
+  } catch {
+    return url;
   }
 }
 
-async function downloadFile(url: string, outputPath: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    const protocol = parsedUrl.protocol === 'https:' ? https : http;
+function parseFilenameFromHeaders(
+  contentDisposition: string | null,
+  contentType: string | null,
+  fallbackTitle: string
+): { filename: string; extension: string; title: string } {
+  let filename = '';
 
-    const file = require('fs').createWriteStream(outputPath);
+  if (contentDisposition) {
+    const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;\s]+)/i);
+    if (utf8Match) {
+      try {
+        filename = decodeURIComponent(utf8Match[1]);
+      } catch {}
+    }
 
-    const request = protocol.get(
-      url,
-      {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; LectureAI/1.0)',
-        },
-      },
-      (response) => {
-        if (response.statusCode === 301 || response.statusCode === 302) {
-          const redirectUrl = response.headers.location;
-          if (!redirectUrl) {
-            reject(new Error('Redirect without location'));
-            return;
-          }
-          file.close();
-          downloadFile(redirectUrl, outputPath).then(resolve).catch(reject);
-          return;
+    if (!filename) {
+      const quotedMatch = contentDisposition.match(/filename="([^"]+)"/i);
+      if (quotedMatch) {
+        filename = quotedMatch[1].trim();
+      } else {
+        const unquotedMatch = contentDisposition.match(/filename=([^;\s]+)/i);
+        if (unquotedMatch) {
+          filename = unquotedMatch[1].trim();
         }
-
-        if (response.statusCode !== 200) {
-          file.close();
-          reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
-          return;
-        }
-
-        const contentType = (response.headers['content-type'] || '').toLowerCase();
-        if (contentType.includes('text/html')) {
-          file.close();
-          reject(
-            new Error(
-              'The provided URL returned a webpage (HTML) rather than a direct audio or video file. If this is a YouTube video, please use the YouTube tab instead.'
-            )
-          );
-          return;
-        }
-
-        response.pipe(file);
-
-        file.on('finish', () => {
-          file.close();
-          resolve();
-        });
       }
-    );
+    }
+  }
 
-    request.on('error', (err) => {
-      file.close();
-      reject(err);
-    });
+  let extension = '';
+  if (filename) {
+    extension = path.extname(filename).toLowerCase();
+  }
 
-    file.on('error', (err: Error) => {
-      file.close();
-      reject(err);
-    });
+  if (!extension && contentType) {
+    const cleanType = contentType.split(';')[0].trim().toLowerCase();
+    extension = MIME_TO_EXT[cleanType] || '';
+  }
+
+  if (!extension) {
+    extension = '.mp3';
+  }
+
+  const title = filename ? path.basename(filename, extension) : fallbackTitle;
+
+  return {
+    filename: filename || `${title}${extension}`,
+    extension,
+    title,
+  };
+}
+
+export async function downloadMediaFromUrl(rawUrl: string): Promise<MediaDownloadResult> {
+  const uploadsDir = path.join(process.cwd(), 'uploads');
+  await fs.mkdir(uploadsDir, { recursive: true });
+
+  const directUrl = resolveDirectMediaUrl(rawUrl);
+  const timestamp = Date.now();
+  console.log('[MediaDownloader] Starting download:', rawUrl);
+  if (directUrl !== rawUrl) {
+    console.log('[MediaDownloader] Resolved direct URL:', directUrl);
+  }
+
+  let response = await fetch(directUrl, {
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    },
+    redirect: 'follow',
   });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+
+  let contentType = (response.headers.get('content-type') || '').toLowerCase();
+
+  // Handle Google Drive virus scan warning for large files
+  if (contentType.includes('text/html') && directUrl.includes('drive.google.com')) {
+    const htmlText = await response.text();
+    const confirmMatch =
+      htmlText.match(/href="(\/uc\?export=download[^"]+confirm=[^"]+)"/i) ||
+      htmlText.match(/href="(https:\/\/[^"]+confirm=[^"]+)"/i) ||
+      htmlText.match(/action="(https:\/\/[^"]+confirm=[^"]+)"/i);
+
+    if (confirmMatch) {
+      let confirmUrl = confirmMatch[1].replace(/&amp;/g, '&');
+      if (confirmUrl.startsWith('/')) {
+        confirmUrl = `https://drive.google.com${confirmUrl}`;
+      }
+      console.log('[MediaDownloader] Following Google Drive confirmation URL...');
+      response = await fetch(confirmUrl, {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        },
+        redirect: 'follow',
+      });
+      contentType = (response.headers.get('content-type') || '').toLowerCase();
+    }
+  }
+
+  if (contentType.includes('text/html')) {
+    throw new Error(
+      'The provided URL returned a webpage (HTML) rather than a direct audio or video file. ' +
+        'If this is a Google Drive link, make sure permissions are set to "Anyone with the link can view". ' +
+        'If this is a YouTube video, please use the YouTube tab instead.'
+    );
+  }
+
+  if (!response.body) {
+    throw new Error('Downloaded file stream is empty');
+  }
+
+  const defaultTitle = `Media_${timestamp}`;
+  const { extension, title } = parseFilenameFromHeaders(
+    response.headers.get('content-disposition'),
+    contentType,
+    defaultTitle
+  );
+
+  const outputPath = path.join(uploadsDir, `media_${timestamp}${extension}`);
+  console.log('[MediaDownloader] Output path:', outputPath);
+
+  const fileStream = createWriteStream(outputPath);
+  await pipeline(Readable.fromWeb(response.body as any), fileStream);
+
+  const stats = await fs.stat(outputPath);
+  const fileSizeMB = stats.size / (1024 * 1024);
+  console.log(`[MediaDownloader] Downloaded file size: ${fileSizeMB.toFixed(2)}MB`);
+
+  if (stats.size === 0) {
+    await fs.unlink(outputPath).catch(() => {});
+    throw new Error('Downloaded file is empty (0 bytes)');
+  }
+
+  const isVideo =
+    /\.(mp4|mov|mkv|avi|webm)$/i.test(outputPath) || contentType.startsWith('video/');
+
+  return {
+    audioPath: outputPath,
+    title,
+    isVideo,
+  };
 }
 
 export function isValidMediaUrl(url: string): boolean {
