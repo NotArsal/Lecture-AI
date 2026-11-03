@@ -12,16 +12,42 @@ export interface YoutubeDownloadResult {
   duration?: number;
 }
 
+interface YtDlpExecutable {
+  cmd: string;
+  argsPrefix: string[];
+}
+
+/**
+ * Detect available yt-dlp executable or Python module fallback
+ */
+export async function getYtDlpExecutable(): Promise<YtDlpExecutable | null> {
+  // 1. Try direct yt-dlp binary
+  try {
+    await execPromise('yt-dlp --version');
+    return { cmd: 'yt-dlp', argsPrefix: [] };
+  } catch {}
+
+  // 2. Try python -m yt_dlp
+  try {
+    await execPromise('python -m yt_dlp --version');
+    return { cmd: 'python', argsPrefix: ['-m', 'yt_dlp'] };
+  } catch {}
+
+  // 3. Try python3 -m yt_dlp
+  try {
+    await execPromise('python3 -m yt_dlp --version');
+    return { cmd: 'python3', argsPrefix: ['-m', 'yt_dlp'] };
+  } catch {}
+
+  return null;
+}
+
 /**
  * Check if yt-dlp is installed
  */
 export async function checkYtDlpInstalled(): Promise<boolean> {
-  try {
-    await execPromise('yt-dlp --version');
-    return true;
-  } catch {
-    return false;
-  }
+  const executable = await getYtDlpExecutable();
+  return executable !== null;
 }
 
 /**
@@ -30,8 +56,8 @@ export async function checkYtDlpInstalled(): Promise<boolean> {
  */
 export async function downloadYoutubeAudio(url: string): Promise<YoutubeDownloadResult> {
   // Check if yt-dlp is installed
-  const isInstalled = await checkYtDlpInstalled();
-  if (!isInstalled) {
+  const executable = await getYtDlpExecutable();
+  if (!executable) {
     throw new Error(
       'yt-dlp is not installed. Please install it:\n' +
         'macOS: brew install yt-dlp\n' +
@@ -59,6 +85,7 @@ export async function downloadYoutubeAudio(url: string): Promise<YoutubeDownload
     // --newline: output newlines for easier parsing
     // --no-simulate: actually download (not just simulate)
     const args = [
+      ...executable.argsPrefix,
       '-x',
       '--audio-format',
       'mp3',
@@ -85,7 +112,7 @@ export async function downloadYoutubeAudio(url: string): Promise<YoutubeDownload
     let stderr: string;
 
     try {
-      const result = await execFilePromise('yt-dlp', args, {
+      const result = await execFilePromise(executable.cmd, args, {
         maxBuffer: 50 * 1024 * 1024, // 50MB buffer for longer output
         timeout: 5 * 60 * 1000, // 5 minutes timeout for long videos
       });
